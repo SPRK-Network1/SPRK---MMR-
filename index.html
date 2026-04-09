@@ -1,1 +1,734 @@
-WEARESCAMMINGNIGGAS
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>SPRK Network — Build Wealth. Ignite Your Future.</title>
+  <meta name="description" content="SPRK Network is the premier platform connecting ambitious professionals with curated financial opportunities, expert mentorship, and a thriving community built for long-term success." />
+  <meta property="og:title" content="SPRK Network — Build Wealth. Ignite Your Future." />
+  <meta property="og:description" content="Join 12,000+ members already building their financial future with SPRK Network." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #0B0F14;
+      --card:       #0F1B2D;
+      --text:       #E5E7EB;
+      --muted:      #9CA3AF;
+      --gold:       #E5D19A;
+      --gold-dark:  #D8BA68;
+      --border:     rgba(229, 231, 235, 0.12);
+      --border-gold:rgba(216, 186, 104, 0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(229,209,154,0.2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(229,209,154,0.35); }
+
+    /* ── Keyframes ── */
+    @keyframes shimmer {
+      0%   { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+    @keyframes fadeInUp {
+      0%   { opacity: 0; transform: translateY(24px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      0%   { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 14px 3px rgba(216,186,104,0.07), 0 4px 32px rgba(0,0,0,0.5); }
+      50%       { box-shadow: 0 0 30px 8px rgba(216,186,104,0.2),  0 4px 40px rgba(0,0,0,0.6); }
+    }
+    @keyframes dotPulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* ── Utility ── */
+    .fade-in     { animation: fadeIn    0.6s ease-out forwards; }
+    .fade-in-up  { animation: fadeInUp  0.8s ease-out forwards; }
+    .delay-1     { animation-delay: 0.1s; opacity: 0; }
+    .delay-2     { animation-delay: 0.2s; opacity: 0; }
+    .delay-3     { animation-delay: 0.3s; opacity: 0; }
+    .delay-4     { animation-delay: 0.4s; opacity: 0; }
+    .delay-6     { animation-delay: 0.6s; opacity: 0; }
+
+    /* ── Layout wrappers ── */
+    .page        { position: relative; }
+    .glow-tr, .glow-bl {
+      position: absolute; pointer-events: none;
+      border-radius: 50%; filter: blur(80px);
+    }
+    .glow-tr {
+      top: -60px; right: -80px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(216,186,104,0.06) 0%, transparent 65%);
+    }
+    .glow-bl {
+      bottom: 0; left: -80px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(216,186,104,0.04) 0%, transparent 65%);
+    }
+    .container   { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* ════════════════════════════════════════
+       HEADER
+    ════════════════════════════════════════ */
+    .header {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 80px 24px 64px;
+      overflow: hidden;
+    }
+    .header-glow {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 400px;
+      background: radial-gradient(ellipse at top, rgba(216,186,104,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    /* Logo */
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .logo-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 24px rgba(216,186,104,0.35);
+      flex-shrink: 0;
+    }
+    .logo-icon svg { width: 22px; height: 22px; fill: var(--bg); }
+    .logo-text { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; color: var(--text); }
+    .logo-text span { color: var(--gold); }
+
+    /* Pre-headline */
+    .pre-headline {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    /* H1 */
+    .h1 {
+      font-size: clamp(42px, 7vw, 68px);
+      font-weight: 800;
+      line-height: 1.08;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+    .h1-gold {
+      background: linear-gradient(90deg, var(--gold) 0%, var(--gold-dark) 40%, var(--gold) 80%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+    }
+
+    /* Subheadline */
+    .subheadline {
+      font-size: clamp(16px, 2.2vw, 20px);
+      line-height: 1.65;
+      color: var(--muted);
+      max-width: 620px;
+      margin-bottom: 40px;
+    }
+
+    /* CTA Buttons */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg);
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 32px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: box-shadow 0.25s, transform 0.2s;
+      position: relative;
+    }
+    .btn-primary:hover {
+      box-shadow: 0 0 40px rgba(216,186,104,0.5);
+      transform: scale(1.03);
+    }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary svg  { width: 16px; height: 16px; fill: var(--bg); }
+
+    /* Trust badges */
+    .trust-badges {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 32px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .badge-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #34d399;
+      display: inline-block;
+      margin-right: 6px;
+    }
+    .badge-sep {
+      width: 1px; height: 16px;
+      background: rgba(229,231,235,0.15);
+    }
+
+    /* ════════════════════════════════════════
+       MEDIA SECTION
+    ════════════════════════════════════════ */
+    .media-section { padding: 0 24px 80px; }
+    .media-section .container { max-width: 900px; }
+
+    .video-wrapper {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(229,231,235,0.1);
+      box-shadow: 0 8px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(216,186,104,0.08);
+      background: var(--card);
+      position: relative;
+      padding-bottom: 56.25%;
+    }
+    .video-thumb {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--bg) 0%, #0F1B2D 60%, #0B1526 100%);
+    }
+    .video-thumb-glow {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, rgba(216,186,104,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .play-btn-wrap {
+      position: relative;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 20px;
+      z-index: 1;
+    }
+    .play-btn-halo {
+      position: absolute;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: rgba(229,209,154,0.18);
+      filter: blur(20px);
+      transition: transform 0.4s;
+    }
+    .video-thumb:hover .play-btn-halo { transform: scale(1.5); }
+    .play-btn {
+      position: relative;
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 40px rgba(216,186,104,0.4);
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+    .video-thumb:hover .play-btn {
+      box-shadow: 0 0 56px rgba(216,186,104,0.65);
+      transform: scale(1.06);
+    }
+    .play-btn svg { width: 30px; height: 30px; fill: var(--bg); margin-left: 4px; }
+    .play-label { text-align: center; }
+    .play-label p { color: var(--text); font-weight: 600; font-size: 17px; }
+    .play-label span { color: var(--muted); font-size: 13px; }
+
+    .video-thumb-footer {
+      position: absolute; bottom: 20px; left: 20px; right: 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .live-dot {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--muted);
+    }
+    .live-dot span {
+      width: 8px; height: 8px;
+      border-radius: 50%; background: #34d399;
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+
+    .video-embed { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .stat-card {
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; padding: 24px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(229,231,235,0.08);
+      background: rgba(15,27,45,0.5);
+    }
+    .stat-icon { color: var(--gold); margin-bottom: 10px; }
+    .stat-icon svg { width: 20px; height: 20px; stroke: var(--gold); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .stat-value { font-size: 26px; font-weight: 700; color: var(--text); }
+    .stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    /* Supporting text */
+    .media-copy { margin-top: 48px; text-align: center; max-width: 700px; margin-inline: auto; }
+    .media-copy h2 { font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: var(--text); margin-bottom: 16px; }
+    .media-copy h2 em { font-style: normal; color: var(--gold); }
+    .media-copy p { font-size: 16px; line-height: 1.75; color: var(--muted); }
+
+    /* ════════════════════════════════════════
+       DIVIDER
+    ════════════════════════════════════════ */
+    .divider { max-width: 800px; margin: 0 auto; padding: 24px; }
+    .divider-inner {
+      display: flex; align-items: center; gap: 20px;
+    }
+    .divider-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(to right, transparent, rgba(216,186,104,0.28), transparent);
+    }
+    .divider-dot {
+      width: 6px; height: 6px; flex-shrink: 0;
+      border-radius: 50%; background: var(--gold); opacity: 0.5;
+    }
+
+    /* ════════════════════════════════════════
+       FEATURES SECTION
+    ════════════════════════════════════════ */
+    .features-section { padding: 64px 24px 80px; }
+
+    .features-header { text-align: center; margin-bottom: 56px; }
+    .features-label {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 14px;
+    }
+    .features-h2 {
+      font-size: clamp(28px, 4.5vw, 46px);
+      font-weight: 800; color: var(--text); line-height: 1.1;
+    }
+    .features-h2 em { font-style: normal; color: var(--gold); }
+    .features-sub {
+      font-size: 17px; color: var(--muted);
+      margin-top: 14px; max-width: 480px; margin-inline: auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .feature-card {
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px 28px;
+      display: flex; flex-direction: column; gap: 0;
+      transition: transform 0.25s;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute; inset: -1px;
+      border-radius: 20px;
+      border: 1px solid rgba(216,186,104,0.08);
+      pointer-events: none;
+    }
+    .feature-card:hover { transform: translateY(-4px); }
+    .feature-card:nth-child(1) { animation: pulseGlow 3.2s ease-in-out infinite; }
+    .feature-card:nth-child(2) { animation: pulseGlow 3.2s ease-in-out 1.07s infinite; }
+    .feature-card:nth-child(3) { animation: pulseGlow 3.2s ease-in-out 2.13s infinite; }
+
+    .feature-icon-wrap {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(229,209,154,0.14), rgba(216,186,104,0.07));
+      border: 1px solid rgba(216,186,104,0.22);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .feature-icon-wrap svg {
+      width: 20px; height: 20px;
+      stroke: var(--gold); fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .feature-title {
+      font-size: 18px; font-weight: 700;
+      color: var(--text); margin-bottom: 12px;
+    }
+    .feature-desc {
+      font-size: 14px; line-height: 1.7;
+      color: var(--muted); flex: 1;
+    }
+    .feature-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 500;
+      color: var(--gold);
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(229,231,235,0.08);
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s;
+      background: none; border-left: none; border-right: none; border-bottom: none;
+    }
+    .feature-link:hover { color: var(--gold-dark); }
+    .feature-link svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s; }
+    .feature-link:hover svg { transform: translateX(3px); }
+
+    .features-cta {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 14px;
+      margin-top: 56px;
+    }
+    .features-cta p { font-size: 13px; color: var(--muted); }
+
+    /* ════════════════════════════════════════
+       FOOTER
+    ════════════════════════════════════════ */
+    .footer {
+      border-top: 1px solid rgba(229,231,235,0.06);
+      padding: 36px 24px;
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; flex-wrap: wrap;
+      align-items: center; justify-content: space-between;
+      gap: 16px;
+    }
+    .footer-logo {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 600; color: var(--text);
+    }
+    .footer-logo-icon {
+      width: 24px; height: 24px; border-radius: 6px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex; align-items: center; justify-content: center;
+    }
+    .footer-logo-icon svg { width: 14px; height: 14px; fill: var(--bg); }
+    .footer-copy { font-size: 12px; color: var(--muted); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 12px; color: var(--muted);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+
+    /* ════════════════════════════════════════
+       RESPONSIVE
+    ════════════════════════════════════════ */
+    @media (max-width: 900px) {
+      .features-grid { grid-template-columns: 1fr; max-width: 480px; margin-inline: auto; }
+      .stats-grid    { grid-template-columns: 1fr; max-width: 360px; margin-inline: auto; margin-top: 20px; }
+    }
+    @media (max-width: 640px) {
+      .header { padding: 56px 20px 48px; }
+      .badge-sep { display: none; }
+      .trust-badges { flex-direction: column; gap: 10px; }
+      .footer-inner { flex-direction: column; text-align: center; }
+      .footer-links { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  <div class="glow-tr"></div>
+  <div class="glow-bl"></div>
+
+  <!-- ══════════ HEADER ══════════ -->
+  <header class="header">
+    <div class="header-glow"></div>
+    <div class="header-inner">
+
+      <div class="logo-row fade-in">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+        </div>
+        <div class="logo-text">SPRK <span>Network</span></div>
+      </div>
+
+      <p class="pre-headline fade-in-up delay-1">Welcome to SPRK Network</p>
+
+      <h1 class="h1 fade-in-up delay-2">
+        Build Wealth.<br>
+        <span class="h1-gold">Ignite Your Future.</span>
+      </h1>
+
+      <p class="subheadline fade-in-up delay-3">
+        SPRK Network is the premier platform connecting ambitious professionals with curated financial
+        opportunities, expert mentorship, and a thriving community built for long-term success.
+      </p>
+
+      <div class="fade-in-up delay-4">
+        <a href="#signup" class="btn-primary">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Start Today
+        </a>
+      </div>
+
+      <div class="trust-badges fade-in delay-6">
+        <span><span class="badge-dot"></span>No credit card required</span>
+        <div class="badge-sep"></div>
+        <span><span class="badge-dot"></span>Free to get started</span>
+        <div class="badge-sep"></div>
+        <span><span class="badge-dot"></span>Cancel anytime</span>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ══════════ MEDIA SECTION ══════════ -->
+  <section class="media-section">
+    <div class="container">
+
+      <div class="video-wrapper" id="video-wrapper">
+        <div class="video-thumb" id="video-thumb" onclick="playVideo()">
+          <div class="video-thumb-glow"></div>
+          <div class="play-btn-wrap">
+            <div class="play-btn-halo"></div>
+            <div class="play-btn">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 3l14 9-14 9V3z"/></svg>
+            </div>
+            <div class="play-label">
+              <p>Watch the SPRK Network Story</p>
+              <span>2 minutes — discover what makes us different</span>
+            </div>
+          </div>
+          <div class="video-thumb-footer">
+            <div class="live-dot"><span></span> HD Quality</div>
+            <span style="font-size:12px;color:var(--muted);">1:47</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+          </div>
+          <div class="stat-value">12,000+</div>
+          <div class="stat-label">Active Members</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="stat-value">$2.4B+</div>
+          <div class="stat-label">Community Wealth Built</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="stat-value">98%</div>
+          <div class="stat-label">Member Satisfaction</div>
+        </div>
+      </div>
+
+      <div class="media-copy">
+        <h2>Everything you need to <em>accelerate your growth</em></h2>
+        <p>
+          SPRK Network brings together exclusive financial insights, real-time market intelligence, and
+          a community of high-performing individuals. Whether you're just starting your wealth-building
+          journey or looking to scale an existing portfolio, our platform gives you the tools, network,
+          and knowledge to move faster and smarter than ever before.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════ DIVIDER ══════════ -->
+  <div class="divider">
+    <div class="divider-inner">
+      <div class="divider-line"></div>
+      <div class="divider-dot"></div>
+      <div class="divider-line"></div>
+    </div>
+  </div>
+
+  <!-- ══════════ FEATURES SECTION ══════════ -->
+  <section class="features-section">
+    <div class="container">
+
+      <div class="features-header">
+        <p class="features-label">The SPRK Advantage</p>
+        <h2 class="features-h2">Now <em>WHY</em> SPRK Network?</h2>
+        <p class="features-sub">Three core pillars that separate SPRK members from the rest of the market.</p>
+      </div>
+
+      <div class="features-grid">
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <div class="feature-title">Curated Investment Intelligence</div>
+          <div class="feature-desc">
+            Access hand-picked financial opportunities reviewed by our expert team. From emerging markets
+            to proven wealth strategies, get the insights that top investors rely on — delivered directly
+            to your dashboard.
+          </div>
+          <button class="feature-link">
+            Learn more
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="feature-title">Elite Peer Network</div>
+          <div class="feature-desc">
+            Connect with thousands of driven professionals who are actively building wealth. Share wins,
+            get feedback, and collaborate with members who are on the same path — your network is your
+            net worth.
+          </div>
+          <button class="feature-link">
+            Learn more
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="feature-title">Exclusive Member Resources</div>
+          <div class="feature-desc">
+            Unlock members-only masterclasses, live Q&amp;A sessions with industry experts, and a growing
+            library of actionable playbooks. Everything designed to compress your learning curve and
+            accelerate results.
+          </div>
+          <button class="feature-link">
+            Learn more
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+
+      </div>
+
+      <div class="features-cta">
+        <a href="#signup" class="btn-primary">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Start Today
+        </a>
+        <p>Join 12,000+ members already building their future</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <div class="footer-logo-icon">
+          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        SPRK Network
+      </div>
+      <p class="footer-copy">&copy; <span id="year"></span> SPRK Network. All rights reserved.</p>
+      <nav class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  function playVideo() {
+    var wrapper = document.getElementById('video-wrapper');
+    var thumb   = document.getElementById('video-thumb');
+    thumb.style.display = 'none';
+    var iframe = document.createElement('iframe');
+    iframe.className = 'video-embed';
+    iframe.src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1';
+    iframe.title = 'SPRK Network Introduction';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+    wrapper.appendChild(iframe);
+  }
+
+  /* Intersection Observer for scroll-triggered fade-ins */
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.style.animationPlayState = 'running';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.feature-card, .stat-card, .media-copy').forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.animation = 'fadeInUp 0.7s ease-out forwards paused';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
