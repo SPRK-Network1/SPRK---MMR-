@@ -1,3 +1,5 @@
+
+index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -972,9 +974,10 @@
     thumb.style.display = 'none';
     var iframe = document.createElement('iframe');
     iframe.className = 'video-embed';
-    iframe.src = 'https://www.youtube.com/embed/8p2KB9Kuf6E?si=HNTlxYDn83YETW-r';
-    iframe.title = 'SPRK Network Introduction';
-    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.src = 'https://player.vimeo.com/video/1182150252?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1';
+    iframe.title = 'SPRK Network Story';
+    iframe.allow = 'autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media';
+    iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
     iframe.allowFullscreen = true;
     wrapper.appendChild(iframe);
   }
