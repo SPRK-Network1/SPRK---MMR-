@@ -478,7 +478,32 @@
     }
     .feature-link:hover svg { transform: translateX(3px); }
 
-    /* ════════════════════════════════════════
+     /* ── VIP Carousel ── */
+    .vip-carousel-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+    /* Hide VIP dots on desktop */
+    @media (min-width: 769px) {
+      .vip-carousel-dots { display: none; }
+      .vip-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        transform: none !important;
+        flex-wrap: unset;
+      }
+      .vip-grid .vip-card {
+        flex: unset;
+      }
+      .vip-card:last-child {
+        grid-column: 1 / -1;
+        max-width: 600px;
+        margin-inline: auto;
+        width: 100%;
+      }
+    }
+
+    /* ═══════════════════════════════════════
        VIP SECTION
     ════════════════════════════════════════ */
     .vip-section { padding: 0 24px 80px; position: relative; }
@@ -506,13 +531,6 @@
       gap: 14px;
       position: relative;
       z-index: 1;
-    }
-    /* 5th card spans full width on desktop */
-    .vip-card:last-child {
-      grid-column: 1 / -1;
-      max-width: 600px;
-      margin-inline: auto;
-      width: 100%;
     }
 
     .vip-card {
@@ -643,12 +661,7 @@
       display: flex; align-items: center; gap: 8px;
       font-size: 14px; font-weight: 600; color: var(--text);
     }
-    .footer-logo-icon {
-      width: 24px; height: 24px; border-radius: 6px;
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-      display: flex; align-items: center; justify-content: center;
-    }
-    .footer-logo-icon svg { width: 14px; height: 14px; fill: var(--bg); }
+
     .footer-copy { font-size: 12px; color: var(--muted); }
     .footer-links { display: flex; gap: 24px; }
     .footer-links a {
@@ -663,8 +676,12 @@
     @media (max-width: 900px) {
       .features-grid { grid-template-columns: 1fr; max-width: 480px; margin-inline: auto; }
       .stats-grid    { grid-template-columns: 1fr; max-width: 360px; margin-inline: auto; margin-top: 20px; }
-      .vip-grid      { grid-template-columns: 1fr; }
-      .vip-card:last-child { grid-column: auto; max-width: 100%; }
+      .vip-grid {
+        display: flex !important;
+        gap: 20px;
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+      .vip-card:last-child { grid-column: auto; max-width: unset; margin-inline: unset; }
     }
     @media (max-width: 640px) {
       .header { padding: 56px 20px 48px; }
@@ -700,11 +717,21 @@
       .play-btn-halo { width: 80px; height: 80px; }
       /* Carousel: show one card at a time on mobile */
       .features-grid .feature-card {
-        flex: 0 0 calc(100vw - 64px);
+        flex: 0 0 calc(100vw - 96px);
+        min-width: 0;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+      }
+      /* VIP carousel: show one card at a time on mobile */
+      .vip-grid .vip-card {
+        flex: 0 0 calc(100vw - 96px);
+        min-width: 0;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
       }
     }
   </style>
-<script type='text/javascript' src='https://private-us-east-1.manuscdn.com/Wok26PbMcMBE1eQwGkLAM2X63cKz-0fVKE0MUyzd4flJT_bYEpiymkCbsvVmYR2MR8IqQXlx7Vl_53QWZUZeYnepnVQCbii7w8kyHY7Ah6H-H0m6NJ1q5n2D0JnArisxnAnk5VwmeyJf4gK2auiUzYwlnD7agAdW2QAAb8eXPRTlhoXym1gzZDusFzbw7BScXfRvlbnl-EBlIlyK3OLE0XCWT0B10QciByJ0mw-VagSd0dYIimj6VpbFgWlNlZHlMagixaFG3OfkYHl_f0GQyltTh6SzTdcMsPvrJ7EUsWgZ9YKc5F3aQWt7FabC14hOeru71fIVD80IiIBgpmR5DAXZedXdj8ZhqDMqYSXx9bvSdQb7_QzXqWrNJuYLREc8XUy_bGls3wQSkrlZx_tNdmMr3PAKBxqHs1GfY77zaul9e6_TDM5Xtj5fQh9O1FGfoNEiGb8a7P43yLebG6KqKwDi5W1BgYznA26Yi2fbedeX64qZXu7a0H5v_zBU3TChNKpAPudM2fKZ_LIM2L7Kgk0yIVIrttN1f2AIF2eDJn46Nsx2P3knrfVZwnyOl1GfQ7hqK2sisD804DRCxMHMSYDjmGiNnNZ4xbmziwXCLBVq6HuhRW6ekYyiaDXt5Z4QNlXfrUORmDs_p7u2YqJMdZs2CZiUpFgP3jA-TjWhWCljIHK7Wlczm-9DkgPpJ7OSp-nXiUAiZ51maZHAVR5cXXyviOWfQl050jE5fc76xNwv-2zHqLC1HPo-zI-IyQYPDoMMFEfBYpEG2ujgOdPjJt4QqIizjpyCrvJohMMXEh1JSNFJXXoCiZmU7D_pcs562cskZ7lKp4BTZgVzA4NBMOBde1F5ovz2Xd-brNEhJjvvbH_ax-8pa2I_4MXmwUJOJMeLM4s0PKR6Zefm2RbkAUv2qqZdZsaEQP9sFTBHG1k4DUbnZeTMo8UUUcHt2o55zt7gieE-F8VlsV2vWGw02ogqIdQUgCCVnW86KfmCs6mhUT9pxTvIGz3CQoCPx_ywjpnVgE-rC1ti16CK5sZjANscKIthuuHBup737fk_a6CT4h-z4QIfIKHIlPbTC0B4KJ41MUylcv-s1rgCc7dZfmegKQYb-_wWfyoM08B1q-Fi8ysNdrhaUwzxAQe0-MhNYlYPAvhcneokncmiaQMNWFo36a5bC5UmffBiRUFoN4SF2s1Vq-jqUPggDP_B7v73Zpak0h7Qt2pYEZ9oIAc-AOyPm_9PcpKFd9834e0mt_50wSCpQGv9oe2wdtXSgVtHqFWsTf29rJPthgjnHp9NoLhzdhD1LKkl4Yz-sXO3TUSUimBNl9UbEXTvJ9cgilC-K0NokoA_v9DkBWA2Zovn006JJaZyO_L3J0MWWFML3zb1HxN6cIhIAf61Wd_sfakmWx-mGtlNpgp6Iu2aSSpuZV3UJb8BFiYw4UYZUY4JocClfqQrtkJsBo_fDFYRjoYAKkIwPRHjHAWLlTTGMeiFjA5GGVkfOL1DU9rDJxVoZff3wI5oqw2qqndAQQtobVR1HEjAxJqETLvF_QKCn56ogvXQVXXhzLs32d1MGEsakps2mg'></script></head>
+<script type='text/javascript' src='https://private-us-east-1.manuscdn.com/s-mm0YJdNueMwMYK9DLQfEmAav-YlFw5b_VGYZnhH7coILRrO4KgLfBeYCqBQyfrCO4S53OsZJVZdUuexC-Fz-eY_b_L865K9BYAzMENXiMx2SipcDCpBReJWsyhRoDVHKJAezb3KWbDPgWrA6GIzIA0Hwq7-bKbYxQTw4ywYxjAYrDwMpaLEFFB4eRv7dV_ScxtA3ARTxgfAeugq3HApn6W1idSefk5xxU91tWL9ckGJBzbKGDdeiUpzgZK7p1vFM1gClrkpoxq_0U12YGPIcJ9aeGRs3SqQVOHd_PyuG0YpCRli9LxzeFrevMNyxkR0g6Q1jsK9ZUO2vhxaa2X9ectSm2EvOW6VW_IemIaOtSDlV_uzs8IfT_MKHCuR8BQRVP4X0htYwP4U214J2D1ndayLvNY2NEZhKIDnxjRt0c-s4D5tlBhKB8T_oCvFT66OQ8Fys4ALbvVJx1qJmt6CvOfBkdnERMYzGMmJk4S4BGTx_PXefn5jfrEhtJNTcAlzXYO5pjZ4rl6Bx88fPPJJ1kUCnT1aJWFjFfzoNEvp_piQi3h-2GacePMZEIS8JGrvgMN-QOH2zJr20kGNWHzHqhBS9M6c5thGbJU5f4zkc2pQwwKn4akjB08K4Kx5iqmKrGD4JzrIKGgxuAuIub2ZWBM0FUcbt6YD71u1ppCRnxromoF-V1yGBzK1VasOAd_AXHDr-e1hR9cUviRjaBkr27VIBx_JHe_Uibsw39BFmR7BdnpLtUq2elHI3_mUclrf4B3w3AUTqZKjYjxAlRn8KuPE7QjpNdzVKBgeeH6Ngo--aDBscjzfdZ-xE_lfM7BkO9ij07og5b7Zuj7uE0H30kTseSGy0rp0sVd-rsAppXaAFcEBx1a4GjHoCXLGJ0HTKIjIdlVVfVYFGPJZT4p8__nkvreoNqsfuvVPa_1IrW-ZVQrg0UU-OyaM_JWhPJzBKJG-TarwmulDiuPcS8AL29IFNzcC94OgrlCRl9Kv-QygwUUF3FT3FB6LzBkWsT3r_sl2FI18YWNB1UACIw3cusosPsk6wvZLykVtre5gTaRpSLNWp1A4QEbRMaPMTNBMQTTx8VdFhcUch23xDRvAe7byXNuYFJx48yDm-Jiyf07sA22YuU6B-k4lH4jJGameOzbby0xDIpSwfpcVgz0cvi-puoKZPQNd4JYvevheP6kUUXrxv_-jA5SnsrSDDRuwTlxnT_JKDvf4Yx2xS81S25LuTFZLXPRWaYFDLtc03F4y1h3DqrOhd4swASV4NMBb-Ax63r5z4Ig4xkQX6OnTTDvtVTrgUgodE2Xr9xnF39ne1sOPqo3V8P39x8kJaJWkvmYLZ-tGxPMJ9QsqMDQdlzYLx8w5ccG8nYUWoJQPWPgNWbC8uJEYS6hev2RhJvLHWjQ8gjHTI1_0SOuWwRJ69okqdPE1m8YLa5E3eGilS0uJYGbWDuU1HgqvPG5ovR5CXq9mqmZOOEJBsJtKWEwELnO3N55wZD08f4fKA-POKM5gc6H5x-pMvlhIP-uLQ8ERh1ZYPQCcovHFZCTDk6P7efWtpYJQSmZNntvLvGvlhj01A'></script></head>
 <body>
 
 <div class="page">
@@ -886,6 +913,13 @@
         </div>
       </div>
 
+      <div style="display:flex;justify-content:center;margin-top:36px;">
+        <a href="https://www.fanbasis.com/agency-checkout/sprk-network/60XK9" target="_blank" class="btn-primary btn-primary-lg">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Get Started
+        </a>
+      </div>
+
     </div>
   </section>
 
@@ -908,7 +942,8 @@
         <p class="vip-sub">Everything you need to scale faster, with zero bottlenecks.</p>
       </div>
 
-      <div class="vip-grid">
+      <div class="vip-carousel-wrap" id="vip-carousel-wrap">
+      <div class="vip-grid" id="vip-grid">
 
         <div class="vip-card">
           <div class="vip-badge">
@@ -971,6 +1006,21 @@
         </div>
 
       </div>
+      <div class="carousel-dots vip-carousel-dots" id="vip-carousel-dots">
+        <button class="carousel-dot active" onclick="goToVipSlide(0)"></button>
+        <button class="carousel-dot" onclick="goToVipSlide(1)"></button>
+        <button class="carousel-dot" onclick="goToVipSlide(2)"></button>
+        <button class="carousel-dot" onclick="goToVipSlide(3)"></button>
+        <button class="carousel-dot" onclick="goToVipSlide(4)"></button>
+      </div>
+      </div>
+
+      <div style="display:flex;justify-content:center;margin-top:36px;">
+        <a href="https://www.fanbasis.com/agency-checkout/sprk-network/60XK9" target="_blank" class="btn-primary btn-primary-lg">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Get Started
+        </a>
+      </div>
 
     </div>
   </section>
@@ -1005,9 +1055,7 @@
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-logo">
-        <div class="footer-logo-icon">
-          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-        </div>
+        <img src="images/sprknetwork-logo.png" alt="SPRK Network" style="width:24px;height:24px;border-radius:6px;object-fit:contain;">
         SPRK Network
       </div>
       <p class="footer-copy">&copy; <span id="year"></span> SPRK Network. All rights reserved.</p>
@@ -1092,8 +1140,43 @@
     if (window.innerWidth >= 769) {
       var grid = document.getElementById('features-grid');
       if (grid) grid.style.transform = '';
+      var vipGrid = document.getElementById('vip-grid');
+      if (vipGrid) vipGrid.style.transform = '';
     }
   });
+
+  /* ── VIP Carousel (mobile only) ── */
+  var vipCurrentSlide = 0;
+  var vipTotalSlides = 5;
+  var vipTouchStartX = 0;
+  var vipTouchEndX = 0;
+
+  function goToVipSlide(index) {
+    if (window.innerWidth >= 769) return;
+    vipCurrentSlide = ((index % vipTotalSlides) + vipTotalSlides) % vipTotalSlides;
+    var grid = document.getElementById('vip-grid');
+    var wrap = document.getElementById('vip-carousel-wrap');
+    var cardWidth = wrap.offsetWidth;
+    grid.style.transform = 'translateX(-' + (vipCurrentSlide * (cardWidth + 20)) + 'px)';
+    document.querySelectorAll('#vip-carousel-dots .carousel-dot').forEach(function(dot, i) {
+      dot.classList.toggle('active', i === vipCurrentSlide);
+    });
+  }
+
+  var vipCarouselWrap = document.getElementById('vip-carousel-wrap');
+  if (vipCarouselWrap) {
+    vipCarouselWrap.addEventListener('touchstart', function(e) {
+      vipTouchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    vipCarouselWrap.addEventListener('touchend', function(e) {
+      vipTouchEndX = e.changedTouches[0].screenX;
+      var diff = vipTouchStartX - vipTouchEndX;
+      if (Math.abs(diff) > 40) {
+        if (diff > 0) goToVipSlide(vipCurrentSlide + 1);
+        else goToVipSlide(vipCurrentSlide - 1);
+      }
+    }, { passive: true });
+  }
 </script>
 
 </body>
