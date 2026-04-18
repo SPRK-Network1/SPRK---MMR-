@@ -373,12 +373,52 @@
       margin-top: 14px; max-width: 480px; margin-inline: auto;
     }
 
+    /* ── Features Carousel ── */
+    .features-carousel-wrap {
+      position: relative;
+      overflow: hidden;
+    }
     .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: flex;
       gap: 20px;
       position: relative;
       z-index: 1;
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .features-grid .feature-card {
+      flex: 0 0 calc(33.333% - 14px);
+      min-width: 0;
+    }
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 28px;
+    }
+    .carousel-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(229,209,154,0.25);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .carousel-dot.active {
+      background: var(--gold);
+      transform: scale(1.25);
+    }
+    /* Hide dots on desktop */
+    @media (min-width: 769px) {
+      .carousel-dots { display: none; }
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        transform: none !important;
+      }
+      .features-grid .feature-card {
+        flex: unset;
+      }
     }
 
     .feature-card {
@@ -654,9 +694,17 @@
       .video-thumb-footer { bottom: 10px; }
       .play-label p    { font-size: 15px; }
       .play-label span { font-size: 12px; }
+      /* Shrink play button on mobile */
+      .play-btn { width: 56px; height: 56px; }
+      .play-btn svg { width: 20px; height: 20px; }
+      .play-btn-halo { width: 80px; height: 80px; }
+      /* Carousel: show one card at a time on mobile */
+      .features-grid .feature-card {
+        flex: 0 0 calc(100vw - 64px);
+      }
     }
   </style>
-</head>
+<script type='text/javascript' src='https://private-us-east-1.manuscdn.com/Wok26PbMcMBE1eQwGkLAM2X63cKz-0fVKE0MUyzd4flJT_bYEpiymkCbsvVmYR2MR8IqQXlx7Vl_53QWZUZeYnepnVQCbii7w8kyHY7Ah6H-H0m6NJ1q5n2D0JnArisxnAnk5VwmeyJf4gK2auiUzYwlnD7agAdW2QAAb8eXPRTlhoXym1gzZDusFzbw7BScXfRvlbnl-EBlIlyK3OLE0XCWT0B10QciByJ0mw-VagSd0dYIimj6VpbFgWlNlZHlMagixaFG3OfkYHl_f0GQyltTh6SzTdcMsPvrJ7EUsWgZ9YKc5F3aQWt7FabC14hOeru71fIVD80IiIBgpmR5DAXZedXdj8ZhqDMqYSXx9bvSdQb7_QzXqWrNJuYLREc8XUy_bGls3wQSkrlZx_tNdmMr3PAKBxqHs1GfY77zaul9e6_TDM5Xtj5fQh9O1FGfoNEiGb8a7P43yLebG6KqKwDi5W1BgYznA26Yi2fbedeX64qZXu7a0H5v_zBU3TChNKpAPudM2fKZ_LIM2L7Kgk0yIVIrttN1f2AIF2eDJn46Nsx2P3knrfVZwnyOl1GfQ7hqK2sisD804DRCxMHMSYDjmGiNnNZ4xbmziwXCLBVq6HuhRW6ekYyiaDXt5Z4QNlXfrUORmDs_p7u2YqJMdZs2CZiUpFgP3jA-TjWhWCljIHK7Wlczm-9DkgPpJ7OSp-nXiUAiZ51maZHAVR5cXXyviOWfQl050jE5fc76xNwv-2zHqLC1HPo-zI-IyQYPDoMMFEfBYpEG2ujgOdPjJt4QqIizjpyCrvJohMMXEh1JSNFJXXoCiZmU7D_pcs562cskZ7lKp4BTZgVzA4NBMOBde1F5ovz2Xd-brNEhJjvvbH_ax-8pa2I_4MXmwUJOJMeLM4s0PKR6Zefm2RbkAUv2qqZdZsaEQP9sFTBHG1k4DUbnZeTMo8UUUcHt2o55zt7gieE-F8VlsV2vWGw02ogqIdQUgCCVnW86KfmCs6mhUT9pxTvIGz3CQoCPx_ywjpnVgE-rC1ti16CK5sZjANscKIthuuHBup737fk_a6CT4h-z4QIfIKHIlPbTC0B4KJ41MUylcv-s1rgCc7dZfmegKQYb-_wWfyoM08B1q-Fi8ysNdrhaUwzxAQe0-MhNYlYPAvhcneokncmiaQMNWFo36a5bC5UmffBiRUFoN4SF2s1Vq-jqUPggDP_B7v73Zpak0h7Qt2pYEZ9oIAc-AOyPm_9PcpKFd9834e0mt_50wSCpQGv9oe2wdtXSgVtHqFWsTf29rJPthgjnHp9NoLhzdhD1LKkl4Yz-sXO3TUSUimBNl9UbEXTvJ9cgilC-K0NokoA_v9DkBWA2Zovn006JJaZyO_L3J0MWWFML3zb1HxN6cIhIAf61Wd_sfakmWx-mGtlNpgp6Iu2aSSpuZV3UJb8BFiYw4UYZUY4JocClfqQrtkJsBo_fDFYRjoYAKkIwPRHjHAWLlTTGMeiFjA5GGVkfOL1DU9rDJxVoZff3wI5oqw2qqndAQQtobVR1HEjAxJqETLvF_QKCn56ogvXQVXXhzLs32d1MGEsakps2mg'></script></head>
 <body>
 
 <div class="page">
@@ -688,7 +736,7 @@
       </p>
 
       <div class="fade-in-up delay-4">
-        <a href="#signup" class="btn-primary">
+        <a href="https://www.fanbasis.com/agency-checkout/sprk-network/60XK9" target="_blank" class="btn-primary">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
           Start Today
         </a>
@@ -759,8 +807,14 @@
           SPRK Network brings together exclusive tested angles, real-time market evaluation, and
           a community of high-performing individuals. Whether you're just starting your online
           journey or looking to scale an existing portfolio, our platform gives you the tools, network,
-          and knowledge to move faster and smarter than ever before, It's that simple. 
+          and knowledge to move faster and smarter than ever before, It's that simple.
         </p>
+        <div style="display:flex;justify-content:center;margin-top:32px;">
+          <a href="https://www.fanbasis.com/agency-checkout/sprk-network/60XK9" target="_blank" class="btn-primary btn-primary-lg">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Get Started
+          </a>
+        </div>
       </div>
 
     </div>
@@ -785,56 +839,51 @@
         <p class="features-sub">Three core pillars that separate SPRK members from the rest of the market.</p>
       </div>
 
-      <div class="features-grid">
+      <div class="features-carousel-wrap" id="features-carousel-wrap">
+        <div class="features-grid" id="features-grid">
 
-        <div class="feature-card">
-          <div class="feature-icon-wrap">
-            <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <div class="feature-card">
+            <div class="feature-icon-wrap">
+              <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <div class="feature-title">Advertisment Friendly</div>
+            <div class="feature-desc">
+              Access hand-picked financial opportunities reviewed by our expert team. From emerging markets
+              to proven wealth strategies, get the insights that top investors rely on — delivered directly
+              to your dashboard.
+            </div>
           </div>
-          <div class="feature-title">Advertisment Friendly</div>
-          <div class="feature-desc">
-            Access hand-picked financial opportunities reviewed by our expert team. From emerging markets
-            to proven wealth strategies, get the insights that top investors rely on — delivered directly
-            to your dashboard.
+
+          <div class="feature-card">
+            <div class="feature-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="feature-title">Elite Peer Network</div>
+            <div class="feature-desc">
+              Connect with hundreds of driven affiliates who are working on consistent results. Share wins,
+              get feedback, and collaborate with members who are on the same path — and building a substantial winning
+              creative portfolio.
+            </div>
           </div>
-          <button class="feature-link">
-            Learn more
-            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </button>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrap">
+              <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <div class="feature-title">Exclusive Member Resources</div>
+            <div class="feature-desc">
+              Unlock members-only masterclasses, live Q&amp;A sessions with industry experts, and a growing
+              library of actionable playbooks. Everything designed to compress your learning curve and
+              accelerate results.
+            </div>
+          </div>
+
         </div>
-
-        <div class="feature-card">
-          <div class="feature-icon-wrap">
-            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </div>
-          <div class="feature-title">Elite Peer Network</div>
-          <div class="feature-desc">
-            Connect with hundreds of driven affiliates who are working on consistent results. Share wins,
-            get feedback, and collaborate with members who are on the same path — and building a substantial winning 
-            creative portfolio. 
-          </div>
-          <button class="feature-link">
-            Learn more
-            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </button>
+        <div class="carousel-dots" id="carousel-dots">
+          <button class="carousel-dot active" onclick="goToSlide(0)"></button>
+          <button class="carousel-dot" onclick="goToSlide(1)"></button>
+          <button class="carousel-dot" onclick="goToSlide(2)"></button>
         </div>
-
-        <div class="feature-card">
-          <div class="feature-icon-wrap">
-            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="feature-title">Exclusive Member Resources</div>
-          <div class="feature-desc">
-            Unlock members-only masterclasses, live Q&amp;A sessions with industry experts, and a growing
-            library of actionable playbooks. Everything designed to compress your learning curve and
-            accelerate results.
-          </div>
-          <button class="feature-link">
-            Learn more
-            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </button>
-        </div>
-
       </div>
 
     </div>
@@ -937,7 +986,7 @@
         Join the network, unlock the VIP advantages, and start scaling today.
       </p>
       <div class="pricing-cta-wrap">
-        <a href="#signup" class="btn-primary btn-primary-lg">
+        <a href="https://www.fanbasis.com/agency-checkout/sprk-network/60XK9" target="_blank" class="btn-primary btn-primary-lg">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
           Start Today for $1
         </a>
@@ -1002,6 +1051,48 @@
     el.style.opacity = '0';
     el.style.animation = 'fadeInUp 0.7s ease-out forwards paused';
     observer.observe(el);
+  });
+
+  /* ── Carousel (mobile only) ── */
+  var currentSlide = 0;
+  var totalSlides = 3;
+  var touchStartX = 0;
+  var touchEndX = 0;
+
+  function goToSlide(index) {
+    if (window.innerWidth >= 769) return;
+    /* Loop: wrap around */
+    currentSlide = ((index % totalSlides) + totalSlides) % totalSlides;
+    var grid = document.getElementById('features-grid');
+    var wrap = document.getElementById('features-carousel-wrap');
+    var cardWidth = wrap.offsetWidth;
+    grid.style.transform = 'translateX(-' + (currentSlide * (cardWidth + 20)) + 'px)';
+    document.querySelectorAll('.carousel-dot').forEach(function(dot, i) {
+      dot.classList.toggle('active', i === currentSlide);
+    });
+  }
+
+  var carouselWrap = document.getElementById('features-carousel-wrap');
+  if (carouselWrap) {
+    carouselWrap.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    carouselWrap.addEventListener('touchend', function(e) {
+      touchEndX = e.changedTouches[0].screenX;
+      var diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 40) {
+        /* Always advance — loops back to 0 after last, loops to last before first */
+        if (diff > 0) goToSlide(currentSlide + 1);
+        else goToSlide(currentSlide - 1);
+      }
+    }, { passive: true });
+  }
+
+  window.addEventListener('resize', function() {
+    if (window.innerWidth >= 769) {
+      var grid = document.getElementById('features-grid');
+      if (grid) grid.style.transform = '';
+    }
   });
 </script>
 
