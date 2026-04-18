@@ -314,11 +314,26 @@
 
     .video-embed { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
+    /* ── Stats Carousel ── */
+    .stats-carousel-wrap {
+      position: relative;
+      overflow: hidden;
+      margin-top: 24px;
+    }
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 16px;
-      margin-top: 24px;
+    }
+    /* Hide stats dots on desktop */
+    @media (min-width: 769px) {
+      .stats-carousel-dots { display: none; }
+      .stats-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        transform: none !important;
+      }
+      .stats-grid .stat-card { flex: unset; }
     }
     .stat-card {
       display: flex; flex-direction: column; align-items: center;
@@ -675,7 +690,15 @@
     ════════════════════════════════════════ */
     @media (max-width: 900px) {
       .features-grid { grid-template-columns: 1fr; max-width: 480px; margin-inline: auto; }
-      .stats-grid    { grid-template-columns: 1fr; max-width: 360px; margin-inline: auto; margin-top: 20px; }
+      .stats-grid {
+        display: flex !important;
+        gap: 16px;
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+      .stats-grid .stat-card {
+        flex: 0 0 calc(100vw - 96px);
+        min-width: 0;
+      }
       .vip-grid {
         display: flex !important;
         gap: 20px;
@@ -731,7 +754,7 @@
       }
     }
   </style>
-<script type='text/javascript' src='https://private-us-east-1.manuscdn.com/s-mm0YJdNueMwMYK9DLQfEmAav-YlFw5b_VGYZnhH7coILRrO4KgLfBeYCqBQyfrCO4S53OsZJVZdUuexC-Fz-eY_b_L865K9BYAzMENXiMx2SipcDCpBReJWsyhRoDVHKJAezb3KWbDPgWrA6GIzIA0Hwq7-bKbYxQTw4ywYxjAYrDwMpaLEFFB4eRv7dV_ScxtA3ARTxgfAeugq3HApn6W1idSefk5xxU91tWL9ckGJBzbKGDdeiUpzgZK7p1vFM1gClrkpoxq_0U12YGPIcJ9aeGRs3SqQVOHd_PyuG0YpCRli9LxzeFrevMNyxkR0g6Q1jsK9ZUO2vhxaa2X9ectSm2EvOW6VW_IemIaOtSDlV_uzs8IfT_MKHCuR8BQRVP4X0htYwP4U214J2D1ndayLvNY2NEZhKIDnxjRt0c-s4D5tlBhKB8T_oCvFT66OQ8Fys4ALbvVJx1qJmt6CvOfBkdnERMYzGMmJk4S4BGTx_PXefn5jfrEhtJNTcAlzXYO5pjZ4rl6Bx88fPPJJ1kUCnT1aJWFjFfzoNEvp_piQi3h-2GacePMZEIS8JGrvgMN-QOH2zJr20kGNWHzHqhBS9M6c5thGbJU5f4zkc2pQwwKn4akjB08K4Kx5iqmKrGD4JzrIKGgxuAuIub2ZWBM0FUcbt6YD71u1ppCRnxromoF-V1yGBzK1VasOAd_AXHDr-e1hR9cUviRjaBkr27VIBx_JHe_Uibsw39BFmR7BdnpLtUq2elHI3_mUclrf4B3w3AUTqZKjYjxAlRn8KuPE7QjpNdzVKBgeeH6Ngo--aDBscjzfdZ-xE_lfM7BkO9ij07og5b7Zuj7uE0H30kTseSGy0rp0sVd-rsAppXaAFcEBx1a4GjHoCXLGJ0HTKIjIdlVVfVYFGPJZT4p8__nkvreoNqsfuvVPa_1IrW-ZVQrg0UU-OyaM_JWhPJzBKJG-TarwmulDiuPcS8AL29IFNzcC94OgrlCRl9Kv-QygwUUF3FT3FB6LzBkWsT3r_sl2FI18YWNB1UACIw3cusosPsk6wvZLykVtre5gTaRpSLNWp1A4QEbRMaPMTNBMQTTx8VdFhcUch23xDRvAe7byXNuYFJx48yDm-Jiyf07sA22YuU6B-k4lH4jJGameOzbby0xDIpSwfpcVgz0cvi-puoKZPQNd4JYvevheP6kUUXrxv_-jA5SnsrSDDRuwTlxnT_JKDvf4Yx2xS81S25LuTFZLXPRWaYFDLtc03F4y1h3DqrOhd4swASV4NMBb-Ax63r5z4Ig4xkQX6OnTTDvtVTrgUgodE2Xr9xnF39ne1sOPqo3V8P39x8kJaJWkvmYLZ-tGxPMJ9QsqMDQdlzYLx8w5ccG8nYUWoJQPWPgNWbC8uJEYS6hev2RhJvLHWjQ8gjHTI1_0SOuWwRJ69okqdPE1m8YLa5E3eGilS0uJYGbWDuU1HgqvPG5ovR5CXq9mqmZOOEJBsJtKWEwELnO3N55wZD08f4fKA-POKM5gc6H5x-pMvlhIP-uLQ8ERh1ZYPQCcovHFZCTDk6P7efWtpYJQSmZNntvLvGvlhj01A'></script></head>
+<script type='text/javascript' src='https://private-us-east-1.manuscdn.com/NPdlgTSCd63mdDpbpLzzdcMK0RNhAJUSTlVUxrsDTxwEiI8v-iEblv70UaBKvPrse_7vohQJctSP6M2XadN5Lo-kPLH3akU2fsc1ikJ-Y2jA7FMUK1BQo1kkTeb5TDBSoJOYBgDCqWkKCsQRTlvAungrSnMmNHmgV4JSp2eYQOEXo8hXXr330cr3dpZPrJMoRLFZAvSsCNUOhvvTKp1pahSs3opren0lQf3e2pPrfpA_xvBV44MJtLIXLHPtNyxYmQ2TnQSzTaIOD0_SFbpWT9ZCNp5PCPkodJBBCC2B922ZATP7vdWtjxmnUCnFC4nrbgmhHJ5c630PFkmdGMMXFIoZGjCkCtTL9YduyzlRDgrnZ3TJAPpL4y-IXIPkzf7QJ-JCR3hZgQKb22uwh32Bkc3A9Vqksedh4w5GE6hoJ5-Ns4pghW_NZ-QUP3IW_8fZ1zvtgHp76Fg43OPc_F8I2SUsZiiGy9b-eMAgzyTRG8BNj0ri6mLV1ELOVQP_h0UnpmjPYgA-N80wylNrAluuY7KrigccMOqiKDwY8skb1q0LnhiSX3zWoMxmgoc3ka8eGrk5j6rukKpgvPvu70-nnlkrSIHLKFiFRLCyMcrwErdTzCSdkfrzDSHuWIOsfqGLvzNhOLPfJoxAw4_S0XMufAcL9CNj8NmAAPCaIgEpk_EEkZwCgSWFOm_QBnQAzt1S3gt8iTVa7ejnWUhCeCa6RUHraREQPUp4okFDl3axn28-jyj-BgoVY5pFMok_Faxgx3AK1l7wNQxlxqsmArSfHxsAA9-XriAEFrEzJ70Oglhq4dfgT3QqO7hwnjC7hUl4hzIxAKfw6cVw97eNtN6UFlWfLNOlJKOqtA1j6nEdsQpahzKUnxtF3s8qd8uXaDJkt9CVBNKjzV5hkDSL0EtkqGXeciR0T7sdYaWjDOlbGyvATE2EgBxwIwi7MZ9G3zUu4Bew6lMtd6fC6XPCBaqy3cCJ5n9PDn4YRfPL8_FGgnkzttp1bPaIBQl_y2XK7KR_6gErz0yo1t7P87c3CrVhaesQE6vdx_ZjXeuPk-dxTV_U-CvKEDgKhf4XKKrOPh_8kjtekG1kIlycv0vWvg6fg7hlLxmmZ_s1Qa92aegizyzFVQIjl6FG1T5oQSnSvpKpb3kiXYhgqfafcG8uobE7S43Nz1dZU6wbA-qYgFi2uOTGkbYQqqyH4S2QghQxQWelYNe8CJSEoQJKQiKggufZ6TyX3tSAfHWX2agBQGushG86gyscukwuhSzU6HqZ4CUqkjn2G08xdwgtcnnBPrUQduWPfgaQi8_oswpim2N7bMXuRSLPgReVu7MRazG70yxe65WkC22ERXHM_KSvBb0CKC6E-cw53-U4xIHzgKVO2rHucTrZW0xFUauOgz4cEBg0xNbAodRqtj7LkPiObZ0a-KWXYc4WlE_FFb5P2tJSX7zb8BbXFcV2fwN7RGFkshZvSicF-f_QOj87BCCwobN2QIl8ymxWYFdFxfQzGNJ49507xi7dQFwoUwsun0ZG2qzrhY5Lv6ncKwvrL6LCCxQzBFybR_TWKke_YxJnIqSn_5zGjQ'></script></head>
 <body>
 
 <div class="page">
@@ -804,7 +827,8 @@
         </div>
       </div>
 
-      <div class="stats-grid">
+      <div class="stats-carousel-wrap" id="stats-carousel-wrap">
+      <div class="stats-grid" id="stats-grid">
         <div class="stat-card">
           <div class="stat-icon">
             <svg viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
@@ -826,6 +850,12 @@
           <div class="stat-value">98%</div>
           <div class="stat-label">Member Satisfaction</div>
         </div>
+      </div>
+      <div class="carousel-dots stats-carousel-dots" id="stats-carousel-dots">
+        <button class="carousel-dot active" onclick="goToStatsSlide(0)"></button>
+        <button class="carousel-dot" onclick="goToStatsSlide(1)"></button>
+        <button class="carousel-dot" onclick="goToStatsSlide(2)"></button>
+      </div>
       </div>
 
       <div class="media-copy">
@@ -1055,7 +1085,7 @@
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-logo">
-        <img src="images/sprknetwork-logo.png" alt="SPRK Network" style="width:24px;height:24px;border-radius:6px;object-fit:contain;">
+        <img src="images/Sprknetwork.png" alt="SPRK Network" style="width:24px;height:24px;border-radius:6px;object-fit:contain;">
         SPRK Network
       </div>
       <p class="footer-copy">&copy; <span id="year"></span> SPRK Network. All rights reserved.</p>
@@ -1142,8 +1172,43 @@
       if (grid) grid.style.transform = '';
       var vipGrid = document.getElementById('vip-grid');
       if (vipGrid) vipGrid.style.transform = '';
+      var statsGrid = document.getElementById('stats-grid');
+      if (statsGrid) statsGrid.style.transform = '';
     }
   });
+
+  /* ── Stats Carousel (mobile only) ── */
+  var statsCurrentSlide = 0;
+  var statsTotalSlides = 3;
+  var statsTouchStartX = 0;
+  var statsTouchEndX = 0;
+
+  function goToStatsSlide(index) {
+    if (window.innerWidth >= 769) return;
+    statsCurrentSlide = ((index % statsTotalSlides) + statsTotalSlides) % statsTotalSlides;
+    var grid = document.getElementById('stats-grid');
+    var wrap = document.getElementById('stats-carousel-wrap');
+    var cardWidth = wrap.offsetWidth;
+    grid.style.transform = 'translateX(-' + (statsCurrentSlide * (cardWidth + 16)) + 'px)';
+    document.querySelectorAll('#stats-carousel-dots .carousel-dot').forEach(function(dot, i) {
+      dot.classList.toggle('active', i === statsCurrentSlide);
+    });
+  }
+
+  var statsCarouselWrap = document.getElementById('stats-carousel-wrap');
+  if (statsCarouselWrap) {
+    statsCarouselWrap.addEventListener('touchstart', function(e) {
+      statsTouchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    statsCarouselWrap.addEventListener('touchend', function(e) {
+      statsTouchEndX = e.changedTouches[0].screenX;
+      var diff = statsTouchStartX - statsTouchEndX;
+      if (Math.abs(diff) > 40) {
+        if (diff > 0) goToStatsSlide(statsCurrentSlide + 1);
+        else goToStatsSlide(statsCurrentSlide - 1);
+      }
+    }, { passive: true });
+  }
 
   /* ── VIP Carousel (mobile only) ── */
   var vipCurrentSlide = 0;
