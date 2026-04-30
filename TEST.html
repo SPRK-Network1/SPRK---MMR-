@@ -15,7 +15,7 @@
     <meta property="og:url" content="https://www.sprknetwork.com/checkout" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="SPRK Network VIP Membership" />
-    <meta property="og:description" content="Join the SPRK Network VIP — $1 for 30 days, then $37/month" />
+    <meta property="og:description" content="Join the SPRK Network VIP — $1 for 30 days" />
     <meta property="og:site_name" content="SPRK Network" />
 
     <!-- Favicon (use your own) -->
@@ -90,17 +90,10 @@
             }
         }
 
-        /* ===== TERMS SECTION (below the checkout) ===== */
+        /* ===== TERMS SECTION (below the checkout, after SDK's "By providing card info" text) ===== */
         .terms-section {
-            margin-top: 28px;
+            margin-top: 16px;
             padding: 0 4px;
-        }
-
-        .terms-fanbasis-notice {
-            font-size: 13px;
-            color: #9CA3AF;
-            line-height: 1.6;
-            margin-bottom: 16px;
         }
 
         .terms-checkbox-row {
@@ -133,21 +126,6 @@
 
         .terms-checkbox-row label a:hover {
             text-decoration: underline;
-        }
-
-        /* ===== POWERED BY ===== */
-        .powered-by {
-            text-align: right;
-            margin-top: 12px;
-            font-size: 12px;
-            color: #6B7280;
-        }
-
-        .powered-by a {
-            color: #FD3363;
-            text-decoration: none;
-            font-weight: 600;
-            letter-spacing: 0.5px;
         }
 
         /* ===== STATEMENT NOTE ===== */
@@ -207,7 +185,7 @@
             </div>
         </div>
 
-        <!-- Terms & Conditions (matching Jacob's style) -->
+        <!-- Terms & Conditions (positioned below the SDK's "By providing your card information..." text) -->
         <div class="terms-section">
             <div class="terms-checkbox-row">
                 <input type="checkbox" id="terms-checkbox">
@@ -230,6 +208,9 @@
     <!-- Initialize FanBasis Embedded Checkout -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // SPRK Network gold logo as base64
+            const sprkLogoBase64 = "data:image/png;base64,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";
+
             // Configuration for SPRK Network checkout
             const config = {
                 creatorId: 'sprk-network',
@@ -242,6 +223,7 @@
                     show_product_info: true,
                     product_layout: 'left',
                     show_coupon_row: false,
+                    show_subscription_info: false,
                     background_color: '#0B0F14',
                     label_color: '#E5E7EB',
                     input_background_color: '#111827',
@@ -249,7 +231,8 @@
                     heading_color: '#E5E7EB',
                     secondary_color: '#9CA3AF',
                     border_color: 'rgba(229,231,235,0.15)',
-                    surface_color: '#111827'
+                    surface_color: '#111827',
+                    product_image: sprkLogoBase64
                 }
             };
 
