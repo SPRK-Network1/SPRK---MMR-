@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPRK Network | Earn from Your Content</title>
+    <meta name="description" content="SPRK Network is a creator monetization platform for TikTok creators. Risk-free Spark Ads — we fund the spend, you keep 30% of profit.">
+    <meta name="author" content="SPRK Network">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="SPRK Network | Earn from Your Content">
+    <meta property="og:description" content="Risk-free Spark Ads for creators. We fund the spend, you keep 30% of profit.">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --background: 0 0% 5%;
+            --foreground: 40 20% 92%;
+            --card: 0 0% 9%;
+            --primary: 38 60% 55%;
+            --primary-foreground: 0 0% 5%;
+            --secondary: 0 0% 12%;
+            --muted: 0 0% 12%;
+            --muted-foreground: 40 8% 58%;
+            --border: 40 10% 18%;
+            --input: 40 10% 18%;
+            --ring: 38 60% 55%;
+            --surface: 0 0% 8%;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-family: Inter, system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+        h1,h2,h3,h4,h5,h6 { font-family: 'Playfair Display', Georgia, serif; font-weight: inherit; font-size: inherit; }
+        a { color: inherit; text-decoration: inherit; }
+        img,svg,video { display: block; max-width: 100%; }
+        button { cursor: pointer; font-family: inherit; }
+
+        /* NAV */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+            background-color: hsl(var(--background) / .8);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid hsl(var(--border));
+        }
+        .nav-inner {
+            display: flex; align-items: center; justify-content: space-between;
+            height: 4rem; padding: 0 1.5rem; max-width: 1400px; margin: 0 auto;
+        }
+        .nav-logo {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em;
+            color: hsl(var(--foreground));
+        }
+        .btn-primary {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            padding: .5rem 1.25rem;
+            border-radius: 9999px;
+            font-size: .875rem; font-weight: 500;
+            border: none; transition: opacity .2s;
+        }
+        .btn-primary:hover { opacity: .9; }
+
+        /* HERO */
+        .hero {
+            padding-top: 4rem;
+            min-height: 85vh;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .hero-inner {
+            padding: 0 1.5rem; text-align: center;
+            max-width: 56rem; margin: 0 auto;
+        }
+        .eyebrow {
+            color: hsl(var(--muted-foreground));
+            font-family: Inter, sans-serif;
+            font-size: .75rem; text-transform: uppercase;
+            letter-spacing: .3em; margin-bottom: 1.5rem; font-weight: 500;
+        }
+        h1 {
+            color: hsl(var(--foreground));
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700; line-height: 1.02;
+            margin-bottom: 2rem; letter-spacing: -0.02em;
+        }
+        h1 .italic { font-style: italic; color: hsl(var(--primary)); }
+        .hero-sub {
+            color: hsl(var(--muted-foreground));
+            font-size: 1.125rem; font-weight: 300;
+            max-width: 36rem; margin: 0 auto 3rem; line-height: 1.625;
+        }
+
+        /* TWO-COL */
+        .section-twocol {
+            padding: 6rem 1.5rem 8rem;
+            background-color: hsl(var(--background));
+        }
+        .twocol-inner {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 3rem 4rem; align-items: center;
+            max-width: 72rem; margin: 0 auto;
+        }
+        h2.twocol {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700; line-height: 1.1;
+            letter-spacing: -0.02em; color: hsl(var(--foreground));
+            margin-bottom: 1.25rem;
+        }
+        h2.twocol .italic { font-style: italic; color: hsl(var(--primary)); }
+        .twocol-lead {
+            font-size: 1.125rem; font-weight: 600;
+            color: hsl(var(--foreground)); line-height: 1.375; margin-bottom: 1rem;
+        }
+        .twocol-body {
+            color: hsl(var(--muted-foreground));
+            font-size: 1rem; line-height: 1.625; margin-bottom: 2rem;
+        }
+        .stat-visual {
+            width: 100%; aspect-ratio: 3/4; border-radius: 1rem; overflow: hidden;
+            background: hsl(var(--secondary));
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 1.5rem; padding: 2.5rem;
+        }
+        .stat-item { text-align: center; }
+        .stat-big {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem; font-weight: 700; color: hsl(var(--primary)); line-height: 1;
+        }
+        .stat-lbl { font-size: .875rem; color: hsl(var(--muted-foreground)); margin-top: .35rem; }
+        .stat-div { width: 2px; height: 36px; background: hsl(var(--border)); }
+
+        /* PILLARS */
+        .section-pillars {
+            padding: 6rem 1.5rem 8rem;
+            border-top: 1px solid hsl(var(--border));
+        }
+        .section-eyebrow {
+            color: hsl(var(--muted-foreground)); font-size: .75rem;
+            text-transform: uppercase; letter-spacing: .3em;
+            text-align: center; margin-bottom: 1rem; font-weight: 500;
+        }
+        h2.center {
+            font-size: clamp(1.75rem, 4vw, 3rem); font-weight: 700;
+            color: hsl(var(--foreground)); text-align: center;
+            margin-bottom: 4rem; letter-spacing: -0.01em;
+        }
+        .pillars-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem 3.5rem; max-width: 64rem; margin: 0 auto;
+        }
+        .pillar-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.25rem; font-weight: 600;
+            color: hsl(var(--foreground)); margin-bottom: .75rem;
+        }
+        .pillar-body { color: hsl(var(--muted-foreground)); font-size: .875rem; line-height: 1.625; }
+
+        /* FORM */
+        .section-form {
+            padding: 6rem 1.5rem 8rem;
+            background-color: hsl(var(--surface));
+        }
+        .form-eyebrow {
+            color: hsl(var(--muted-foreground)); font-size: .75rem;
+            text-transform: uppercase; letter-spacing: .3em;
+            text-align: center; margin-bottom: 1rem; font-weight: 500;
+        }
+        h2.form-h2 {
+            font-size: clamp(1.75rem, 4vw, 3rem); font-weight: 700;
+            color: hsl(var(--foreground)); text-align: center; margin-bottom: 1rem;
+        }
+        .form-sub {
+            color: hsl(var(--muted-foreground)); font-size: 1.125rem;
+            font-weight: 300; text-align: center; margin-bottom: 3rem;
+        }
+        .form-card {
+            background: hsl(var(--card));
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .1);
+            padding: 2rem 2.5rem; max-width: 36rem; margin: 0 auto;
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; font-size: .875rem; font-weight: 500; color: hsl(var(--foreground)); margin-bottom: .375rem; }
+        .req { color: hsl(var(--primary)); }
+        input[type="text"], input[type="email"], input[type="tel"], textarea {
+            width: 100%; border-radius: .5rem;
+            border: 1px solid hsl(var(--input));
+            background: hsl(var(--background));
+            padding: .75rem 1rem; font-size: .875rem;
+            color: hsl(var(--foreground)); font-family: inherit; outline: none;
+            transition: box-shadow .15s, border-color .15s;
+        }
+        input:focus, textarea:focus {
+            box-shadow: 0 0 0 2px hsl(var(--ring) / .3);
+            border-color: hsl(var(--ring));
+        }
+        textarea { resize: none; }
+        .form-divider { border: none; border-top: 1px solid hsl(var(--border)); margin: 1rem 0 1.25rem; }
+        .checkbox-row { display: flex; align-items: flex-start; gap: .75rem; margin-bottom: 1rem; }
+        .checkbox-row input[type="checkbox"] { margin-top: .2rem; width: 1rem; height: 1rem; flex-shrink: 0; accent-color: hsl(var(--primary)); }
+        .checkbox-label { font-size: .875rem; line-height: 1.625; color: hsl(var(--foreground) / .8); }
+        .checkbox-label a { text-decoration: underline; }
+        .checkbox-label a:hover { color: hsl(var(--primary)); }
+        .btn-submit {
+            width: 100%; background: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border: none; border-radius: 9999px;
+            padding: .875rem; font-size: 1rem; font-weight: 600;
+            font-family: inherit; transition: opacity .2s;
+            display: flex; align-items: center; justify-content: center; gap: .5rem;
+        }
+        .btn-submit:hover:not(:disabled) { opacity: .9; }
+        .btn-submit:disabled { opacity: .6; cursor: not-allowed; }
+
+        /* Form states */
+        .form-success {
+            display: none;
+            text-align: center;
+            padding: 2.5rem 1rem;
+        }
+        .form-success.visible { display: block; }
+        .form-success-icon {
+            width: 3.5rem; height: 3.5rem;
+            background: hsl(var(--primary) / .15);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.25rem;
+            font-size: 1.5rem;
+        }
+        .form-success h3 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.5rem; font-weight: 600;
+            color: hsl(var(--foreground)); margin-bottom: .5rem;
+        }
+        .form-success p {
+            color: hsl(var(--muted-foreground)); font-size: .9rem; line-height: 1.6;
+        }
+        .form-error-msg {
+            display: none;
+            background: hsl(0 60% 40% / .15);
+            border: 1px solid hsl(0 60% 40% / .3);
+            color: hsl(0 70% 70%);
+            border-radius: .5rem;
+            padding: .75rem 1rem;
+            font-size: .875rem;
+            margin-bottom: 1.25rem;
+            line-height: 1.5;
+        }
+        .form-error-msg.visible { display: block; }
+
+        /* Spinner */
+        .spinner {
+            width: 1rem; height: 1rem;
+            border: 2px solid hsl(var(--primary-foreground) / .3);
+            border-top-color: hsl(var(--primary-foreground));
+            border-radius: 50%;
+            animation: spin .6s linear infinite;
+            display: none;
+        }
+        .btn-submit.loading .spinner { display: block; }
+        .btn-submit.loading .btn-label { opacity: .7; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* FOOTER */
+        footer {
+            background-color: hsl(0 0% 3%);
+            color: hsl(40 8% 55%);
+            padding: 4rem 1.5rem;
+        }
+        .footer-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem; max-width: 72rem; margin: 0 auto 3rem;
+        }
+        .footer-h3 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.25rem; font-weight: 600;
+            color: hsl(40 20% 88%); margin-bottom: .75rem;
+        }
+        .footer-h4 {
+            font-family: Inter, sans-serif; font-size: .75rem; font-weight: 600;
+            color: hsl(40 20% 88%);
+            text-transform: uppercase; letter-spacing: .05em; margin-bottom: .75rem;
+        }
+        .footer-body { font-size: .875rem; line-height: 1.625; }
+        .footer-link { display: block; font-size: .875rem; margin-bottom: .5rem; }
+        .footer-link:hover { color: hsl(40 20% 88%); }
+        .footer-bottom { border-top: 1px solid hsl(40 10% 14%); padding-top: 2rem; max-width: 72rem; margin: 0 auto; }
+        .footer-sms { font-size: .75rem; line-height: 1.625; color: hsl(40 8% 40%); max-width: 48rem; margin: 0 auto 1.5rem; text-align: center; }
+        .footer-sms strong { color: hsl(40 8% 52%); }
+        .footer-copy { text-align: center; font-size: .875rem; }
+
+        /* LEGAL */
+        .legal-wrap { padding-top: 4rem; min-height: 100vh; }
+        .legal-inner { max-width: 48rem; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
+        .legal-date { font-size: .8rem; color: hsl(var(--muted-foreground)); margin-bottom: .5rem; }
+        h1.legal { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; color: hsl(var(--foreground)); margin-bottom: 2rem; line-height: 1.15; }
+        .legal-intro { color: hsl(var(--muted-foreground)); font-size: 1rem; line-height: 1.7; margin-bottom: 2rem; }
+        .legal-section { margin-bottom: 2rem; }
+        .legal-section h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.2rem; font-weight: 600; color: hsl(var(--foreground)); margin-bottom: .75rem; border-left: 3px solid hsl(var(--primary)); padding-left: .75rem; }
+        .legal-section p { color: hsl(var(--muted-foreground)); font-size: .95rem; line-height: 1.75; }
+        .legal-section a { color: hsl(var(--primary)); text-decoration: underline; }
+
+        /* PAGE ROUTING */
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* RESPONSIVE — tablet */
+        @media (max-width: 900px) {
+            .twocol-inner { grid-template-columns: 1fr; gap: 3rem; }
+            .stat-visual { aspect-ratio: unset; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 1.5rem 2.5rem; padding: 2rem; }
+            .stat-div { display: none; }
+            .pillars-grid { grid-template-columns: 1fr 1fr; gap: 2rem 2.5rem; }
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+            .section-twocol { padding: 4rem 1.5rem 5rem; }
+            .section-pillars { padding: 4rem 1.5rem 5rem; }
+            .section-form { padding: 4rem 1.5rem 5rem; }
+        }
+
+        /* RESPONSIVE — mobile */
+        @media (max-width: 560px) {
+            .nav-inner { padding: 0 1rem; }
+            .nav-logo { font-size: 1.05rem; }
+            .btn-primary { padding: .45rem 1rem; font-size: .8rem; }
+            .hero { min-height: 80vh; }
+            .hero-inner { padding: 2rem 1.25rem; }
+            .hero-sub { font-size: 1rem; margin-bottom: 2rem; }
+            .section-twocol { padding: 3rem 1.25rem 3.5rem; }
+            .section-pillars { padding: 3rem 1.25rem 3.5rem; }
+            .section-form { padding: 3rem 1.25rem 3.5rem; }
+            .twocol-inner { gap: 2rem; }
+            .stat-visual { flex-direction: column; gap: 1rem; padding: 1.75rem 1.25rem; }
+            .stat-div { display: block; width: 60%; height: 1px; }
+            .stat-big { font-size: 2.25rem; }
+            .pillars-grid { grid-template-columns: 1fr; gap: 1.75rem; }
+            .form-card { padding: 1.25rem 1rem; border-radius: .75rem; }
+            .form-row { grid-template-columns: 1fr; gap: 0; margin-bottom: 0; }
+            .form-row > div { margin-bottom: 1.25rem; }
+            h2.center { margin-bottom: 2.5rem; }
+            .footer-grid { grid-template-columns: 1fr; gap: 1.75rem; margin-bottom: 2rem; }
+            footer { padding: 2.5rem 1.25rem; }
+            .legal-inner { padding: 2.5rem 1.25rem 4rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <div class="nav-inner">
+        <span class="nav-logo" onclick="showPage('home')" style="cursor:pointer">SPRK Network</span>
+        <button class="btn-primary" onclick="showPage('home');setTimeout(()=>document.getElementById('apply').scrollIntoView({behavior:'smooth'}),50)">Get Started</button>
+    </div>
+</nav>
+
+
+<!-- ══ HOME ══ -->
+<div id="page-home" class="page active">
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-inner">
+            <p class="eyebrow">Risk-Free Creator Monetization</p>
+            <h1>
+                TURN YOUR CONTENT<br>
+                INTO REAL,<br>
+                <span class="italic">PASSIVE INCOME.</span>
+            </h1>
+            <p class="hero-sub">Spark Ads without the risk — we fund the spend, you keep 30% of profit. Zero upfront cost, zero downside.</p>
+            <button class="btn-primary" style="font-size:1rem;padding:.75rem 2.5rem;" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'})">Get Started Today</button>
+        </div>
+    </section>
+
+    <!-- TWO-COL -->
+    <section class="section-twocol">
+        <div class="twocol-inner">
+            <div>
+                <h2 class="twocol"><span class="italic">finally,</span> ads that work for creators</h2>
+                <p class="twocol-lead">Risk-free Spark Ad campaigns funded entirely by us.</p>
+                <p class="twocol-body">Most creator programs put all the risk on you. SPRK Network flips that model. We fund the ad spend, run the campaigns, handle compliance — and you earn 30% of every dollar of profit generated. If a test fails, we eat the cost. You only ever see upside.</p>
+                <button class="btn-primary" style="font-size:.875rem;padding:.6rem 1.75rem;text-transform:uppercase;letter-spacing:.05em;" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'})">Apply to Join</button>
+            </div>
+            <div class="stat-visual">
+                <div class="stat-item">
+                    <div class="stat-big">$130K+</div>
+                    <div class="stat-lbl">Revenue generated</div>
+                </div>
+                <div class="stat-div"></div>
+                <div class="stat-item">
+                    <div class="stat-big">$39K+</div>
+                    <div class="stat-lbl">Paid to creators</div>
+                </div>
+                <div class="stat-div"></div>
+                <div class="stat-item">
+                    <div class="stat-big">500+</div>
+                    <div class="stat-lbl">Active creators</div>
+                </div>
+                <div class="stat-div"></div>
+                <div class="stat-item">
+                    <div class="stat-big">98%</div>
+                    <div class="stat-lbl">Success rate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PILLARS -->
+    <section class="section-pillars">
+        <p class="section-eyebrow">What We Do</p>
+        <h2 class="center">The Three Pillars</h2>
+        <div class="pillars-grid">
+            <div>
+                <h3 class="pillar-title">Risk-Free Ad Spend</h3>
+                <p class="pillar-body">We fund 100% of the Spark Ad budget. You never put a dollar at risk — we absorb failed tests so you never have to.</p>
+            </div>
+            <div>
+                <h3 class="pillar-title">30% Profit Share</h3>
+                <p class="pillar-body">Your cut is based on profit, not revenue. When campaigns win, you earn. Transparent splits, no hidden fees, no surprises.</p>
+            </div>
+            <div>
+                <h3 class="pillar-title">Full Campaign Management</h3>
+                <p class="pillar-body">From compliance review to scaling, we manage the entire campaign lifecycle. You focus on content — we handle the rest.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORM -->
+    <section class="section-form" id="apply">
+        <p class="form-eyebrow">Limited Spots Available</p>
+        <h2 class="form-h2">Apply to Join SPRK Network</h2>
+        <p class="form-sub">Fill out the form below and we'll reach out to get you started.</p>
+        <div class="form-card">
+
+            <!-- Success state -->
+            <div class="form-success" id="formSuccess">
+                <div class="form-success-icon">✓</div>
+                <h3>Application Received</h3>
+                <p>Thanks for applying to SPRK Network. We'll be in touch shortly to get you started.</p>
+            </div>
+
+            <!-- Form -->
+            <form id="sprkForm" novalidate>
+                <!-- Web3Forms hidden fields -->
+                <input type="hidden" name="access_key" value="4344f018-5534-45f9-ab37-1ccaaa500e43">
+                <input type="hidden" name="subject" value="New SPRK Network Application">
+                <input type="hidden" name="from_name" value="SPRK Network Lander">
+                <input type="checkbox" name="botcheck" style="display:none">
+
+                <!-- Error message -->
+                <div class="form-error-msg" id="formError">Something went wrong. Please try again or email us directly at admin@sprknetwork.app.</div>
+
+                <div class="form-row">
+                    <div>
+                        <label for="firstName">First Name <span class="req">*</span></label>
+                        <input id="firstName" name="firstName" type="text" maxlength="100" required placeholder="Jane">
+                    </div>
+                    <div>
+                        <label for="lastName">Last Name</label>
+                        <input id="lastName" name="lastName" type="text" maxlength="100" placeholder="Doe">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email <span class="req">*</span></label>
+                    <input id="email" name="email" type="email" maxlength="255" required placeholder="jane@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone <span class="req">*</span></label>
+                    <input id="phone" name="phone" type="tel" placeholder="+1 (555) 000-0000">
+                </div>
+                <hr class="form-divider">
+                <div class="checkbox-row">
+                    <input id="consentT" name="consentT" type="checkbox">
+                    <label class="checkbox-label" for="consentT">You agree to receive <strong>automated follow-up and reminder</strong> SMS messages with varying frequency. Txt and data rates may apply. Reply STOP to end. Text HELP for help. Click for <a href="#" onclick="showPage('terms');return false;">Terms of Service</a>, <a href="#" onclick="showPage('privacy');return false;">Privacy Policy</a>.</label>
+                </div>
+                <div class="checkbox-row">
+                    <input id="consentP" name="consentP" type="checkbox">
+                    <label class="checkbox-label" for="consentP">You agree to receive <strong>promotional</strong> SMS messages with varying frequency. Txt and data rates may apply. Reply STOP to end. Text HELP for help. Click for <a href="#" onclick="showPage('terms');return false;">Terms of Service</a>, <a href="#" onclick="showPage('privacy');return false;">Privacy Policy</a>.</label>
+                </div>
+                <div class="checkbox-row">
+                    <input id="newsletter" name="newsletter" type="checkbox">
+                    <label class="checkbox-label" for="newsletter">Yes, subscribe me to your newsletter.</label>
+                </div>
+                <div class="form-group" style="margin-top:1.25rem">
+                    <label for="message">Message <span class="req">*</span></label>
+                    <textarea id="message" name="message" maxlength="1000" required rows="4" placeholder="Tell us about your content and goals..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <div class="spinner" id="spinner"></div>
+                    <span class="btn-label">Submit Application</span>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h3 class="footer-h3">About Us</h3>
+                <p class="footer-body">SPRK Network is a creator monetization platform specializing in risk-free TikTok Spark Ads. We fund the spend, manage the campaigns, and share the profit with creators.</p>
+            </div>
+            <div>
+                <h4 class="footer-h4">Contact Info</h4>
+                <p class="footer-body" style="margin-bottom:.5rem"><span style="color:hsl(40 20% 88%);font-weight:500;">Email:</span> <a href="mailto:admin@sprknetwork.app" style="transition:color .2s">admin@sprknetwork.app</a></p>
+                <p class="footer-body"><span style="color:hsl(40 20% 88%);font-weight:500;">Website:</span> <a href="https://sprknetwork.app" style="transition:color .2s">sprknetwork.app</a></p>
+            </div>
+            <div>
+                <h4 class="footer-h4">Legal</h4>
+                <a class="footer-link" href="#" onclick="showPage('privacy');return false;">Privacy Policy</a>
+                <a class="footer-link" href="#" onclick="showPage('terms');return false;">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p class="footer-sms"><strong>SMS/Text Messaging Disclosure:</strong> By opting in via our contact form, you consent to receive text messages from SPRK Network. Messages will include application follow-ups, reminders, platform updates, and occasional promotions. Message frequency varies. Message &amp; data rates may apply. Reply STOP to opt-out at any time, or HELP for assistance.</p>
+            <p class="footer-copy">© 2024–2026 SPRK Network. All rights reserved.</p>
+        </div>
+    </footer>
+
+</div><!-- /home -->
+
+
+<!-- ══ PRIVACY ══ -->
+<div id="page-privacy" class="page">
+    <div class="legal-wrap">
+        <div class="legal-inner">
+            <p class="legal-date">Last updated: December 26, 2025</p>
+            <h1 class="legal">Privacy Policy</h1>
+            <p class="legal-intro">This policy explains what information we collect, why we collect it, and how you can manage your data.</p>
+            <div class="legal-section"><h2>Information We Collect</h2><p>We collect information you provide directly (account details, contact information, submissions, support messages) and information collected automatically (device data, IP address, approximate location, browser type, usage logs, and interaction data). If you connect third-party accounts (e.g., TikTok), we may receive profile and performance data as permitted by those platforms.</p></div>
+            <div class="legal-section"><h2>How We Use Information</h2><p>We use information to operate, maintain, and improve SPRK; personalize prompts and recommendations; process payouts; communicate updates; detect fraud and abuse; comply with legal obligations; and support creators and partners.</p></div>
+            <div class="legal-section"><h2>Legal Bases (where applicable)</h2><p>Depending on your region, we rely on contract performance (to provide the service), legitimate interests (to secure and improve SPRK), consent (where required for analytics/cookies), and legal obligations (for tax, accounting, and compliance).</p></div>
+            <div class="legal-section"><h2>Sharing</h2><p>We do not sell your data. We may share information with service providers and vendors (hosting, analytics, payments, communications, fraud prevention) under confidentiality and data protection terms. We may disclose information to comply with law, enforce our terms, protect rights and safety, or in connection with a merger, acquisition, or asset sale.</p></div>
+            <div class="legal-section"><h2>Cookies &amp; Tracking</h2><p>We use cookies and similar technologies for session management, security, preferences, analytics, and performance. You can control cookies through your browser. Some features may not work correctly without essential cookies.</p></div>
+            <div class="legal-section"><h2>Analytics &amp; Third Parties</h2><p>We may use privacy-focused analytics to understand usage. Third-party embeds or platforms you connect to are governed by their own policies; review their terms for details.</p></div>
+            <div class="legal-section"><h2>Data Retention</h2><p>We retain information as needed to operate SPRK, meet legal, tax, and accounting requirements, resolve disputes, and enforce agreements. When data is no longer needed, we delete or de-identify it where feasible.</p></div>
+            <div class="legal-section"><h2>Security</h2><p>We use reasonable technical and organizational measures to protect data. No online service is perfectly secure; please use strong passwords and protect your accounts.</p></div>
+            <div class="legal-section"><h2>Your Rights &amp; Choices</h2><p>You can request access, correction, or deletion of your data, and in some regions, object to or restrict certain processing, or request portability. You may unsubscribe from non-essential communications. To exercise rights, contact us.</p></div>
+            <div class="legal-section"><h2>International Transfers</h2><p>Data may be stored or processed in locations outside your country. Where required, we use appropriate safeguards (such as standard contractual clauses) for cross-border transfers.</p></div>
+            <div class="legal-section"><h2>Children</h2><p>SPRK is not directed to children under 13 (or the minimum age in your region). We do not knowingly collect data from children. If you believe a child provided data, contact us to remove it.</p></div>
+            <div class="legal-section"><h2>Changes</h2><p>We may update this policy. We will post the revised version with a new date and, where required, provide additional notice.</p></div>
+            <div class="legal-section"><h2>Contact</h2><p>Questions or requests? Email <a href="mailto:privacy@sprknetwork.com">privacy@sprknetwork.com</a>.</p></div>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-grid">
+            <div><h3 class="footer-h3">About Us</h3><p class="footer-body">SPRK Network is a creator monetization platform specializing in risk-free TikTok Spark Ads.</p></div>
+            <div><h4 class="footer-h4">Contact Info</h4><p class="footer-body"><a href="mailto:admin@sprknetwork.app">admin@sprknetwork.app</a></p></div>
+            <div><h4 class="footer-h4">Legal</h4><a class="footer-link" href="#" onclick="showPage('privacy');return false;">Privacy Policy</a><a class="footer-link" href="#" onclick="showPage('terms');return false;">Terms of Service</a></div>
+        </div>
+        <div class="footer-bottom"><p class="footer-copy">© 2024–2026 SPRK Network. All rights reserved.</p></div>
+    </footer>
+</div>
+
+
+<!-- ══ TERMS ══ -->
+<div id="page-terms" class="page">
+    <div class="legal-wrap">
+        <div class="legal-inner">
+            <p class="legal-date">Last updated: January 2, 2026</p>
+            <h1 class="legal">Terms of Service</h1>
+            <p class="legal-intro">By using SPRK Network you agree to these terms. Please read them carefully. These Terms govern participation in SPRK Network ("SPRK," "we," "us," or the "Platform"). By submitting content or using SPRK, you agree to these Terms. If you use SPRK on behalf of a company, you represent you have authority to bind that company.</p>
+            <div class="legal-section"><h2>Eligibility &amp; Accounts</h2><p>You must be at least 18 (or the age of majority in your location) and legally able to enter contracts. You are responsible for safeguarding your credentials and for all activity under your account.</p></div>
+            <div class="legal-section"><h2>Independent Contractor Status</h2><p>You participate as an independent contractor. No partnership, joint venture, employment, or agency relationship is created. You manage your own taxes, registrations, and compliance obligations.</p></div>
+            <div class="legal-section"><h2>Content Rights &amp; Licenses</h2><p>You represent and warrant you own or have all rights, licenses, and releases for any content you submit (including music, likeness, trademarks, and IP). You grant SPRK a worldwide, royalty-free license to host, store, display, adapt for placement, and distribute your content as needed to operate and promote the program.</p></div>
+            <div class="legal-section"><h2>Responsibility &amp; Compliance</h2><p>You are solely responsible for your content and for complying with applicable laws, platform rules (e.g., TikTok, Meta), advertising policies, endorsements, and disclosures. SPRK relies on your representations and may request proof of rights or compliance at any time.</p></div>
+            <div class="legal-section"><h2>Program Participation</h2><p>Participation, prompts, angles, examples, and guidance are informational only and do not constitute approvals, guarantees, or legal advice. We may adjust eligibility, requirements, or program criteria at any time to protect platform integrity.</p></div>
+            <div class="legal-section"><h2>Prohibited Content</h2><p>Do not submit content that is illegal, infringing, deceptive, hateful, violent, or that violates platform advertising rules (including restricted categories like tobacco, weapons, or misleading claims). We may remove or reject content without notice.</p></div>
+            <div class="legal-section"><h2>Payouts, Withholding &amp; Offsets</h2><p>Payouts are subject to verification, platform performance, fraud checks, and applicable fees. SPRK may withhold or delay payouts, offset losses, chargebacks, or policy violations, and require additional verification (including tax information) before releasing funds.</p></div>
+            <div class="legal-section"><h2>Taxes</h2><p>You are responsible for all taxes, filings, and reporting associated with your earnings. We may collect required tax forms and may withhold amounts where legally required.</p></div>
+            <div class="legal-section"><h2>Monitoring, Removal &amp; Suspension</h2><p>We may monitor, remove content, pause campaigns, or suspend/terminate access to protect compliance, safety, or operational integrity. We may disable features or restrict access where we detect risk, fraud, or repeated violations.</p></div>
+            <div class="legal-section"><h2>Third-Party Platforms &amp; Services</h2><p>Your use of third-party platforms (e.g., TikTok, payment processors) is subject to their terms. SPRK is not responsible for outages, policy changes, moderation, or decisions made by those platforms.</p></div>
+            <div class="legal-section"><h2>Confidentiality</h2><p>Non-public prompts, angles, rates, dashboards, and payout data are confidential. Do not disclose them without our written consent.</p></div>
+            <div class="legal-section"><h2>Indemnification</h2><p>You agree to indemnify and hold SPRK and its affiliates harmless from claims, losses, damages, liabilities, costs, and expenses (including reasonable attorneys' fees) arising from your content, conduct, or breach of these Terms.</p></div>
+            <div class="legal-section"><h2>Disclaimers</h2><p>SPRK is provided "as is." To the fullest extent permitted by law, we disclaim warranties of merchantability, fitness for a particular purpose, non-infringement, and uninterrupted availability. We do not guarantee specific earnings, performance, or approvals.</p></div>
+            <div class="legal-section"><h2>Limitation of Liability</h2><p>To the fullest extent permitted, SPRK is not liable for indirect, incidental, special, consequential, exemplary, or punitive damages, or for lost profits, revenues, data, or goodwill. Our total liability for any claim is limited to the amount you were paid by SPRK in the three months preceding the claim.</p></div>
+            <div class="legal-section"><h2>Changes to These Terms</h2><p>We may update these Terms. Continued use after updates means you accept the revised Terms. Material changes will be indicated by an updated date or additional notice where required.</p></div>
+            <div class="legal-section"><h2>Governing Law &amp; Disputes</h2><p>These Terms are governed by the laws of our operating jurisdiction, without regard to conflict-of-law principles. Any disputes will be resolved in the courts of that jurisdiction, unless a separate agreement provides otherwise.</p></div>
+            <div class="legal-section"><h2>Contact</h2><p>Questions? Email <a href="mailto:admin@sprknetwork.app">admin@sprknetwork.app</a>.</p></div>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-grid">
+            <div><h3 class="footer-h3">About Us</h3><p class="footer-body">SPRK Network is a creator monetization platform specializing in risk-free TikTok Spark Ads.</p></div>
+            <div><h4 class="footer-h4">Contact Info</h4><p class="footer-body"><a href="mailto:admin@sprknetwork.app">admin@sprknetwork.app</a></p></div>
+            <div><h4 class="footer-h4">Legal</h4><a class="footer-link" href="#" onclick="showPage('privacy');return false;">Privacy Policy</a><a class="footer-link" href="#" onclick="showPage('terms');return false;">Terms of Service</a></div>
+        </div>
+        <div class="footer-bottom"><p class="footer-copy">© 2024–2026 SPRK Network. All rights reserved.</p></div>
+    </footer>
+</div>
+
+<script>
+function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Web3Forms submission
+document.getElementById('sprkForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const form = this;
+    const btn = document.getElementById('submitBtn');
+    const errorEl = document.getElementById('formError');
+    const successEl = document.getElementById('formSuccess');
+
+    // Hide previous error
+    errorEl.classList.remove('visible');
+
+    // Loading state
+    btn.disabled = true;
+    btn.classList.add('loading');
+    btn.querySelector('.btn-label').textContent = 'Submitting...';
+
+    // Build checkbox consent values into readable strings
+    const consentT = document.getElementById('consentT').checked ? 'Yes' : 'No';
+    const consentP = document.getElementById('consentP').checked ? 'Yes' : 'No';
+    const newsletter = document.getElementById('newsletter').checked ? 'Yes' : 'No';
+
+    const formData = new FormData(form);
+    formData.set('consentT', consentT);
+    formData.set('consentP', consentP);
+    formData.set('newsletter', newsletter);
+
+    try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            form.style.display = 'none';
+            successEl.classList.add('visible');
+        } else {
+            throw new Error(data.message || 'Submission failed');
+        }
+    } catch (err) {
+        errorEl.classList.add('visible');
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btn.querySelector('.btn-label').textContent = 'Submit Application';
+    }
+});
+</script>
+</body>
+</html>
