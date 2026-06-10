@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service — SPRK Network</title>
+  <meta name="description" content="SPRK Network Terms of Service — platform rules, SMS program terms, and participant agreement." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0F14;
+      --card: #0F1B2D;
+      --text: #E5E7EB;
+      --muted: #9CA3AF;
+      --gold: #E5D19A;
+      --gold-dark: #D8BA68;
+      --border: rgba(229,231,235,0.12);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(11,15,20,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem;
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 4rem; max-width: 56rem; margin: 0 auto;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem; font-weight: 600;
+      color: var(--gold); text-decoration: none;
+    }
+    .nav-back {
+      font-size: .85rem; color: var(--muted);
+      text-decoration: none; transition: color .2s;
+    }
+    .nav-back:hover { color: var(--gold); }
+
+    /* ── CONTENT ── */
+    .page-wrap {
+      max-width: 56rem; margin: 0 auto;
+      padding: 3.5rem 1.5rem 6rem;
+    }
+    .legal-date {
+      font-size: .8rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .08em;
+      margin-bottom: .6rem;
+    }
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700; color: var(--text);
+      margin-bottom: 1.5rem; line-height: 1.15;
+    }
+    .legal-intro {
+      color: var(--muted); font-size: 1rem;
+      line-height: 1.75; margin-bottom: 2.5rem;
+      border-left: 3px solid rgba(229,209,154,0.3);
+      padding-left: 1rem;
+    }
+    .legal-section { margin-bottom: 2rem; }
+    .legal-section h2 {
+      font-size: 1rem; font-weight: 600;
+      color: var(--gold-dark);
+      margin-bottom: .6rem;
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .legal-section p {
+      color: var(--muted); font-size: .95rem; line-height: 1.8;
+    }
+    .legal-section p + p { margin-top: .6rem; }
+    .legal-section a { color: var(--gold); text-decoration: underline; }
+    .legal-section a:hover { color: var(--gold-dark); }
+    .legal-section ul {
+      list-style: disc;
+      padding-left: 1.4rem;
+      color: var(--muted);
+      font-size: .95rem;
+      line-height: 1.8;
+    }
+    .legal-section ul li { margin-bottom: .3rem; }
+    .divider {
+      border: none; border-top: 1px solid var(--border);
+      margin: 2.5rem 0;
+    }
+    .highlight-box {
+      background: rgba(229,209,154,0.05);
+      border: 1px solid rgba(229,209,154,0.18);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .highlight-box p {
+      color: var(--text); font-size: .93rem; line-height: 1.8;
+    }
+    .highlight-box p + p { margin-top: .6rem; }
+    .sms-badge {
+      display: inline-block;
+      background: rgba(229,209,154,0.12);
+      color: var(--gold);
+      font-size: .75rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .1em;
+      border-radius: 4px; padding: .2rem .55rem;
+      margin-bottom: .75rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+    .footer-inner { max-width: 56rem; margin: 0 auto; }
+    .footer-links {
+      display: flex; gap: 1.5rem; justify-content: center;
+      flex-wrap: wrap; margin-bottom: .75rem;
+    }
+    .footer-links a {
+      font-size: .85rem; color: var(--muted); text-decoration: none;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-copy { font-size: .8rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">SPRK Network</a>
+    <a class="nav-back" href="javascript:history.back()">← Back</a>
+  </div>
+</nav>
+
+<main class="page-wrap">
+  <p class="legal-date">Last updated: June 10, 2026</p>
+  <h1>Terms of Service</h1>
+  <p class="legal-intro">By using SPRK Network you agree to these terms. Please read them carefully. These Terms govern participation in SPRK Network ("SPRK," "we," "us," or the "Platform"). By submitting content or using SPRK, you agree to these Terms. If you use SPRK on behalf of a company, you represent you have authority to bind that company.</p>
+
+  <div class="legal-section">
+    <h2>Eligibility &amp; Accounts</h2>
+    <p>You must be at least 18 (or the age of majority in your location) and legally able to enter contracts. You are responsible for safeguarding your credentials and for all activity under your account.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Independent Contractor Status</h2>
+    <p>You participate as an independent contractor. No partnership, joint venture, employment, or agency relationship is created. You manage your own taxes, registrations, and compliance obligations.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Content Rights &amp; Licenses</h2>
+    <p>You represent and warrant you own or have all rights, licenses, and releases for any content you submit (including music, likeness, trademarks, and IP). You grant SPRK a worldwide, royalty-free license to host, store, display, adapt for placement, and distribute your content as needed to operate and promote the program.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Responsibility &amp; Compliance</h2>
+    <p>You are solely responsible for your content and for complying with applicable laws, platform rules (e.g., TikTok, Meta), advertising policies, endorsements, and disclosures. SPRK relies on your representations and may request proof of rights or compliance at any time.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Program Participation</h2>
+    <p>Participation, prompts, angles, examples, and guidance are informational only and do not constitute approvals, guarantees, or legal advice. We may adjust eligibility, requirements, or program criteria at any time to protect platform integrity.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Prohibited Content</h2>
+    <p>Do not submit content that is illegal, infringing, deceptive, hateful, violent, or that violates platform advertising rules (including restricted categories like tobacco, weapons, or misleading claims). We may remove or reject content without notice.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Payouts, Withholding &amp; Offsets</h2>
+    <p>Payouts are subject to verification, platform performance, fraud checks, and applicable fees. SPRK may withhold or delay payouts, offset losses, chargebacks, or policy violations, and require additional verification (including tax information) before releasing funds.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Taxes</h2>
+    <p>You are responsible for all taxes, filings, and reporting associated with your earnings. We may collect required tax forms and may withhold amounts where legally required.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Monitoring, Removal &amp; Suspension</h2>
+    <p>We may monitor, remove content, pause campaigns, or suspend/terminate access to protect compliance, safety, or operational integrity. We may disable features or restrict access where we detect risk, fraud, or repeated violations.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Third-Party Platforms &amp; Services</h2>
+    <p>Your use of third-party platforms (e.g., TikTok, payment processors) is subject to their terms. SPRK is not responsible for outages, policy changes, moderation, or decisions made by those platforms.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Confidentiality</h2>
+    <p>Non-public prompts, angles, rates, dashboards, and payout data are confidential. Do not disclose them without our written consent.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Indemnification</h2>
+    <p>You agree to indemnify and hold SPRK and its affiliates harmless from claims, losses, damages, liabilities, costs, and expenses (including reasonable attorneys' fees) arising from your content, conduct, or breach of these Terms.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Disclaimers</h2>
+    <p>SPRK is provided "as is." To the fullest extent permitted by law, we disclaim warranties of merchantability, fitness for a particular purpose, non-infringement, and uninterrupted availability. We do not guarantee specific earnings, performance, or approvals.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Limitation of Liability</h2>
+    <p>To the fullest extent permitted, SPRK is not liable for indirect, incidental, special, consequential, exemplary, or punitive damages, or for lost profits, revenues, data, or goodwill. Our total liability for any claim is limited to the amount you were paid by SPRK in the three months preceding the claim.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Changes to These Terms</h2>
+    <p>We may update these Terms. Continued use after updates means you accept the revised Terms. Material changes will be indicated by an updated date or additional notice where required.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Governing Law &amp; Disputes</h2>
+    <p>These Terms are governed by the laws of our operating jurisdiction, without regard to conflict-of-law principles. Any disputes will be resolved in the courts of that jurisdiction, unless a separate agreement provides otherwise.</p>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ══ SMS TERMS ══ -->
+  <div class="legal-section" id="sms-terms">
+    <span class="sms-badge">SMS Program</span>
+    <h2>SMS / Text Messaging Terms</h2>
+
+    <div class="highlight-box">
+      <p><strong>Program:</strong> SPRK Network SMS Program, operated by SPRK Network.</p>
+      <p><strong>Message types:</strong> Creator onboarding instructions and next steps, application status updates and reminders, campaign launch notifications and performance updates, platform announcements and program changes.</p>
+      <p><strong>Message frequency:</strong> Message frequency varies based on your activity and program stage. You may receive up to several messages per week during active onboarding or campaign periods.</p>
+      <p><strong>Rates:</strong> Message and data rates may apply. Check with your wireless carrier for details.</p>
+      <p><strong>To opt out:</strong> Reply <strong>STOP</strong> to any SMS from us at any time. You will receive a single confirmation message and no further texts.</p>
+      <p><strong>For help:</strong> Reply <strong>HELP</strong> or contact us directly (see below).</p>
+    </div>
+
+    <p>By providing your mobile number and checking the SMS consent box on any SPRK Network form, you consent to receive automated text messages from SPRK Network at the number provided. Consent is not a condition of purchase or participation. Carriers are not liable for delayed or undelivered messages.</p>
+
+    <p style="margin-top:1rem;"><strong>SMS Support Contact:</strong><br />
+      Email: <a href="mailto:admin@sprknetwork.app">admin@sprknetwork.app</a><br />
+      Phone: <a href="tel:+18005775775">1-800-SPRK-775</a>
+    </p>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="legal-section">
+    <h2>Contact</h2>
+    <p>Questions? Email <a href="mailto:admin@sprknetwork.app">admin@sprknetwork.app</a> or call <a href="tel:+18005775775">1-800-SPRK-775</a>.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <nav class="footer-links">
+      <a href="/privacy-policy/">Privacy Policy</a>
+      <a href="/terms-of-service/">Terms of Service</a>
+      <a href="mailto:admin@sprknetwork.app">Contact</a>
+    </nav>
+    <p class="footer-copy">&copy; <span id="year"></span> SPRK Network. All rights reserved.</p>
+  </div>
+</footer>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
