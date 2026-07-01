@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>SPRK Network — Apply Now</title>
+  <meta name="description" content="SPRK Network is the premier platform connecting ambitious professionals with curated financial opportunities, expert mentorship, and a thriving community built for long-term success." />
+  <meta property="og:title" content="SPRK Network — Build Wealth. Ignite Your Future." />
+  <meta property="og:description" content="Join 12,000+ members already building their financial future with SPRK Network." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:          #0B0F14;
+      --card:        #0F1B2D;
+      --text:        #E5E7EB;
+      --muted:       #9CA3AF;
+      --gold:        #E5D19A;
+      --gold-dark:   #D8BA68;
+      --border:      rgba(229, 231, 235, 0.12);
+      --border-gold: rgba(216, 186, 104, 0.15);
+    }
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(229,209,154,0.2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(229,209,154,0.35); }
+    /* ── Keyframes ── */
+    @keyframes shimmer {
+      0%   { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+    @keyframes fadeInUp {
+      0%   { opacity: 0; transform: translateY(24px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      0%   { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 14px 3px rgba(216,186,104,0.07), 0 4px 32px rgba(0,0,0,0.5); }
+      50%       { box-shadow: 0 0 30px 8px rgba(216,186,104,0.2),  0 4px 40px rgba(0,0,0,0.6); }
+    }
+    /* ── Utility ── */
+    .fade-in     { animation: fadeIn    0.6s ease-out forwards; }
+    .fade-in-up  { animation: fadeInUp  0.8s ease-out forwards; }
+    .delay-1     { animation-delay: 0.1s; opacity: 0; }
+    .delay-2     { animation-delay: 0.2s; opacity: 0; }
+    .delay-3     { animation-delay: 0.3s; opacity: 0; }
+    /* ── Layout wrappers ── */
+    .page        { position: relative; overflow: hidden; min-height: 100vh; display: flex; flex-direction: column; }
+    .glow-tr, .glow-bl {
+      position: absolute; pointer-events: none;
+      border-radius: 50%; filter: blur(80px);
+    }
+    .glow-tr {
+      top: -60px; right: -80px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(216,186,104,0.06) 0%, transparent 65%);
+    }
+    .glow-bl {
+      bottom: 0; left: -80px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(216,186,104,0.04) 0%, transparent 65%);
+    }
+    /* ════════════════════════════════════════
+       HEADER
+    ════════════════════════════════════════ */
+    .header {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 56px 24px 32px;
+      overflow: hidden;
+    }
+    .header-glow {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 400px;
+      background: radial-gradient(ellipse at top, rgba(216,186,104,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 800px;
+      width: 100%;
+    }
+    /* Logo */
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .logo-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .logo-text { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; color: var(--text); }
+    .logo-text span { color: var(--gold); }
+    .pre-headline {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    /* ════════════════════════════════════════
+       TYPEFORM CARD
+    ════════════════════════════════════════ */
+    .form-section {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 8px 24px 64px;
+      position: relative;
+      z-index: 1;
+    }
+    .form-card {
+      position: relative;
+      width: 100%;
+      max-width: 640px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 36px 32px;
+      box-shadow: 0 8px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(216,186,104,0.08);
+      animation: pulseGlow 5s ease-in-out infinite;
+      overflow: hidden;
+    }
+    @media (max-width: 640px) {
+      .form-card { padding: 28px 22px 26px; }
+    }
+    /* ── Progress ── */
+    .progress-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(229,231,235,0.08);
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+      transition: width 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    /* ── Steps ── */
+    .step { display: none; }
+    .step.active { display: block; animation: fadeInUp 0.5s ease-out; }
+    .step-q {
+      font-size: clamp(22px, 3.4vw, 30px);
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 10px;
+      overflow-wrap: break-word;
+    }
+    .step-q em { font-style: normal; color: var(--gold); }
+    .step-sub {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--muted);
+      margin-bottom: 26px;
+    }
+    /* ── Inputs ── */
+    .tf-input {
+      width: 100%;
+      background: rgba(11,15,20,0.6);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 15px 18px;
+      font-size: 16px;
+      font-family: inherit;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .tf-input::placeholder { color: rgba(156,163,175,0.5); }
+    .tf-input:focus {
+      border-color: var(--gold-dark);
+      box-shadow: 0 0 0 3px rgba(216,186,104,0.12);
+    }
+    textarea.tf-input {
+      resize: vertical;
+      min-height: 120px;
+      line-height: 1.6;
+    }
+    /* ── Choice options ── */
+    .options { display: flex; flex-direction: column; gap: 12px; }
+    .option-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      text-align: left;
+      background: rgba(11,15,20,0.5);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 15px 18px;
+      font-size: 15.5px;
+      font-weight: 500;
+      font-family: inherit;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .option-btn:hover {
+      border-color: var(--border-gold);
+      background: rgba(216,186,104,0.06);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+    }
+    .option-btn.selected {
+      border-color: var(--gold-dark);
+      background: rgba(216,186,104,0.1);
+      box-shadow: 0 0 0 1px rgba(216,186,104,0.25), 0 0 24px rgba(216,186,104,0.12);
+    }
+    .option-key {
+      width: 26px; height: 26px;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 6px;
+      border: 1px solid var(--border-gold);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gold);
+      background: rgba(216,186,104,0.06);
+    }
+    .option-btn.selected .option-key {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg);
+      border-color: transparent;
+    }
+    /* ── Error ── */
+    .step-error {
+      display: none;
+      margin-top: 12px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: #F87171;
+    }
+    .step-error.show { display: block; animation: fadeIn 0.3s ease-out; }
+    /* ── Nav row / buttons ── */
+    .step-nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 28px;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg);
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      padding: 14px 32px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: box-shadow 0.25s, transform 0.2s;
+      position: relative;
+    }
+    .btn-primary:hover {
+      box-shadow: 0 0 40px rgba(216,186,104,0.5);
+      transform: scale(1.03);
+    }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary svg { width: 16px; height: 16px; fill: var(--bg); }
+    .btn-primary-lg {
+      font-size: 17px;
+      padding: 17px 44px;
+    }
+    .enter-hint {
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+    .enter-hint strong { color: var(--gold); font-weight: 600; }
+    @media (max-width: 640px) { .enter-hint { display: none; } }
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 8px 0;
+      margin-top: 18px;
+      transition: color 0.2s;
+    }
+    .btn-back:hover { color: var(--gold); }
+    .btn-back svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    /* ── Success step ── */
+    .success-wrap { text-align: center; padding: 12px 0 4px; }
+    .success-icon {
+      width: 64px; height: 64px;
+      margin: 0 auto 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(216,186,104,0.1);
+      border: 1px solid var(--border-gold);
+    }
+    .success-icon svg {
+      width: 30px; height: 30px;
+      stroke: var(--gold); fill: none;
+      stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .success-h {
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .success-h span {
+      background: linear-gradient(90deg, var(--gold) 0%, var(--gold-dark) 40%, var(--gold) 80%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+    }
+    .success-p {
+      font-size: 15.5px;
+      line-height: 1.65;
+      color: var(--muted);
+      max-width: 440px;
+      margin: 0 auto 30px;
+    }
+    /* ── Trust badges ── */
+    .trust-badges {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 32px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .badge-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #34d399;
+      display: inline-block;
+      margin-right: 6px;
+    }
+    .badge-sep {
+      width: 1px; height: 16px;
+      background: rgba(229,231,235,0.15);
+    }
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12.5px;
+      color: rgba(156,163,175,0.6);
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="glow-tr"></div>
+  <div class="glow-bl"></div>
+
+  <!-- ══════════ HEADER ══════════ -->
+  <header class="header">
+    <div class="header-glow"></div>
+    <div class="header-inner">
+      <div class="logo-row fade-in">
+        <div class="logo-icon">
+          <img src="images/Sprknetwork.png" alt="SPRK Network Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+        </div>
+        <div class="logo-text">SPRK <span>Network</span></div>
+      </div>
+      <p class="pre-headline fade-in-up delay-1">Welcome to SPRK Network</p>
+    </div>
+  </header>
+
+  <!-- ══════════ TYPEFORM ══════════ -->
+  <section class="form-section">
+    <div class="form-card fade-in-up delay-2">
+
+      <div class="progress-row">
+        <span id="progress-label">Step 1 of 6</span>
+        <span>SPRK <span style="color:var(--gold);">Application</span></span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+
+      <form id="sprk-form" novalidate>
+
+        <!-- Step 1 — First Name -->
+        <div class="step active" data-step="0">
+          <h2 class="step-q">What's your <em>first name</em>?</h2>
+          <p class="step-sub">Let's start with the basics.</p>
+          <input class="tf-input" type="text" id="firstName" name="firstName" placeholder="Type your first name…" autocomplete="given-name" />
+          <p class="step-error" id="error-0">Please enter your first name.</p>
+          <div class="step-nav">
+            <button type="button" class="btn-primary" onclick="nextStep()">
+              OK
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </button>
+            <span class="enter-hint">press <strong>Enter ↵</strong></span>
+          </div>
+        </div>
+
+        <!-- Step 2 — Last Name -->
+        <div class="step" data-step="1">
+          <h2 class="step-q">And your <em>last name</em>?</h2>
+          <p class="step-sub">Nice to meet you.</p>
+          <input class="tf-input" type="text" id="lastName" name="lastName" placeholder="Type your last name…" autocomplete="family-name" />
+          <p class="step-error" id="error-1">Please enter your last name.</p>
+          <div class="step-nav">
+            <button type="button" class="btn-primary" onclick="nextStep()">
+              OK
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </button>
+            <span class="enter-hint">press <strong>Enter ↵</strong></span>
+          </div>
+          <button type="button" class="btn-back" onclick="prevStep()">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+        </div>
+
+        <!-- Step 3 — Email -->
+        <div class="step" data-step="2">
+          <h2 class="step-q">What's the best <em>email</em> to reach you?</h2>
+          <p class="step-sub">We'll send your next steps here. No spam — ever.</p>
+          <input class="tf-input" type="email" id="email" name="email" placeholder="name@example.com" autocomplete="email" inputmode="email" />
+          <p class="step-error" id="error-2">Please enter a valid email address.</p>
+          <div class="step-nav">
+            <button type="button" class="btn-primary" onclick="nextStep()">
+              OK
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </button>
+            <span class="enter-hint">press <strong>Enter ↵</strong></span>
+          </div>
+          <button type="button" class="btn-back" onclick="prevStep()">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+        </div>
+
+        <!-- Step 4 — Phone Number -->
+        <div class="step" data-step="3">
+          <h2 class="step-q">What's your <em>phone number</em>?</h2>
+          <p class="step-sub">So our team can personally follow up with you.</p>
+          <input class="tf-input" type="tel" id="phone" name="phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" />
+          <p class="step-error" id="error-3">Please enter a valid phone number.</p>
+          <div class="step-nav">
+            <button type="button" class="btn-primary" onclick="nextStep()">
+              OK
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </button>
+            <span class="enter-hint">press <strong>Enter ↵</strong></span>
+          </div>
+          <button type="button" class="btn-back" onclick="prevStep()">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+        </div>
+
+        <!-- Step 5 — How did you hear about SPRK Network -->
+        <div class="step" data-step="4">
+          <h2 class="step-q">How did you hear about <em>SPRK Network</em>?</h2>
+          <p class="step-sub">Pick the one that fits best.</p>
+          <div class="options" id="source-options">
+            <button type="button" class="option-btn" onclick="selectOption(this, 'TikTok')"><span class="option-key">A</span>TikTok</button>
+            <button type="button" class="option-btn" onclick="selectOption(this, 'Instagram')"><span class="option-key">B</span>Instagram</button>
+            <button type="button" class="option-btn" onclick="selectOption(this, 'YouTube')"><span class="option-key">C</span>YouTube</button>
+            <button type="button" class="option-btn" onclick="selectOption(this, 'Friend / Referral')"><span class="option-key">D</span>Friend / Referral</button>
+            <button type="button" class="option-btn" onclick="selectOption(this, 'Other')"><span class="option-key">E</span>Other</button>
+          </div>
+          <p class="step-error" id="error-4">Please select an option.</p>
+          <button type="button" class="btn-back" onclick="prevStep()">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+        </div>
+
+        <!-- Step 6 — Why do you want to learn more -->
+        <div class="step" data-step="5">
+          <h2 class="step-q">Why do you want to <em>learn more</em>?</h2>
+          <p class="step-sub">Tell us a little about your goals — a sentence or two is perfect.</p>
+          <textarea class="tf-input" id="why" name="why" placeholder="I want to learn more because…"></textarea>
+          <p class="step-error" id="error-5">Please tell us a little about why you're interested.</p>
+          <div class="step-nav">
+            <button type="button" class="btn-primary btn-primary-lg" onclick="nextStep()">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Submit
+            </button>
+          </div>
+          <button type="button" class="btn-back" onclick="prevStep()">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+        </div>
+
+        <!-- Step 7 — Success -->
+        <div class="step" data-step="6">
+          <div class="success-wrap">
+            <div class="success-icon">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <h2 class="success-h">You're all set, <span id="success-name">friend</span>!</h2>
+            <p class="success-p">
+              Your application has been received. Take the next step now and
+              join the community that's already building real results.
+            </p>
+            <a href="https://www.fanbasis.com/agency-checkout/sprk-network/60XK9" target="_blank" class="btn-primary btn-primary-lg">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Start Today
+            </a>
+            <div class="trust-badges">
+              <span><span class="badge-dot"></span>Highly Secure Payments</span>
+              <div class="badge-sep"></div>
+              <span><span class="badge-dot"></span>Get Started For $1</span>
+              <div class="badge-sep"></div>
+              <span><span class="badge-dot"></span>Cancel anytime</span>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </section>
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <footer class="footer">
+    &copy; 2026 SPRK Network. All rights reserved.
+  </footer>
+</div>
+
+<script>
+  /* ═══════════════════════════════════════════════
+     CONFIG — paste your Google Apps Script Web App
+     URL (or any webhook) here to receive submissions.
+     Leave empty to skip sending (form still works).
+  ═══════════════════════════════════════════════ */
+  var SUBMIT_URL = "";
+
+  var TOTAL_QUESTIONS = 6;
+  var currentStep = 0;
+  var answers = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    source: "",
+    why: ""
+  };
+
+  var steps = document.querySelectorAll(".step");
+  var progressFill = document.getElementById("progress-fill");
+  var progressLabel = document.getElementById("progress-label");
+
+  function showStep(index) {
+    steps.forEach(function (s) { s.classList.remove("active"); });
+    steps[index].classList.add("active");
+    currentStep = index;
+
+    var pct = Math.min((index / TOTAL_QUESTIONS) * 100, 100);
+    if (index >= TOTAL_QUESTIONS) pct = 100;
+    progressFill.style.width = pct + "%";
+    progressLabel.textContent = index >= TOTAL_QUESTIONS
+      ? "Complete"
+      : "Step " + (index + 1) + " of " + TOTAL_QUESTIONS;
+
+    // Focus the input on the new step
+    var input = steps[index].querySelector(".tf-input");
+    if (input) setTimeout(function () { input.focus(); }, 350);
+  }
+
+  function hideError(index) {
+    var err = document.getElementById("error-" + index);
+    if (err) err.classList.remove("show");
+  }
+
+  function showError(index) {
+    var err = document.getElementById("error-" + index);
+    if (err) err.classList.add("show");
+  }
+
+  function validateStep(index) {
+    hideError(index);
+    switch (index) {
+      case 0:
+        answers.firstName = document.getElementById("firstName").value.trim();
+        if (!answers.firstName) { showError(0); return false; }
+        return true;
+      case 1:
+        answers.lastName = document.getElementById("lastName").value.trim();
+        if (!answers.lastName) { showError(1); return false; }
+        return true;
+      case 2:
+        answers.email = document.getElementById("email").value.trim();
+        var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(answers.email);
+        if (!emailOk) { showError(2); return false; }
+        return true;
+      case 3:
+        answers.phone = document.getElementById("phone").value.trim();
+        var digits = answers.phone.replace(/\D/g, "");
+        if (digits.length < 7) { showError(3); return false; }
+        return true;
+      case 4:
+        if (!answers.source) { showError(4); return false; }
+        return true;
+      case 5:
+        answers.why = document.getElementById("why").value.trim();
+        if (!answers.why) { showError(5); return false; }
+        return true;
+    }
+    return true;
+  }
+
+  function nextStep() {
+    if (!validateStep(currentStep)) return;
+    if (currentStep === TOTAL_QUESTIONS - 1) {
+      submitForm();
+    }
+    showStep(currentStep + 1);
+  }
+
+  function prevStep() {
+    if (currentStep > 0) showStep(currentStep - 1);
+  }
+
+  function selectOption(btn, value) {
+    answers.source = value;
+    hideError(4);
+    var siblings = btn.parentElement.querySelectorAll(".option-btn");
+    siblings.forEach(function (b) { b.classList.remove("selected"); });
+    btn.classList.add("selected");
+    // Auto-advance after a brief highlight, typeform-style
+    setTimeout(function () {
+      if (currentStep === 4) showStep(5);
+    }, 350);
+  }
+
+  function submitForm() {
+    document.getElementById("success-name").textContent = answers.firstName || "friend";
+    if (!SUBMIT_URL) return;
+    try {
+      fetch(SUBMIT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          "FIRST NAME": answers.firstName,
+          "LAST NAME": answers.lastName,
+          "EMAIL": answers.email,
+          "PHONE NUMBER": answers.phone,
+          "HOW DID YOU HEAR ABOUT SPRK NETWORK": answers.source,
+          "WHY DO YOU WANT TO LEARN MORE?": answers.why
+        })
+      });
+    } catch (e) { /* never block the user on a network error */ }
+  }
+
+  /* Enter key advances (except inside the textarea, where Enter makes a new line) */
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter") return;
+    if (currentStep >= TOTAL_QUESTIONS) return;
+    if (e.target && e.target.tagName === "TEXTAREA") return;
+    e.preventDefault();
+    nextStep();
+  });
+
+  /* Letter keys A–E select an option on the choice step */
+  document.addEventListener("keydown", function (e) {
+    if (currentStep !== 4) return;
+    var i = ["a", "b", "c", "d", "e"].indexOf(e.key.toLowerCase());
+    if (i === -1) return;
+    var btns = document.querySelectorAll("#source-options .option-btn");
+    if (btns[i]) btns[i].click();
+  });
+
+  showStep(0);
+</script>
+</body>
+</html>
