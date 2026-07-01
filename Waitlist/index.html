@@ -157,7 +157,8 @@
       border-radius: 20px;
       padding: 36px 36px 32px;
       box-shadow: 0 8px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(216,186,104,0.08);
-      animation: pulseGlow 5s ease-in-out infinite;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease-out 0.2s forwards, pulseGlow 5s ease-in-out infinite;
       overflow: hidden;
     }
     @media (max-width: 640px) {
@@ -431,7 +432,7 @@
 
   <!-- ══════════ TYPEFORM ══════════ -->
   <section class="form-section">
-    <div class="form-card fade-in-up delay-2">
+    <div class="form-card">
 
       <div class="progress-row">
         <span id="progress-label">Step 1 of 6</span>
@@ -592,7 +593,7 @@
      URL (or any webhook) here to receive submissions.
      Leave empty to skip sending (form still works).
   ═══════════════════════════════════════════════ */
-  var SUBMIT_URL = "";
+  var SUBMIT_URL = "https://script.google.com/a/macros/sprknetwork.app/s/AKfycbxQOpGrFZbOOKuLjHp8o8xkoH0bqc--SX-b433MhIfEFIHkVRjNlORnuUP7PW8oFTPr/exec";
 
   var TOTAL_QUESTIONS = 6;
   var currentStep = 0;
@@ -699,7 +700,7 @@
       fetch(SUBMIT_URL, {
         method: "POST",
         mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({
           "FIRST NAME": answers.firstName,
           "LAST NAME": answers.lastName,
