@@ -527,6 +527,16 @@
             <button type="button" class="option-btn" onclick="selectOption(this, 'Friend / Referral')"><span class="option-key">D</span>Friend / Referral</button>
             <button type="button" class="option-btn" onclick="selectOption(this, 'Other')"><span class="option-key">E</span>Other</button>
           </div>
+          <div id="other-wrap" style="display:none; margin-top:14px;">
+            <input class="tf-input" type="text" id="sourceOther" placeholder="How did you hear about us? Tell us here…" />
+            <div class="step-nav">
+              <button type="button" class="btn-primary" onclick="nextStep()">
+                OK
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              </button>
+              <span class="enter-hint">press <strong>Enter ↵</strong></span>
+            </div>
+          </div>
           <p class="step-error" id="error-4">Please select an option.</p>
           <button type="button" class="btn-back" onclick="prevStep()">
             <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
@@ -558,22 +568,11 @@
             <div class="success-icon">
               <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
-            <h2 class="success-h">You're all set, <span id="success-name">friend</span>!</h2>
+            <h2 class="success-h">Thanks for your application, <span id="success-name">friend</span>!</h2>
             <p class="success-p">
-              Your application has been received. Take the next step now and
-              join the community that's already building real results.
+              Our team will review your application and let you know
+              as soon as a spot opens up.
             </p>
-            <a href="https://www.fanbasis.com/agency-checkout/sprk-network/60XK9" target="_blank" class="btn-primary btn-primary-lg">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-              Start Today
-            </a>
-            <div class="trust-badges">
-              <span><span class="badge-dot"></span>Highly Secure Payments</span>
-              <div class="badge-sep"></div>
-              <span><span class="badge-dot"></span>Get Started For $1</span>
-              <div class="badge-sep"></div>
-              <span><span class="badge-dot"></span>Cancel anytime</span>
-            </div>
           </div>
         </div>
 
@@ -659,7 +658,13 @@
         if (digits.length < 7) { showError(3); return false; }
         return true;
       case 4:
-        if (!answers.source) { showError(4); return false; }
+        var err4 = document.getElementById("error-4");
+        if (!answers.source) { err4.textContent = "Please select an option."; showError(4); return false; }
+        if (answers.source.indexOf("Other") === 0) {
+          var otherTxt = document.getElementById("sourceOther").value.trim();
+          if (!otherTxt) { err4.textContent = "Please tell us how you heard about us."; showError(4); return false; }
+          answers.source = "Other: " + otherTxt;
+        }
         return true;
       case 5:
         answers.why = document.getElementById("why").value.trim();
@@ -687,10 +692,18 @@
     var siblings = btn.parentElement.querySelectorAll(".option-btn");
     siblings.forEach(function (b) { b.classList.remove("selected"); });
     btn.classList.add("selected");
-    // Auto-advance after a brief highlight, typeform-style
-    setTimeout(function () {
-      if (currentStep === 4) showStep(5);
-    }, 350);
+    var otherWrap = document.getElementById("other-wrap");
+    if (value === "Other") {
+      // "Other" requires an explanation — show the input, no auto-advance
+      otherWrap.style.display = "block";
+      setTimeout(function () { document.getElementById("sourceOther").focus(); }, 100);
+    } else {
+      otherWrap.style.display = "none";
+      // Auto-advance after a brief highlight, typeform-style
+      setTimeout(function () {
+        if (currentStep === 4) showStep(5);
+      }, 350);
+    }
   }
 
   function submitForm() {
@@ -725,6 +738,7 @@
   /* Letter keys A–E select an option on the choice step */
   document.addEventListener("keydown", function (e) {
     if (currentStep !== 4) return;
+    if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
     var i = ["a", "b", "c", "d", "e"].indexOf(e.key.toLowerCase());
     if (i === -1) return;
     var btns = document.querySelectorAll("#source-options .option-btn");
