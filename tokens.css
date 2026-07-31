@@ -1,0 +1,113 @@
+/* ═══════════════════════════════════════════════════════════
+   SPRK NETWORK — DESIGN TOKENS
+   Editorial/atmospheric system: dark paper, muted-gold accent,
+   weighty grotesque display + serif italic accent.
+
+   Scale is built in OKLCH so the paper/ink steps stay perceptually
+   even and so color-mix() blends cleanly. Nothing in styles.css
+   should hard-code a colour.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  color-scheme: dark;
+
+  /* ── Colour · paper (surfaces, darkest → lightest) ────────── */
+  --color-paper:        oklch(13% 0.014 250);   /* page            ≈ #0B0F14 */
+  --color-paper-2:      oklch(18% 0.028 255);   /* card            ≈ #0F1B2D */
+  --color-paper-3:      oklch(23% 0.030 255);   /* raised / hover  ≈ #122034 */
+  --color-paper-4:      oklch(30% 0.028 255);   /* highest         */
+
+  /* ── Colour · ink (text, strongest → faintest) ───────────── */
+  --color-ink:          oklch(93% 0.005 250);   /* headings        ≈ #E5E7EB */
+  --color-ink-2:        oklch(76% 0.016 255);   /* body            */
+  --color-ink-3:        oklch(58% 0.018 255);   /* meta / labels   */
+
+  /* ── Colour · rules ──────────────────────────────────────── */
+  --color-rule:         oklch(27% 0.020 250);
+  --color-rule-strong:  oklch(38% 0.026 250);
+
+  /* ── Colour · accent (muted gold — SPRK's signature) ─────── */
+  --color-accent:       oklch(85% 0.070 90);    /* gold       ≈ #E5D19A */
+  --color-accent-2:     oklch(79% 0.105 85);    /* gold-dark  ≈ #D8BA68 */
+  --color-accent-soft:  oklch(85% 0.030 90);
+  --color-accent-ink:   oklch(16% 0.030 90);    /* text ON gold */
+  --color-focus:        oklch(88% 0.090 90);
+  --color-success:      oklch(74% 0.160 155);   /*            ≈ #34D399 */
+  --color-error:        oklch(70% 0.200 25);
+
+  /* Ambient blooms — gold above, deep navy below. Kept low-chroma
+     so the page reads premium rather than neon. */
+  --color-bloom-1:      oklch(80% 0.090 90);
+  --color-bloom-2:      oklch(45% 0.070 255);
+
+  /* ── Typography ──────────────────────────────────────────── */
+  --font-display: "Inter Tight", system-ui, -apple-system, sans-serif;
+  --font-body:    "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-accent:  "Instrument Serif", "Times New Roman", Georgia, serif;
+
+  --text-xs:      0.75rem;
+  --text-sm:      0.8125rem;
+  --text-base:    1rem;
+  --text-md:      1.0625rem;
+  --text-lg:      1.25rem;
+  --text-xl:      1.5rem;
+  --text-2xl:     2rem;
+  --text-3xl:     2.75rem;
+  --text-4xl:     clamp(2.5rem, 4vw + 1rem, 4.5rem);
+  --text-display: clamp(2.75rem, 10vw + 0.25rem, 8.5rem);
+
+  --leading-display: 0.92;
+  --leading-tight:   1.05;
+  --leading-snug:    1.25;
+  --leading-body:    1.55;
+
+  /* ── Space (4pt) ─────────────────────────────────────────── */
+  --space-2xs: 0.25rem;
+  --space-xs:  0.5rem;
+  --space-sm:  0.75rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-4xl: 9rem;
+
+  /* ── Motion ──────────────────────────────────────────────── */
+  --ease-out:    cubic-bezier(0.20, 0.80, 0.20, 1.00);
+  --ease-in:     cubic-bezier(0.40, 0.00, 1.00, 1.00);
+  --ease-in-out: cubic-bezier(0.40, 0.00, 0.20, 1.00);
+  --dur-fast:    120ms;
+  --dur-base:    220ms;
+  --dur-slow:    400ms;
+  --marquee:     90s;
+
+  /* ── Rules / radii ───────────────────────────────────────── */
+  --rule-hair:   1px;
+  --rule-bold:   2px;
+  --radius-xs:   3px;
+  --radius-sm:   6px;
+  --radius-md:   12px;
+  --radius-lg:   20px;
+  --radius-pill: 999px;
+
+  /* ── Layout ──────────────────────────────────────────────── */
+  --page-gutter: clamp(1rem, 4vw, 3rem);
+  --max-width:   80rem;
+  --measure:     60ch;
+
+  /* ── Shadows ─────────────────────────────────────────────────
+     No spread, no `0 0 0 1px` ring: a spread glow paints a hard
+     rounded-rect edge on dark paper, which reads as a barrier
+     around the card. Depth = soft downward shadow. Definition =
+     the border, which is a single hairline. ──────────────────── */
+  --sh-card:  0 6px 28px rgba(0, 0, 0, 0.42);
+  --sh-lift:  0 16px 46px rgba(0, 0, 0, 0.55);
+  --sh-media: 0 10px 48px rgba(0, 0, 0, 0.55);
+  --sh-nav:   0 8px 32px rgba(0, 0, 0, 0.45);
+
+  /* ── Z-index ─────────────────────────────────────────────── */
+  --z-ambient: -2;
+  --z-nav:     40;
+  --z-skip:   100;
+}
