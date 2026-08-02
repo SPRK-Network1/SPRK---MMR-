@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The 3 Pillars of SPRK Network</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#07080B; --ink2:#0B0D12; --panel:rgba(255,255,255,.035);
+  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.055);
+  --ember:#FF6A21; --ember2:#FFA53D; --violet:#7A6BFF; --mint:#3BE0A0;
+  --text:#EFF2F7; --mut:#8B93A5; --dim:#5C6373;
+  --disp:'Archivo',system-ui,sans-serif;
+  --body:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--ink); color:var(--text); font-family:var(--body);
+  overflow:hidden; -webkit-font-smoothing:antialiased;
+}
+/* ---------- ambient field ---------- */
+.field{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.field b{position:absolute;display:block;border-radius:50%;filter:blur(90px);opacity:.5}
+.b1{width:900px;height:900px;left:-260px;top:-340px;background:radial-gradient(circle,rgba(255,106,33,.34),transparent 66%);animation:drift1 26s ease-in-out infinite}
+.b2{width:820px;height:820px;right:-280px;bottom:-320px;background:radial-gradient(circle,rgba(122,107,255,.30),transparent 66%);animation:drift2 32s ease-in-out infinite}
+.b3{width:560px;height:560px;left:44%;top:52%;background:radial-gradient(circle,rgba(255,165,61,.16),transparent 68%);animation:drift1 40s ease-in-out infinite reverse}
+@keyframes drift1{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(90px,70px,0)}}
+@keyframes drift2{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(-80px,-60px,0)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 90% 70% at 50% 45%,#000 25%,transparent 78%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 45%,#000 25%,transparent 78%)}
+.vig{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse 75% 70% at 50% 45%,transparent 40%,rgba(4,5,7,.86) 100%)}
+
+/* ---------- stage ---------- */
+#viewport{position:fixed;inset:0;z-index:2;display:grid;place-items:center}
+#stage{width:1280px;height:720px;position:relative;transform-origin:center center}
+.slide{position:absolute;inset:0;padding:62px 78px 70px;display:none;flex-direction:column}
+.slide.on{display:flex;animation:in .5s cubic-bezier(.2,.7,.3,1) both}
+@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.slide.on > *{animation:rise .55s cubic-bezier(.2,.7,.3,1) both}
+.slide.on > *:nth-child(1){animation-delay:.04s}
+.slide.on > *:nth-child(2){animation-delay:.10s}
+.slide.on > *:nth-child(3){animation-delay:.16s}
+.slide.on > *:nth-child(4){animation-delay:.22s}
+.slide.on > *:nth-child(5){animation-delay:.28s}
+.slide.on > *:nth-child(6){animation-delay:.34s}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* ---------- type ---------- */
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ember2);
+  display:flex;align-items:center;gap:11px;margin-bottom:20px}
+.eyebrow::before{content:"";width:22px;height:2px;background:linear-gradient(90deg,var(--ember),transparent);border-radius:2px}
+.eyebrow.v{color:var(--violet)}
+.eyebrow.v::before{background:linear-gradient(90deg,var(--violet),transparent)}
+h1{font-family:var(--disp);font-weight:800;font-size:82px;line-height:.94;letter-spacing:-.035em}
+h2{font-family:var(--disp);font-weight:700;font-size:47px;line-height:1.04;letter-spacing:-.03em;margin-bottom:14px}
+h3{font-family:var(--disp);font-weight:700;font-size:22px;letter-spacing:-.015em;margin-bottom:8px}
+.lede{font-size:18px;line-height:1.55;color:#C3C9D6;max-width:830px}
+.mut{color:var(--mut)}
+.em{color:var(--ember2)}
+.vi{color:var(--violet)}
+strong{font-weight:600;color:#fff}
+
+/* ---------- chrome ---------- */
+.foot{position:absolute;left:78px;right:78px;bottom:30px;display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.foot .mark{display:flex;align-items:center;gap:9px}
+.foot .mark img{width:13px;opacity:.5}
+.rail{position:fixed;left:0;right:0;top:0;height:2px;z-index:6;background:rgba(255,255,255,.06)}
+.rail i{display:block;height:100%;background:linear-gradient(90deg,var(--ember),var(--ember2));box-shadow:0 0 14px rgba(255,106,33,.9);transition:width .45s cubic-bezier(.2,.7,.3,1)}
+.nav{position:fixed;right:26px;bottom:22px;z-index:6;display:flex;gap:8px}
+.nav button{width:36px;height:32px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.045);
+  color:#B9C0CE;cursor:pointer;font-size:14px;line-height:1;transition:.18s;backdrop-filter:blur(8px)}
+.nav button:hover{background:rgba(255,106,33,.16);border-color:rgba(255,106,33,.5);color:#fff}
+.nav button:focus-visible{outline:2px solid var(--ember2);outline-offset:2px}
+.hint{position:fixed;left:26px;bottom:26px;z-index:6;font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:#4A505E}
+
+/* ---------- components ---------- */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 24px;position:relative;overflow:hidden}
+.card::after{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;
+  background:linear-gradient(160deg,rgba(255,255,255,.07),transparent 42%)}
+.card.hi{border-color:rgba(255,106,33,.3);box-shadow:0 0 0 1px rgba(255,106,33,.08),0 18px 60px -28px rgba(255,106,33,.55)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.num{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--ember);margin-bottom:12px;display:block}
+.card p{font-size:14.5px;line-height:1.6;color:var(--mut)}
+ul.tick{list-style:none;display:flex;flex-direction:column;gap:9px}
+ul.tick li{font-size:15px;line-height:1.5;color:#BAC1CF;padding-left:22px;position:relative}
+ul.tick li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:2px;
+  background:var(--ember);box-shadow:0 0 10px rgba(255,106,33,.9);transform:skewX(-16deg)}
+ul.tick.v li::before{background:var(--violet);box-shadow:0 0 10px rgba(122,107,255,.9)}
+
+.say{border-left:3px solid var(--violet);background:linear-gradient(90deg,rgba(122,107,255,.13),rgba(122,107,255,0));
+  border-radius:0 14px 14px 0;padding:17px 22px}
+.say .lab{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--violet);text-transform:uppercase;margin-bottom:7px}
+.say q,.say p{font-size:16.5px;line-height:1.55;color:#E4E8F0;font-style:normal}
+.key{border-left:3px solid var(--ember);background:linear-gradient(90deg,rgba(255,106,33,.14),rgba(255,106,33,0));
+  border-radius:0 14px 14px 0;padding:17px 22px}
+.key .lab{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--ember2);text-transform:uppercase;margin-bottom:7px}
+.key p{font-size:16px;line-height:1.55;color:#E4E8F0}
+
+/* slab signature — echoes the logo geometry */
+.slab{position:relative;display:block;transform:skewX(-16deg);border-radius:5px;
+  background:linear-gradient(100deg,rgba(255,255,255,.94),rgba(255,255,255,.62));
+  box-shadow:0 0 34px rgba(255,106,33,.35)}
+.slab.e{background:linear-gradient(100deg,var(--ember),var(--ember2));box-shadow:0 0 42px rgba(255,106,33,.7)}
+.slab.g{background:linear-gradient(100deg,rgba(255,255,255,.16),rgba(255,255,255,.07));box-shadow:none}
+
+.pillarRow{display:grid;grid-template-columns:64px 1fr;gap:26px;align-items:start}
+.roman{font-family:var(--disp);font-weight:800;font-size:54px;line-height:1;letter-spacing:-.04em;
+  color:rgba(255,106,33,.16);-webkit-text-stroke:1.5px rgba(255,106,33,.85)}
+.tight .card{padding:16px 20px}
+.tight .card h3{font-size:18px;margin-bottom:5px}
+.tight .card p{font-size:13.5px;line-height:1.55}
+.tight .stack{gap:14px}
+.chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:#C8CEDA;border:1px solid var(--line);background:rgba(255,255,255,.045);
+  padding:6px 11px;border-radius:999px}
+.chip.e{color:var(--ember2);border-color:rgba(255,106,33,.35);background:rgba(255,106,33,.08)}
+.chips{display:flex;gap:9px;flex-wrap:wrap}
+.q{font-family:var(--disp);font-weight:700;font-size:26px;letter-spacing:-.02em;line-height:1.18}
+.stack{display:flex;flex-direction:column;gap:16px}
+.rule{height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+
+/* title slide */
+.title-wrap{flex:1;display:flex;flex-direction:column;justify-content:center}
+.logo-lg{width:88px;margin-bottom:34px;filter:drop-shadow(0 0 34px rgba(255,106,33,.55))}
+.title-slabs{display:flex;gap:9px;margin-top:34px}
+.title-slabs span{height:6px;border-radius:3px;transform:skewX(-16deg)}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="field"><b class="b1"></b><b class="b2"></b><b class="b3"></b></div>
+<div class="grid-bg"></div>
+<div class="vig"></div>
+<div class="rail"><i id="rail"></i></div>
+
+<div id="viewport"><div id="stage">
+
+<!-- 1 — TITLE -->
+<section class="slide">
+  <div class="title-wrap">
+    <img class="logo-lg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALYAAADYCAYAAABGDhkuAAAIwElEQVR42u2dP49cZxWHn70owYEgHIHjBBFh+AzYaZIGx4VFIgXY2f0GCEEBHQ1CKSiQkJCi1EmVBmIXFAkQIYr8ESQ0KdJAAThgr+IE4WAbQ0AZirtXzpLIc2ZmZ+ae8z6PtO1qfO5vjx6f99x3tqbTKcn5CPBD4JvAx5As/Bt4Gfgx8Oxh//KtAsH+7n6wJS+PA985zF/YFSjKV8xFer4NfMNgH+SauSjBY8BtBvsmPzMTJTgOnDbYNzlvJsqw438eD/IC8KC5SM8V4G7gP3bsnmfMRAmOHpaOVAm2OqKOlFQRdUQdKdmx1ZFaOvKQKqKOVGSiihzkReABc1FCR44B/7Vj9/zUTJTRkTOqiDpSkaWmI9VURB2pw9/pj9kXmo50BQuijtTgLpaYjlQM9jkzUYaFpyMVVUQdUUdKdmx1RB0pG2x1pA4LTUeqqgi4O1KFKyywO9IVLohduwZHWWCVtXKwnwGm5qJNHakc7D36eyskP48y54u+XfGCOB2pwV3z6kj1YLs70qiOVJ6KDHhYU4MrzDEd6RooiDpSg6Pz6EgLwVZH6rCriqgjTetI10hB1JE6OhLaHWkl2OfwsKYKoVXWVlREHamlIzNf9O0aKog60pCOtBTs8+pIGWYe1rSkIuAqazM60jVWEK9Bq6MjZ1QRdaQiE1XkIE5H6ujIceBdO3aP05E6OvIlVUQdqciOKqKOVNWRD90d6RotiDpSR0ceUkXUkYpMVBF1pBkd6RouiDpSWEdaDrZv1hTWkZZVRB2pwwduZe0aL4g6UoMP3MraerDVkaI60rqKqCNFdaSzHupIIR05rYqoIxXZ+X8VuQd4CjhrbaSCjgwd+2lDLZV0pAPuZIEb40XGrCNb0+n0duAfwEetiRTRkWMd/as1P7ceUkhH7hwc25GXVOF14J1hKvIJ4C11RJJzEXgYeG3o2FfVkTDfArb8GeXPZ4HXhqnIgJfJxJhYgvHz/l0RdSTGlP5A67KlGC/v79jqSLAZANuWIU+w1RF1pKSKQH8K+bY6oo5U69jX1JGwjnzNMuQJtjoSZ8cS5FERdWQ+HbkXeNNS5OjY6khcR75qGfIEG9wdibJrCfKoiDqijpTt2OpIXEecjiQKtjoSx8OaRCqijszHPepIno59DfiFJQqhjiQKtjoSx8OaRCqijsRxOpKsYzsdCTYIdSRXsNURdaSkikD/Zs3bwO2Wa6aOuMqaqGNfBZ6zVCEd8c2aRMEGV1nVkYIqAvBx4G84HYnoiNORRB37Oh7WRHXEVdZEwQanI1FcZU2kIuC9I+pI0Y7tdCSuIx7WJAo2wDlLFsLpSCIVgX535C3giKVTRyp1bFdZ4zridCRRsMHpSBSnI4lUZNARV1nVkXId+xpOR9SRgsEGd0fUkYIqoo6oI2U7tm/WxHXEw5pEwQanI1G8dySRioC7I/PoiG/WJOrYfmeNOlIy2OB0JIq7I4lUBJyOzIPXoCXq2E5H4qgjiYINTkeiOB1JpCLQT0cu4yrrLDysSdaxr+Iqa6iJ4O5IqmCrI3GcjiRSkUFHPKyJcRwPa9J0bA9r4ry579st/twAngdOZwm2OiIRjgBngF8Bj2VQkUFH9uivQxOJsLuqhniYHfsq8ITPSubgBxk6NvR3aD+3DoeSMpwCfjfmjg3wLnAW+D79DonILFYyAj3sji03uR/4rWWYyQXgxNg7ttzkVeAvlmEmnwNOGuw8THFfPcquwc6Fs/0Y2wY7F6+oI5vREYO9erx6OcaOwc7FTyxBiInBzoXTkQ3oiMFePVN1ZP06YrDXg9ORNeuIwV4PrwBvWIaQjpwy2Ll05LxlWF/XNtjqyNg4lMMal6DWyxvAfZZhJkuvstqx14vTkRhLT0cM9nrxsGZNnm2w14vTkRhLT0cM9vpxOrIGHTHY68fpSIylbqd1KrIZnI7EWHg6YsfeDE5HVqwjBnszOB2JMTHYufDNmhgLT0cM9ubwRd8Vdm2DvTmcjhhsdaRxHTlpsHPhdCTGjsFWRyqybbDVkYqcmFdHDPZm8UXfFemIwd48HtbEmBjsXHjvSIy5piMGWx3JxK7BVkcqsm2w1ZGmdcRgj0dHnGnH2DHYuXApKsbEYOfTkb9ahpCOnDLY6kiTXdtgjwuDHWPmdGSTL/PeDTwLfNHnJAtw/76+ja5j/8hQy6p0ZJMd+4/A530+siB/vlV+NtmxL/hsZAlOcIvpyCaD7VVfsjId2aSK3Atc8tnIKnRkkx17D3jRZyOr0JFNz7E9RpZl2R6bigw6chHY8vnIglzY79yj6th7wEs+G1mCD90dGcORujoiyzIZm4oMOuJ0RJbhT8AXxtaxnY7Istw3RhVRR2RZXhijiqgjsgx/AM7S7x6NLtjDX92DPqeZ7OLe9kzG9KKBOhIPtsxgTB1bHYnxL+BTwD8tRY6O7WFNjCPAw5YhT7DRHcPsWII8KqKOzKcjnwauW4ocHdvDmriOfNky5Am2OqKOlFQRdSTOjX0dcTqSpGOrIzHuwOlIqmCrI+pISRVRR9SRsh3bwxp1pGSwwa+vUEcKqog6oo6U7dhOR+I68ohlyBNscJU1ysQS5FGRQUe8d2Q27o4k69h7wMs+ppm4O5Is2OB0JIrTkUQqMuiI0xF1pFzHdjqijpQMNjgdUUcKqgjAZ+i/3NPpiDpSqmNfwt2RqI64O0KuLzBVR2J4WJNIRcDDGnWkaMd2lTWuI81PR7J9l7pv1sRo/hq0TCoC/XTkormdyQ3gWMs6kq1jX8LDmgh3tK4jXcLP7HREHSmnIuB0JErTt7Jm7NiussY4QsNv1nRJP7errDGaPazJqCKDjrjKqo6U69iussZ1pMndkS7xZ3c6EqPJVdasKjLoiNORmI40tzuSuWM7HYnrSHOHNV3yz+90RB0ppyKDjjgdUUfKdew94NfmNqQjp1WRXHwPeM/szuSTBjsXvwG+brhvyXXglwY7H08CJ4FzwDvm+AC/p5+KXG7pH/0/YUeKz6kH2FkAAAAASUVORK5CYII=" alt="SPRK Network">
+    <div class="eyebrow">SPRK Network</div>
+    <h1>The 3 Pillars of<br>SPRK Network</h1>
+    <p class="lede" style="margin-top:26px">The machine that launches your ads. The offers you run. The people who make sure it works.</p>
+    <div class="title-slabs">
+      <span class="slab e" style="width:150px"></span>
+      <span class="slab" style="width:96px"></span>
+      <span class="slab g" style="width:62px"></span>
+    </div>
+  </div>
+  <div class="foot"><span class="mark"><img src="data:image/png;base64,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" alt="">SPRK Network</span><span>01 / 11</span></div>
+</section>
+
+<!-- 2 — THE MODEL -->
+<section class="slide">
+  <div class="eyebrow">The model</div>
+  <h2>How the money is actually made.</h2>
+  <p class="lede">We're partnered with a set of apps that pay for one thing: conversions. Every time an ad you run sends them someone who takes action, you get paid for that person.</p>
+  <div class="grid3" style="margin-top:32px">
+    <div class="card"><span class="num">01</span><h3>The apps pay per action</h3><p>A conversion can be a form filled out, an app downloaded, or an offer completed. Different apps count different actions.</p></div>
+    <div class="card hi"><span class="num">02</span><h3>Up to $20 a conversion</h3><p>Depending on the app and the action, a single conversion can pay up to twenty dollars. Volume is what turns that into a real number.</p></div>
+    <div class="card"><span class="num">03</span><h3>Ads are how you get them</h3><p>You run short-form ads on TikTok, Facebook and Instagram that funnel people into taking that action. That's the entire job.</p></div>
+  </div>
+  <div class="key" style="margin-top:26px"><div class="lab">Put simply</div><p>Money goes into ads. Ads send people to the app. The app pays you per person who converts. Your job is making that math work in your favour — and everything we're about to show you exists to help you do that faster.</p></div>
+  <div class="foot"><span class="mark"><img src="data:image/png;base64,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" alt="">The model</span><span>02 / 11</span></div>
+</section>
+
+<!-- 3 — WHAT YOU ACTUALLY DO -->
+<section class="slide">
+  <div class="eyebrow">The model</div>
+  <h2>What you're actually doing day to day.</h2>
+  <p class="lede">This is where most people expect something harder than it is. You're not building a brand and you're not on camera.</p>
+  <div class="grid2" style="margin-top:26px;gap:22px">
+    <div class="card">
+      <span class="num">You start from a proven angle</span>
+      <p style="margin-top:10px">An angle is the approach an ad takes — the hook, the caption, the style, the graphics. We hand you the angles that are <strong style="color:#fff">already working right now</strong> for other people running these same offers. You're not guessing what converts. You're rebuilding something that already does.</p>
+    </div>
+    <div class="card hi">
+      <span class="num">You never show your face</span>
+      <ul class="tick" style="margin-top:12px">
+        <li>No face on camera, ever</li>
+        <li>No voiceovers, no talking-head videos</li>
+        <li>Footage is sourced from external places, not filmed by you</li>
+        <li>You assemble the creative — you don't star in it</li>
+      </ul>
+    </div>
+  </div>
+  <div class="key" style="margin-top:24px"><div class="lab">The whole loop</div><p>Take a working angle → build the creative from sourced clips → launch it on the dashboard → keep what performs, kill what doesn't, scale the winners.</p></div>
+  <div class="foot"><span class="mark"><img src="data:image/png;base64,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" alt="">The model</span><span>03 / 11</span></div>
+</section>
+
+<!-- 4 — THE THREE -->
+<section class="slide">
+  <div class="eyebrow">Overview</div>
+  <h2>Three things, working together.</h2>
+  <p class="lede">Most people trying to do this are missing at least one of them. On their own, each is useful. Together, they're the whole business.</p>
+  <div class="grid3" style="margin-top:34px">
+    <div class="card hi">
+      <span class="slab e" style="width:74px;height:8px;margin-bottom:18px"></span>
+      <span class="num">Pillar I</span><h3>The Machine</h3>
+      <p>The dashboard that builds and launches your ad campaigns in seconds — plus the ad accounts to run them on.</p>
+    </div>
+    <div class="card hi">
+      <span class="slab e" style="width:74px;height:8px;margin-bottom:18px"></span>
+      <span class="num">Pillar II</span><h3>The Offers</h3>
+      <p>Apps we're partnered with directly, ready for you to promote on TikTok, Facebook and Instagram from day one.</p>
+    </div>
+    <div class="card hi">
+      <span class="slab e" style="width:74px;height:8px;margin-bottom:18px"></span>
+      <span class="num">Pillar III</span><h3>The Mentorship</h3>
+      <p>Real people who look at your work, fix what's wrong, and keep you moving — every week, not once at the start.</p>
+    </div>
+  </div>
+  <div class="key" style="margin-top:26px"><div class="lab">The short version</div><p>You're not buying a course on how to run ads. You're getting the machine that runs them, the offers to point it at, and a coach who's already done it.</p></div>
+  <div class="foot"><span class="mark"><img src="data:image/png;base64,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" alt="">Overview</span><span>04 / 11</span></div>
+</section>
+
+<!-- 5 — PILLAR I -->
+<section class="slide">
+  <div class="eyebrow">Pillar I</div>
+  <div class="pillarRow">
+    <div><span class="roman">I</span><span class="slab e" style="display:block;width:44px;height:7px;margin-top:14px"></span></div>
+    <div>
+      <h2 style="margin-bottom:10px">The Machine</h2>
+      <p class="lede" style="max-width:900px">The hard part of paid ads was never the idea. It's the setup — the accounts, the campaign build, the targeting, the launch. That's the part we removed.</p>
+      <div class="grid2" style="margin-top:24px;gap:22px">
+        <ul class="tick">
+          <li>Your creative goes in, the campaign goes live in <strong>30 to 60 seconds</strong></li>
+          <li><strong>Unlimited launches</strong> — test as many angles as you can make</li>
+          <li>Ad accounts handled for you, first business manager included</li>
+        </ul>
+        <ul class="tick">
+          <li>Every launch checked before it spends a dollar of your budget</li>
+          <li>Reviewed in <strong>30 minutes to 2 hours</strong>, not next week</li>
+          <li>Runs on <strong>TikTok, Facebook and Instagram</strong> from one place</li>
+        </ul>
+      </div>
+      <div class="key" style="margin-top:24px"><div class="lab">What that means for you</div><p>A media buyer spends hours doing what this does in under a minute — and you don't need to know how any of it works to use it.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span class="mark"><img src="data:image/png;base64,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" alt="">The Machine</span><span>05 / 11</span></div>
+</section>
+
+<!-- 6 — THE LOOP -->
+<section class="slide">
+  <div class="eyebrow">Pillar I · In practice</div>
+  <h2>What a launch actually looks like.</h2>
+  <p class="lede">This is the loop you'll run, over and over. Once you've done it once, it takes minutes.</p>
+  <div class="grid3" style="margin-top:30px">
+    <div class="card"><span class="num">Step 01</span><h3>Pick your offer</h3><p>Choose one of our partnered apps and one of the angles we've given you.</p></div>
+    <div class="card"><span class="num">Step 02</span><h3>Build the creative</h3><p>Assemble the short-form video from sourced footage. No face, no voiceover.</p></div>
+    <div class="card"><span class="num">Step 03</span><h3>Submit it</h3><p>Drop it into the dashboard with your offer and angle attached.</p></div>
+  </div>
+  <div class="grid3" style="margin-top:18px">
+    <div class="card"><span class="num">Step 04</span><h3>We review it</h3><p>Our team checks it inside a couple of hours so your accounts stay safe.</p></div>
+    <div class="card hi"><span class="num">Step 05</span><h3>It goes live</h3><p>Approved, and the dashboard fires the campaign live in 30 to 60 seconds.</p></div>
+    <div class="card hi"><span class="num">Step 06</span><h3>Scale what wins</h3><p>Kill what doesn't. Put more behind what does. That's the whole game.</p></div>
+  </div>
+  <div class="foot"><span class="mark"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALYAAADYCAYAAABGDhkuAAAIwElEQVR42u2dP49cZxWHn70owYEgHIHjBBFh+AzYaZIGx4VFIgXY2f0GCEEBHQ1CKSiQkJCi1EmVBmIXFAkQIYr8ESQ0KdJAAThgr+IE4WAbQ0AZirtXzpLIc2ZmZ+ae8z6PtO1qfO5vjx6f99x3tqbTKcn5CPBD4JvAx5As/Bt4Gfgx8Oxh//KtAsH+7n6wJS+PA985zF/YFSjKV8xFer4NfMNgH+SauSjBY8BtBvsmPzMTJTgOnDbYNzlvJsqw438eD/IC8KC5SM8V4G7gP3bsnmfMRAmOHpaOVAm2OqKOlFQRdUQdKdmx1ZFaOvKQKqKOVGSiihzkReABc1FCR44B/7Vj9/zUTJTRkTOqiDpSkaWmI9VURB2pw9/pj9kXmo50BQuijtTgLpaYjlQM9jkzUYaFpyMVVUQdUUdKdmx1RB0pG2x1pA4LTUeqqgi4O1KFKyywO9IVLohduwZHWWCVtXKwnwGm5qJNHakc7D36eyskP48y54u+XfGCOB2pwV3z6kj1YLs70qiOVJ6KDHhYU4MrzDEd6RooiDpSg6Pz6EgLwVZH6rCriqgjTetI10hB1JE6OhLaHWkl2OfwsKYKoVXWVlREHamlIzNf9O0aKog60pCOtBTs8+pIGWYe1rSkIuAqazM60jVWEK9Bq6MjZ1QRdaQiE1XkIE5H6ujIceBdO3aP05E6OvIlVUQdqciOKqKOVNWRD90d6RotiDpSR0ceUkXUkYpMVBF1pBkd6RouiDpSWEdaDrZv1hTWkZZVRB2pwwduZe0aL4g6UoMP3MraerDVkaI60rqKqCNFdaSzHupIIR05rYqoIxXZ+X8VuQd4CjhrbaSCjgwd+2lDLZV0pAPuZIEb40XGrCNb0+n0duAfwEetiRTRkWMd/as1P7ceUkhH7hwc25GXVOF14J1hKvIJ4C11RJJzEXgYeG3o2FfVkTDfArb8GeXPZ4HXhqnIgJfJxJhYgvHz/l0RdSTGlP5A67KlGC/v79jqSLAZANuWIU+w1RF1pKSKQH8K+bY6oo5U69jX1JGwjnzNMuQJtjoSZ8cS5FERdWQ+HbkXeNNS5OjY6khcR75qGfIEG9wdibJrCfKoiDqijpTt2OpIXEecjiQKtjoSx8OaRCqijszHPepIno59DfiFJQqhjiQKtjoSx8OaRCqijsRxOpKsYzsdCTYIdSRXsNURdaSkikD/Zs3bwO2Wa6aOuMqaqGNfBZ6zVCEd8c2aRMEGV1nVkYIqAvBx4G84HYnoiNORRB37Oh7WRHXEVdZEwQanI1FcZU2kIuC9I+pI0Y7tdCSuIx7WJAo2wDlLFsLpSCIVgX535C3giKVTRyp1bFdZ4zridCRRsMHpSBSnI4lUZNARV1nVkXId+xpOR9SRgsEGd0fUkYIqoo6oI2U7tm/WxHXEw5pEwQanI1G8dySRioC7I/PoiG/WJOrYfmeNOlIy2OB0JIq7I4lUBJyOzIPXoCXq2E5H4qgjiYINTkeiOB1JpCLQT0cu4yrrLDysSdaxr+Iqa6iJ4O5IqmCrI3GcjiRSkUFHPKyJcRwPa9J0bA9r4ry579st/twAngdOZwm2OiIRjgBngF8Bj2VQkUFH9uivQxOJsLuqhniYHfsq8ITPSubgBxk6NvR3aD+3DoeSMpwCfjfmjg3wLnAW+D79DonILFYyAj3sji03uR/4rWWYyQXgxNg7ttzkVeAvlmEmnwNOGuw8THFfPcquwc6Fs/0Y2wY7F6+oI5vREYO9erx6OcaOwc7FTyxBiInBzoXTkQ3oiMFePVN1ZP06YrDXg9ORNeuIwV4PrwBvWIaQjpwy2Ll05LxlWF/XNtjqyNg4lMMal6DWyxvAfZZhJkuvstqx14vTkRhLT0cM9nrxsGZNnm2w14vTkRhLT0cM9vpxOrIGHTHY68fpSIylbqd1KrIZnI7EWHg6YsfeDE5HVqwjBnszOB2JMTHYufDNmhgLT0cM9ubwRd8Vdm2DvTmcjhhsdaRxHTlpsHPhdCTGjsFWRyqybbDVkYqcmFdHDPZm8UXfFemIwd48HtbEmBjsXHjvSIy5piMGWx3JxK7BVkcqsm2w1ZGmdcRgj0dHnGnH2DHYuXApKsbEYOfTkb9ahpCOnDLY6kiTXdtgjwuDHWPmdGSTL/PeDTwLfNHnJAtw/76+ja5j/8hQy6p0ZJMd+4/A530+siB/vlV+NtmxL/hsZAlOcIvpyCaD7VVfsjId2aSK3Atc8tnIKnRkkx17D3jRZyOr0JFNz7E9RpZl2R6bigw6chHY8vnIglzY79yj6th7wEs+G1mCD90dGcORujoiyzIZm4oMOuJ0RJbhT8AXxtaxnY7Istw3RhVRR2RZXhijiqgjsgx/AM7S7x6NLtjDX92DPqeZ7OLe9kzG9KKBOhIPtsxgTB1bHYnxL+BTwD8tRY6O7WFNjCPAw5YhT7DRHcPsWII8KqKOzKcjnwauW4ocHdvDmriOfNky5Am2OqKOlFQRdSTOjX0dcTqSpGOrIzHuwOlIqmCrI+pISRVRR9SRsh3bwxp1pGSwwa+vUEcKqog6oo6U7dhOR+I68ohlyBNscJU1ysQS5FGRQUe8d2Q27o4k69h7wMs+ppm4O5Is2OB0JIrTkUQqMuiI0xF1pFzHdjqijpQMNjgdUUcKqgjAZ+i/3NPpiDpSqmNfwt2RqI64O0KuLzBVR2J4WJNIRcDDGnWkaMd2lTWuI81PR7J9l7pv1sRo/hq0TCoC/XTkormdyQ3gWMs6kq1jX8LDmgh3tK4jXcLP7HREHSmnIuB0JErTt7Jm7NiussY4QsNv1nRJP7errDGaPazJqCKDjrjKqo6U69iussZ1pMndkS7xZ3c6EqPJVdasKjLoiNORmI40tzuSuWM7HYnrSHOHNV3yz+90RB0ppyKDjjgdUUfKdew94NfmNqQjp1WRXHwPeM/szuSTBjsXvwG+brhvyXXglwY7H08CJ4FzwDvm+AC/p5+KXG7pH/0/YUeKz6kH2FkAAAAASUVORK5CYII=" alt="">The Machine</span><span>06 / 11</span></div>
+</section>
+
+<!-- 7 — PILLAR II -->
+<section class="slide">
+  <div class="eyebrow">Pillar II</div>
+  <div class="pillarRow">
+    <div><span class="roman">II</span><span class="slab e" style="display:block;width:44px;height:7px;margin-top:14px"></span></div>
+    <div>
+      <h2 style="margin-bottom:10px">The Offers</h2>
+      <p class="lede" style="max-width:900px">A machine with nothing to promote is a toy. We're partnered directly with the apps you'll be running ads for — which means you skip the part that stops most people before they start.</p>
+      <div class="grid2" style="margin-top:24px;gap:22px">
+        <ul class="tick">
+          <li>A roster of <strong>partnered apps</strong> you can promote from day one</li>
+          <li>Paying <strong>up to $20 per conversion</strong>, depending on the offer</li>
+          <li>Every offer unlocked, including the ones with limited spots</li>
+        </ul>
+        <ul class="tick">
+          <li>Angles that are already converting, handed to you <strong>five days early</strong></li>
+          <li><strong>You keep 90%</strong> of what your ads earn — we take 10%</li>
+          <li>No applications, no waiting on approval, no rejections</li>
+        </ul>
+      </div>
+      <div class="key" style="margin-top:24px"><div class="lab">What that means for you</div><p>Getting approved for offers like these on your own takes a track record you don't have yet. You're plugging into relationships that are already built — and we only make money when you do.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span class="mark"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALYAAADYCAYAAABGDhkuAAAIwElEQVR42u2dP49cZxWHn70owYEgHIHjBBFh+AzYaZIGx4VFIgXY2f0GCEEBHQ1CKSiQkJCi1EmVBmIXFAkQIYr8ESQ0KdJAAThgr+IE4WAbQ0AZirtXzpLIc2ZmZ+ae8z6PtO1qfO5vjx6f99x3tqbTKcn5CPBD4JvAx5As/Bt4Gfgx8Oxh//KtAsH+7n6wJS+PA985zF/YFSjKV8xFer4NfMNgH+SauSjBY8BtBvsmPzMTJTgOnDbYNzlvJsqw438eD/IC8KC5SM8V4G7gP3bsnmfMRAmOHpaOVAm2OqKOlFQRdUQdKdmx1ZFaOvKQKqKOVGSiihzkReABc1FCR44B/7Vj9/zUTJTRkTOqiDpSkaWmI9VURB2pw9/pj9kXmo50BQuijtTgLpaYjlQM9jkzUYaFpyMVVUQdUUdKdmx1RB0pG2x1pA4LTUeqqgi4O1KFKyywO9IVLohduwZHWWCVtXKwnwGm5qJNHakc7D36eyskP48y54u+XfGCOB2pwV3z6kj1YLs70qiOVJ6KDHhYU4MrzDEd6RooiDpSg6Pz6EgLwVZH6rCriqgjTetI10hB1JE6OhLaHWkl2OfwsKYKoVXWVlREHamlIzNf9O0aKog60pCOtBTs8+pIGWYe1rSkIuAqazM60jVWEK9Bq6MjZ1QRdaQiE1XkIE5H6ujIceBdO3aP05E6OvIlVUQdqciOKqKOVNWRD90d6RotiDpSR0ceUkXUkYpMVBF1pBkd6RouiDpSWEdaDrZv1hTWkZZVRB2pwwduZe0aL4g6UoMP3MraerDVkaI60rqKqCNFdaSzHupIIR05rYqoIxXZ+X8VuQd4CjhrbaSCjgwd+2lDLZV0pAPuZIEb40XGrCNb0+n0duAfwEetiRTRkWMd/as1P7ceUkhH7hwc25GXVOF14J1hKvIJ4C11RJJzEXgYeG3o2FfVkTDfArb8GeXPZ4HXhqnIgJfJxJhYgvHz/l0RdSTGlP5A67KlGC/v79jqSLAZANuWIU+w1RF1pKSKQH8K+bY6oo5U69jX1JGwjnzNMuQJtjoSZ8cS5FERdWQ+HbkXeNNS5OjY6khcR75qGfIEG9wdibJrCfKoiDqijpTt2OpIXEecjiQKtjoSx8OaRCqijszHPepIno59DfiFJQqhjiQKtjoSx8OaRCqijsRxOpKsYzsdCTYIdSRXsNURdaSkikD/Zs3bwO2Wa6aOuMqaqGNfBZ6zVCEd8c2aRMEGV1nVkYIqAvBx4G84HYnoiNORRB37Oh7WRHXEVdZEwQanI1FcZU2kIuC9I+pI0Y7tdCSuIx7WJAo2wDlLFsLpSCIVgX535C3giKVTRyp1bFdZ4zridCRRsMHpSBSnI4lUZNARV1nVkXId+xpOR9SRgsEGd0fUkYIqoo6oI2U7tm/WxHXEw5pEwQanI1G8dySRioC7I/PoiG/WJOrYfmeNOlIy2OB0JIq7I4lUBJyOzIPXoCXq2E5H4qgjiYINTkeiOB1JpCLQT0cu4yrrLDysSdaxr+Iqa6iJ4O5IqmCrI3GcjiRSkUFHPKyJcRwPa9J0bA9r4ry579st/twAngdOZwm2OiIRjgBngF8Bj2VQkUFH9uivQxOJsLuqhniYHfsq8ITPSubgBxk6NvR3aD+3DoeSMpwCfjfmjg3wLnAW+D79DonILFYyAj3sji03uR/4rWWYyQXgxNg7ttzkVeAvlmEmnwNOGuw8THFfPcquwc6Fs/0Y2wY7F6+oI5vREYO9erx6OcaOwc7FTyxBiInBzoXTkQ3oiMFePVN1ZP06YrDXg9ORNeuIwV4PrwBvWIaQjpwy2Ll05LxlWF/XNtjqyNg4lMMal6DWyxvAfZZhJkuvstqx14vTkRhLT0cM9nrxsGZNnm2w14vTkRhLT0cM9vpxOrIGHTHY68fpSIylbqd1KrIZnI7EWHg6YsfeDE5HVqwjBnszOB2JMTHYufDNmhgLT0cM9ubwRd8Vdm2DvTmcjhhsdaRxHTlpsHPhdCTGjsFWRyqybbDVkYqcmFdHDPZm8UXfFemIwd48HtbEmBjsXHjvSIy5piMGWx3JxK7BVkcqsm2w1ZGmdcRgj0dHnGnH2DHYuXApKsbEYOfTkb9ahpCOnDLY6kiTXdtgjwuDHWPmdGSTL/PeDTwLfNHnJAtw/76+ja5j/8hQy6p0ZJMd+4/A530+siB/vlV+NtmxL/hsZAlOcIvpyCaD7VVfsjId2aSK3Atc8tnIKnRkkx17D3jRZyOr0JFNz7E9RpZl2R6bigw6chHY8vnIglzY79yj6th7wEs+G1mCD90dGcORujoiyzIZm4oMOuJ0RJbhT8AXxtaxnY7Istw3RhVRR2RZXhijiqgjsgx/AM7S7x6NLtjDX92DPqeZ7OLe9kzG9KKBOhIPtsxgTB1bHYnxL+BTwD8tRY6O7WFNjCPAw5YhT7DRHcPsWII8KqKOzKcjnwauW4ocHdvDmriOfNky5Am2OqKOlFQRdSTOjX0dcTqSpGOrIzHuwOlIqmCrI+pISRVRR9SRsh3bwxp1pGSwwa+vUEcKqog6oo6U7dhOR+I68ohlyBNscJU1ysQS5FGRQUe8d2Q27o4k69h7wMs+ppm4O5Is2OB0JIrTkUQqMuiI0xF1pFzHdjqijpQMNjgdUUcKqgjAZ+i/3NPpiDpSqmNfwt2RqI64O0KuLzBVR2J4WJNIRcDDGnWkaMd2lTWuI81PR7J9l7pv1sRo/hq0TCoC/XTkormdyQ3gWMs6kq1jX8LDmgh3tK4jXcLP7HREHSmnIuB0JErTt7Jm7NiussY4QsNv1nRJP7errDGaPazJqCKDjrjKqo6U69iussZ1pMndkS7xZ3c6EqPJVdasKjLoiNORmI40tzuSuWM7HYnrSHOHNV3yz+90RB0ppyKDjjgdUUfKdew94NfmNqQjp1WRXHwPeM/szuSTBjsXvwG+brhvyXXglwY7H08CJ4FzwDvm+AC/p5+KXG7pH/0/YUeKz6kH2FkAAAAASUVORK5CYII=" alt="">The Offers</span><span>07 / 11</span></div>
+</section>
+
+<!-- 8 — PILLAR III -->
+<section class="slide">
+  <div class="eyebrow">Pillar III</div>
+  <div class="pillarRow">
+    <div><span class="roman">III</span><span class="slab e" style="display:block;width:44px;height:7px;margin-top:14px"></span></div>
+    <div>
+      <h2 style="margin-bottom:10px">The Mentorship</h2>
+      <p class="lede" style="max-width:900px">The tool and the offers get you to the starting line. This is the part that decides whether you actually get profitable — and it's the part almost nobody else gives you.</p>
+      <div class="grid2" style="margin-top:24px;gap:22px">
+        <ul class="tick">
+          <li>Private <strong>one-on-one calls</strong> every month with someone doing this daily</li>
+          <li>Group coaching multiple times a week, every call recorded</li>
+          <li>A private community running the exact same play as you</li>
+        </ul>
+        <ul class="tick">
+          <li>Your launches reviewed before they spend — mistakes caught, not paid for</li>
+          <li>The angle and creative library, so you never start from a blank page</li>
+          <li>An onboarding call <strong>within the hour</strong> of joining, not a login and good luck</li>
+        </ul>
+      </div>
+      <div class="key" style="margin-top:24px"><div class="lab">What that means for you</div><p>You don't need to be technical and you don't need experience. You bring the effort — the system handles the hard parts and your coach corrects the rest before it costs you money.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span class="mark"><img src="data:image/png;base64,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" alt="">The Mentorship</span><span>08 / 11</span></div>
+</section>
+
+<!-- 9 — FUNDING -->
+<section class="slide">
+  <div class="eyebrow">The funding program</div>
+  <h2>Prove it works, and we fund the scale.</h2>
+  <p class="lede">The usual ceiling on something like this is your own bank account. A campaign is printing, and you can't feed it. That's the problem this solves.</p>
+  <div class="grid3" style="margin-top:30px">
+    <div class="card">
+      <span class="slab g" style="width:60px;height:7px;margin-bottom:16px"></span>
+      <span class="num">Step 01 · You prove it</span><h3>Hit a 2× return</h3>
+      <p>Get a campaign returning at least double what you put into it. You can prove that on a small budget — it's the number that matters, not the size.</p>
+    </div>
+    <div class="card hi">
+      <span class="slab e" style="width:60px;height:7px;margin-bottom:16px"></span>
+      <span class="num">Step 02 · We fund it</span><h3>Our money, not yours</h3>
+      <p>We pay the ad spend out of our own pocket to scale it — and we keep feeding it, well past ten thousand, for as long as it keeps returning.</p>
+    </div>
+    <div class="card hi">
+      <span class="slab e" style="width:60px;height:7px;margin-bottom:16px"></span>
+      <span class="num">Step 03 · We split it</span><h3>50/50 from there</h3>
+      <p>Profit from the funded spend is split evenly between you and us. Our money is on the line next to yours, so we only win if it keeps working.</p>
+    </div>
+  </div>
+  <div class="key" style="margin-top:26px"><div class="lab">Why this exists</div><p>Put $50 into an ad and double it, and the only thing standing between you and doing that at a hundred times the size is capital. We'd rather supply it and take half than watch a winner stall.</p></div>
+  <div class="foot"><span class="mark"><img src="data:image/png;base64,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" alt="">Funding</span><span>09 / 11</span></div>
+</section>
+
+<!-- 10 — YOUR SIDE -->
+<section class="slide">
+  <div class="eyebrow">Being straight with you</div>
+  <h2>Here's your side of it.</h2>
+  <p class="lede">We're not going to tell you this is passive or guaranteed. It isn't. Here's exactly what it takes from you — and it's short on purpose.</p>
+  <div class="grid2" style="margin-top:30px;gap:22px">
+    <div class="card">
+      <span class="num">What we handle</span>
+      <ul class="tick" style="margin-top:14px">
+        <li>The campaign build, the launch, the ad accounts</li>
+        <li>The offers, the partnerships, and the working angles</li>
+        <li>Reviewing your work before it goes live</li>
+        <li>Funding the scale once a campaign proves itself</li>
+      </ul>
+    </div>
+    <div class="card hi">
+      <span class="num">What you handle</span>
+      <ul class="tick" style="margin-top:14px">
+        <li>Building the creatives from the angles we give you</li>
+        <li>Funding your own testing budget, starting small</li>
+        <li>Testing a few creatives a week, consistently</li>
+        <li>Showing up to coaching and using what you're told</li>
+      </ul>
+    </div>
+  </div>
+  <div class="key" style="margin-top:24px"><div class="lab">Straight answer</div><p>People who do those four things get results. People who buy in and disappear don't — and no system on earth changes that.</p></div>
+  <div class="foot"><span class="mark"><img src="data:image/png;base64,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" alt="">Your side</span><span>10 / 11</span></div>
+</section>
+
+<!-- 11 — RECAP -->
+<section class="slide">
+  <div class="eyebrow">To recap</div>
+  <h2>Machine. Offers. Mentorship.</h2>
+  <p class="lede">Take any one of the three away and it stops working. That's why we don't sell them separately.</p>
+  <div class="grid3" style="margin-top:30px">
+    <div class="card hi"><span class="slab e" style="width:74px;height:8px;margin-bottom:16px"></span><span class="num">I · The Machine</span><p style="color:#D7DCE6;font-size:15px;line-height:1.6">Campaigns live in under a minute. Unlimited tests. Accounts handled. Checked before it spends.</p></div>
+    <div class="card hi"><span class="slab e" style="width:74px;height:8px;margin-bottom:16px"></span><span class="num">II · The Offers</span><p style="color:#D7DCE6;font-size:15px;line-height:1.6">Partnered apps paying up to $20 a conversion. Working angles early. You keep 90% of what you earn.</p></div>
+    <div class="card hi"><span class="slab e" style="width:74px;height:8px;margin-bottom:16px"></span><span class="num">III · The Mentorship</span><p style="color:#D7DCE6;font-size:15px;line-height:1.6">One-on-ones. Group calls. A community. Your work reviewed. Onboarded within the hour.</p></div>
+  </div>
+  <div class="key" style="margin-top:24px"><div class="lab">And once it's working</div><p>Hit a 2× return and we fund the scale ourselves, 50/50 from there. Of everything here — which piece is the one that changes things for you?</p></div>
+  <div class="foot"><span class="mark"><img src="data:image/png;base64,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" alt="">SPRK Network</span><span>11 / 11</span></div>
+</section>
+
+</div></div>
+
+<div class="nav">
+  <button id="prev" aria-label="Previous slide">&#8592;</button>
+  <button id="next" aria-label="Next slide">&#8594;</button>
+  <button id="fs" aria-label="Toggle fullscreen">&#9974;</button>
+</div>
+<div class="hint">← → to navigate · F for fullscreen</div>
+
+<script>
+(function(){
+  var stage=document.getElementById('stage'),
+      slides=[].slice.call(document.querySelectorAll('.slide')),
+      rail=document.getElementById('rail'), i=0;
+
+  function fit(){
+    var s=Math.min(window.innerWidth/1280, window.innerHeight/720);
+    stage.style.transform='scale('+s+')';
+  }
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){ s.classList.toggle('on', k===i); });
+    rail.style.width=((i+1)/slides.length*100)+'%';
+    if(location.hash!=='#'+(i+1)) history.replaceState(null,'','#'+(i+1));
+  }
+  document.getElementById('next').onclick=function(){show(i+1)};
+  document.getElementById('prev').onclick=function(){show(i-1)};
+  document.getElementById('fs').onclick=function(){
+    if(document.fullscreenElement){document.exitFullscreen();} else {document.documentElement.requestFullscreen();}
+  };
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();show(i+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1);}
+    else if(e.key==='Home'){show(0);} else if(e.key==='End'){show(slides.length-1);}
+    else if(e.key==='f'||e.key==='F'){document.getElementById('fs').click();}
+  });
+  var x0=null;
+  document.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;},{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(x0===null)return; var dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>50) show(dx<0?i+1:i-1); x0=null;
+  },{passive:true});
+  window.addEventListener('resize',fit);
+  fit();
+  var start=parseInt((location.hash||'').replace('#',''),10);
+  show(isNaN(start)?0:start-1);
+})();
+</script>
+</body>
+</html>
