@@ -1084,11 +1084,57 @@ a, button, summary, .dot {
 /* ── 20 · responsive ─────────────────────────────────────── */
 
 @media (max-width: 60rem) {
+  /* Hiding .nav__links removes it as a GRID ITEM, not just visually — so
+     the CTA auto-placed into the middle 1fr track and stretched to ~67%
+     of the pill. Two explicit tracks give the CTA its own width back. */
+  .nav__inner { grid-template-columns: 1fr auto; }
   .nav__links { display: none; }
-  .nav__cta { font-size: var(--text-xs); padding: var(--space-2xs) var(--space-md); }
+  .nav__cta {
+    justify-self: end;
+    font-size: var(--text-xs);
+    padding: var(--space-2xs) var(--space-sm);
+    gap: var(--space-2xs);
+  }
 
-  .stage { padding-top: var(--space-xl); gap: var(--space-md); }
-  .stage__mark { width: 38px; height: 38px; }
+  /* ── VSL first. The video is the whole point of this page, so pull it
+     as close to the top as the copy allows. The logo mark is redundant
+     with the nav pill sitting two rows above it. ─────────────────── */
+  .stage {
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-lg);
+    gap: var(--space-sm);
+  }
+  .stage__mark { display: none; }
+  .stage__h { font-size: clamp(1.75rem, 8vw, 2.4rem); }
+  .stage__sub { font-size: var(--text-sm); max-width: 36ch; }
+
+  /* thinner bezel = more video on a narrow screen */
+  .frame { padding: 5px; margin-top: var(--space-2xs); border-radius: calc(var(--radius-md) + 5px); }
+  .frame__inner { border-radius: var(--radius-md); }
+
+  .stage__actions { gap: var(--space-sm); margin-top: 0; }
+  .stage .cta { width: 100%; max-width: 22rem; }
+  .chips { margin-top: 0; }
+
+  /* The pipes made the trust line wrap onto two rows with a separator
+     dangling at the end of the first. Dots alone carry the rhythm.
+     Needs the parent in the selector: `.stage__trust span` is (0,1,1)
+     and would otherwise outrank a bare `.badge-sep` (0,1,0). */
+  .stage__trust .badge-sep,
+  .close__trust .badge-sep { display: none; }
+  .stage__trust,
+  .close__trust { gap: var(--space-xs) var(--space-md); }
+
+  /* ── Vertical rhythm. Every section carried desktop padding top AND
+     bottom, stacking into ~192px of dead space between blocks. ───── */
+  .section-head { margin-bottom: var(--space-xl); }
+  .proof,
+  .statement,
+  .steps,
+  .vip,
+  .faq       { padding-block: var(--space-2xl); }
+  .stats     { padding-block: var(--space-lg) var(--space-2xl); }
+  .stats__inner { padding-block: var(--space-lg); gap: var(--space-md); }
 
   .steps__list { gap: var(--space-2xl); }
   .step { grid-template-columns: 1fr; gap: var(--space-md); }
@@ -1142,10 +1188,16 @@ a, button, summary, .dot {
 }
 
 @media (max-width: 26rem) {
-  .nav__brand-text span { display: none; }
   .win-card { width: 62vw; height: 300px; }
   .chips { gap: var(--space-xs); }
   .chip { font-size: var(--text-xs); padding: var(--space-2xs) var(--space-sm); }
+}
+
+/* "Network" only drops on genuinely tiny screens now. It used to go at
+   26rem, which truncated the brand to "SPRK" on every normal phone —
+   space the shrunken nav CTA no longer needs. */
+@media (max-width: 21rem) {
+  .nav__brand-text span { display: none; }
 }
 
 

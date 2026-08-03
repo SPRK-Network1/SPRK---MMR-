@@ -69,9 +69,13 @@
   --space-md:  1rem;
   --space-lg:  1.5rem;
   --space-xl:  2.5rem;
-  --space-2xl: 4rem;
-  --space-3xl: 6rem;
-  --space-4xl: 9rem;
+  /* The top of the scale is fluid. Fixed rem values here meant a phone
+     got the same 96px above AND below every section as a 27" monitor —
+     ~192px of dead space between blocks, which on an ad landing page is
+     just scrolling between you and the CTA. */
+  --space-2xl: clamp(2rem,   4.5vw, 4rem);
+  --space-3xl: clamp(2.5rem, 6vw,   6rem);
+  --space-4xl: clamp(3rem,   7.5vw, 9rem);
 
   /* ── Motion ──────────────────────────────────────────────── */
   --ease-out:    cubic-bezier(0.20, 0.80, 0.20, 1.00);
