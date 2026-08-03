@@ -1309,13 +1309,6 @@ a, button, summary, .dot {
   text-wrap: balance;
 }
 
-.apply__sub {
-  max-width: 46ch;
-  color: var(--color-ink-2);
-  font-size: var(--text-md);
-  text-wrap: pretty;
-}
-
 /* the branded shell the form sits inside */
 .apply__frame {
   position: relative;

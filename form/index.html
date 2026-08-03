@@ -62,10 +62,6 @@
       </a>
 
       <h1 class="apply__h">Fill out the application form below</h1>
-      <p class="apply__sub">
-        Takes about two minutes. We review applications daily and send your access
-        link as soon as you're approved.
-      </p>
     </header>
 
     <!-- The Typeform mounts here. The skeleton underneath is what the
@@ -180,7 +176,11 @@
       window.tf.createWidget(FORM_ID, {
         container: document.getElementById('tf-container'),
         hidden: hidden,
-        opacity: 0,            // transparent form background, so our navy shows through
+        // No `opacity` option on purpose. Setting it to 0 makes the FORM's
+        // background transparent, and the form's text is styled for its own
+        // background — on this navy page that rendered the questions
+        // invisible. The form keeps its own theme instead; set the dark
+        // palette in Typeform > Design and it matches the page.
         inlineOnMobile: true,  // scroll with the page rather than trapping touch
         onReady: function () {
           if (skeleton) skeleton.setAttribute('data-state', 'ready');
