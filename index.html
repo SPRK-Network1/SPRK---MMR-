@@ -614,18 +614,18 @@
           });
 
           box.textContent =
-            'SPRK attribution debug\n' +
-            'popup SDK:  ' + (window.tf && window.tf.createPopup ? 'loaded' : 'not loaded yet — links fall back') + '\n' +
-            'meta pixel: ' + (typeof window.fbq === 'function' ? 'loaded' : 'not loaded yet') + '\n\n' +
+            'SPRK attribution debug (landing)\n' +
+            'meta pixel: ' + (typeof window.fbq === 'function' ? 'loaded' : 'not loaded yet') + '\n' +
+            'destination: /form (the embed lives there)\n\n' +
             lines.join('\n') +
-            '\n\nfallback url:\n' + buildUrl('debug');
+            '\n\ncta url:\n' + buildUrl('debug');
         }
 
         render();
         var ticks = 0;
         var poll = setInterval(function () {
           render();
-          if (++ticks > 10 || (window.tf && window.tf.createPopup && window.fbq)) clearInterval(poll);
+          if (++ticks > 10 || window.fbq) clearInterval(poll);
         }, 600);
 
         document.body.appendChild(box);
