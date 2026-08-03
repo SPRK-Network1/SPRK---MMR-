@@ -22,6 +22,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://fast.vidalytics.com" />
+  <link rel="preconnect" href="https://connect.facebook.net" />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
  
   <link rel="stylesheet" href="tokens.css" />
@@ -87,7 +88,7 @@
         <a href="#vip">VIP</a>
         <a href="#faq">FAQ</a>
       </nav>
-      <a class="nav__cta" data-typeform href="https://form.typeform.com/to/H2fs6m45" target="_blank" rel="noopener">
+      <a class="nav__cta" data-typeform data-cta="nav" href="https://form.typeform.com/to/H2fs6m45" target="_blank" rel="noopener">
         <span>Get Started</span>
         <span class="nav__cta-arrow" aria-hidden="true">→</span>
       </a>
@@ -120,7 +121,7 @@
       </div>
  
       <div class="stage__actions rise d4">
-        <a class="cta cta--glow" data-typeform href="https://form.typeform.com/to/H2fs6m45" target="_blank" rel="noopener">
+        <a class="cta cta--glow" data-typeform data-cta="hero" href="https://form.typeform.com/to/H2fs6m45" target="_blank" rel="noopener">
           <span class="cta__label">Get Started</span>
           <span class="cta__arrow" aria-hidden="true">→</span>
         </a>
@@ -188,7 +189,7 @@
           Posting into the void should not be the plan.
         </h2>
         <p class="statement__sub">So let's give you a system instead.</p>
-        <a class="cta cta--glow" data-typeform href="https://form.typeform.com/to/H2fs6m45" target="_blank" rel="noopener">
+        <a class="cta cta--glow" data-typeform data-cta="statement" href="https://form.typeform.com/to/H2fs6m45" target="_blank" rel="noopener">
           <span class="cta__label">Get Started</span>
           <span class="cta__arrow" aria-hidden="true">→</span>
         </a>
@@ -418,7 +419,7 @@
         <h2 class="close__h" id="close-h">Ready to start?</h2>
         <p class="close__sub">Join the network, unlock the VIP advantages, and start scaling.</p>
  
-        <a class="cta cta--glow cta--lg" data-typeform href="https://form.typeform.com/to/H2fs6m45" target="_blank" rel="noopener">
+        <a class="cta cta--glow cta--lg" data-typeform data-cta="close" href="https://form.typeform.com/to/H2fs6m45" target="_blank" rel="noopener">
           <span class="cta__label">Get Started</span>
           <span class="cta__arrow" aria-hidden="true">→</span>
         </a>
@@ -468,7 +469,7 @@
  
   <!-- ─── sticky CTA · appears once the VSL is scrolled past ──── -->
   <div class="stickybar" data-state="hidden" aria-hidden="true">
-    <a class="cta cta--glow" data-typeform href="https://form.typeform.com/to/H2fs6m45" target="_blank" rel="noopener" tabindex="-1">
+    <a class="cta cta--glow" data-typeform data-cta="sticky" href="https://form.typeform.com/to/H2fs6m45" target="_blank" rel="noopener" tabindex="-1">
       <span class="cta__label">Get Started</span>
       <span class="cta__arrow" aria-hidden="true">→</span>
     </a>
@@ -476,49 +477,104 @@
  
   <script src="script.js" defer></script>
  
-  <!-- ═══ Attribution passthrough → Typeform ═══════════════════ -->
+  <!-- ═══ Attribution passthrough → Typeform ═══════════════════
+       Carries ad parameters and Meta's browser cookies from this page
+       into the Typeform hidden fields, so n8n can store them on the
+       Lead record and send them to Meta's Conversions API later.
+ 
+       Everything is built as one continuous ?a=1&b=2 query string —
+       the format Meta's URL parameters actually produce. Do not use
+       the ?...#... hybrid Typeform's Share tab suggests.
+  ══════════════════════════════════════════════════════════════ -->
   <script>
   (function () {
     var TYPEFORM = 'https://form.typeform.com/to/H2fs6m45';
+    var STORE    = 'sprk_attr';
  
+    // Parameters set by Meta's URL-parameter string at the ad level,
+    // plus fbclid, which Facebook appends automatically.
     var KEYS = [
       'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
-      'campaign_id', 'adset_id', 'ad_id', 'fbclid', 'cta_source'
+      'campaign_id', 'adset_id', 'ad_id', 'fbclid'
     ];
- 
-    var incoming = new URLSearchParams(window.location.search);
-    var out = new URLSearchParams();
- 
-    KEYS.forEach(function (key) {
-      var value = incoming.get(key);
-      if (value) out.set(key, value);
-    });
  
     function readCookie(name) {
       var match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
       return match ? match.pop() : '';
     }
  
-    function applyLinks() {
+    // ── 1 · Collect the params, falling back to a stored copy ────────
+    //    Survives a page reload or a back-navigation, which would
+    //    otherwise drop every parameter and orphan the lead.
+    var incoming = new URLSearchParams(window.location.search);
+    var saved = {};
+    try { saved = JSON.parse(sessionStorage.getItem(STORE) || '{}'); } catch (e) {}
+ 
+    var attr = {};
+    KEYS.forEach(function (key) {
+      var value = incoming.get(key) || saved[key] || '';
+      if (value) attr[key] = value;
+    });
+ 
+    // ── 2 · One event_id per visit, stable across reloads ────────────
+    attr.event_id = saved.event_id ||
+      ('lead_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10));
+ 
+    try { sessionStorage.setItem(STORE, JSON.stringify(attr)); } catch (e) {}
+ 
+    // ── 3 · Build the destination URL fresh each time it's needed ────
+    function buildUrl(ctaSource) {
+      var out = new URLSearchParams();
+ 
+      Object.keys(attr).forEach(function (key) {
+        if (attr[key]) out.set(key, attr[key]);
+      });
+ 
       var fbp = readCookie('_fbp');
       var fbc = readCookie('_fbc');
-      if (fbp) out.set('fbp', fbp);
-      if (fbc) out.set('fbc', fbc);
  
-      if (!out.get('event_id')) {
-        out.set('event_id',
-          'lead_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10));
+      // The pixel writes _fbc asynchronously, and only when fbclid is
+      // present. If it hasn't landed yet, build a valid one by hand —
+      // Meta accepts fb.1.<timestamp_ms>.<fbclid>. This is what stops
+      // fast clickers from arriving with no click id at all.
+      if (!fbc && attr.fbclid) {
+        fbc = 'fb.1.' + Date.now() + '.' + attr.fbclid;
       }
  
-      var target = TYPEFORM + '?' + out.toString();
-      var links = document.querySelectorAll('a[data-typeform], a[href*="typeform.com"]');
+      if (fbp) out.set('fbp', fbp);
+      if (fbc) out.set('fbc', fbc);
+      if (ctaSource) out.set('cta_source', ctaSource);
+ 
+      return TYPEFORM + '?' + out.toString();
+    }
+ 
+    function typeformLinks() {
+      return document.querySelectorAll('a[data-typeform], a[href*="typeform.com"]');
+    }
+ 
+    // ── 4 · Set hrefs on load so links are never bare ────────────────
+    function refresh() {
+      var links = typeformLinks();
       for (var i = 0; i < links.length; i++) {
-        links[i].setAttribute('href', target);
+        links[i].setAttribute('href', buildUrl(links[i].getAttribute('data-cta') || ''));
       }
     }
  
-    applyLinks();
-    setTimeout(applyLinks, 1200);
+    refresh();
+    setTimeout(refresh, 1500);
+    setTimeout(refresh, 4000);
+ 
+    // ── 5 · Rebuild at click time — the one that actually matters ────
+    //    Captures the cookies at the moment of the click, however long
+    //    the pixel took, and covers CTAs injected after page load.
+    document.addEventListener('click', function (evt) {
+      var node = evt.target;
+      var link = node && node.closest
+        ? node.closest('a[data-typeform], a[href*="typeform.com"]')
+        : null;
+      if (!link) return;
+      link.setAttribute('href', buildUrl(link.getAttribute('data-cta') || ''));
+    }, true);
   })();
   </script>
   <!-- ═══ End attribution passthrough ══════════════════════════ -->
