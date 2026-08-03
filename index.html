@@ -33,6 +33,24 @@
  
   <link rel="stylesheet" href="tokens.css" />
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- ═══ Typeform embed SDK ═══════════════════════════════════
+       Opens the application form over the page instead of sending
+       the visitor to typeform.com.
+
+       embed.js does NOT inject its own styles — it expects this
+       stylesheet for .tf-v1-popup / .tf-v1-close / .tf-v1-spinner.
+       Loaded via the media="print" swap so a third-party request
+       never blocks first paint (it competes with the VSL otherwise);
+       1.9KB, applied long before anyone reaches a CTA.
+
+       Both are async and neither is awaited: if either fails to
+       load, every CTA still navigates via its href.
+  ══════════════════════════════════════════════════════════════ -->
+  <link rel="preconnect" href="https://embed.typeform.com" />
+  <link rel="stylesheet" href="https://embed.typeform.com/next/css/popup.css"
+        media="print" onload="this.media='all'; this.onload=null" />
+  <script src="https://embed.typeform.com/next/embed.js" async></script>
  
   <!-- Marks that scripting is available, before first paint. Scroll-reveal
        styling hangs off this class so that if JS never runs, the content is
@@ -133,7 +151,7 @@
         </a>
  
         <p class="stage__trust">
-          <span><span class="badge-dot" aria-hidden="true"></span>Instant access</span>
+          <span><span class="badge-dot" aria-hidden="true"></span>2-minute application</span>
           <span class="badge-sep" aria-hidden="true"></span>
           <span><span class="badge-dot" aria-hidden="true"></span>Cancel anytime</span>
           <span class="badge-sep" aria-hidden="true"></span>
@@ -399,11 +417,11 @@
  
         <details class="faq__item">
           <summary>
-            <span>How fast do I get in?</span>
+            <span>How do I join, and how fast?</span>
             <span class="faq__chev" aria-hidden="true">+</span>
           </summary>
           <div class="faq__a">
-            <p>Instantly. Access is granted as soon as checkout completes — there's no waiting list and no approval step.</p>
+            <p>The application takes about two minutes. We review them daily and send your access link as soon as you're approved — most people hear back the same day.</p>
           </div>
         </details>
  
@@ -431,7 +449,7 @@
         </a>
  
         <p class="close__trust">
-          <span><span class="badge-dot" aria-hidden="true"></span>Instant access</span>
+          <span><span class="badge-dot" aria-hidden="true"></span>2-minute application</span>
           <span class="badge-sep" aria-hidden="true"></span>
           <span><span class="badge-dot" aria-hidden="true"></span>Cancel anytime</span>
           <span class="badge-sep" aria-hidden="true"></span>
@@ -554,10 +572,19 @@
       return TYPEFORM + '?' + out.toString();
     }
  
+    // Same values as buildUrl, shaped as an object for the embed SDK,
+    // which takes hidden fields as a map rather than a query string.
+    function buildHidden(ctaSource) {
+      var out = {};
+      var qs = new URLSearchParams(buildUrl(ctaSource).split('?')[1] || '');
+      qs.forEach(function (value, key) { out[key] = value; });
+      return out;
+    }
+
     function typeformLinks() {
       return document.querySelectorAll('a[data-typeform], a[href*="typeform.com"]');
     }
- 
+
     // ── 4 · Set hrefs on load so links are never bare ────────────────
     function refresh() {
       var links = typeformLinks();
@@ -565,11 +592,11 @@
         links[i].setAttribute('href', buildUrl(links[i].getAttribute('data-cta') || ''));
       }
     }
- 
+
     refresh();
     setTimeout(refresh, 1500);
     setTimeout(refresh, 4000);
- 
+
     // ── 5 · Rebuild at click time — the one that actually matters ────
     //    Captures the cookies at the moment of the click, however long
     //    the pixel took, and covers CTAs injected after page load.
@@ -581,6 +608,106 @@
       if (!link) return;
       link.setAttribute('href', buildUrl(link.getAttribute('data-cta') || ''));
     }, true);
+
+    // ── 6 · Open the form in a popup instead of navigating away ──────
+    //    Why this matters beyond UX: on a redirect the submit happens on
+    //    typeform.com, where our pixel does not run, so the Lead event
+    //    can never fire from the browser. Keeping the user here lets us
+    //    fire it with the SAME event_id that goes into the hidden field,
+    //    so when n8n posts the Conversions API event Meta deduplicates
+    //    the pair instead of counting the lead twice.
+    //
+    //    Runs in the BUBBLE phase so the capture handler above has
+    //    already refreshed the href — the fallback stays correct even
+    //    when the popup takes over.
+    var FORM_ID = 'H2fs6m45';
+
+    document.addEventListener('click', function (evt) {
+      if (evt.defaultPrevented) return;
+      // let modified clicks (new tab, download, middle-click) behave natively
+      if (evt.metaKey || evt.ctrlKey || evt.shiftKey || evt.altKey || evt.button !== 0) return;
+
+      var node = evt.target;
+      var link = node && node.closest
+        ? node.closest('a[data-typeform], a[href*="typeform.com"]')
+        : null;
+      if (!link) return;
+
+      // Not loaded, blocked, or still downloading → do nothing and let the
+      // href navigate. Ad traffic carries enough script blockers that a
+      // silent no-op here would cost real clicks.
+      if (!window.tf || typeof window.tf.createPopup !== 'function') return;
+
+      evt.preventDefault();
+
+      var cta = link.getAttribute('data-cta') || '';
+      var hidden = buildHidden(cta);
+
+      try {
+        window.tf.createPopup(FORM_ID, {
+          hidden: hidden,
+          size: 90,
+          onSubmit: function () {
+            if (typeof window.fbq === 'function') {
+              window.fbq('track', 'Lead',
+                { content_name: 'SPRK Application', content_category: cta },
+                { eventID: hidden.event_id });
+            }
+          }
+        }).open();
+      } catch (err) {
+        // Any SDK failure falls back to the plain navigation.
+        window.location.href = buildUrl(cta);
+      }
+    }, false);
+
+    // ── 7 · ?debug=1 — show exactly what would be sent ───────────────
+    if (incoming.get('debug') === '1') {
+      window.addEventListener('DOMContentLoaded', function () {
+        var box = document.createElement('pre');
+        box.style.cssText =
+          'position:fixed;left:8px;bottom:8px;z-index:9999;max-width:min(92vw,460px);' +
+          'max-height:52vh;overflow:auto;margin:0;padding:12px 14px;border-radius:10px;' +
+          'background:rgba(8,10,14,.94);border:1px solid rgba(229,209,154,.35);' +
+          'color:#E5D19A;font:11px/1.5 ui-monospace,SFMono-Regular,monospace;' +
+          '-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)';
+
+        var EXPECTED = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content',
+                        'campaign_id','adset_id','ad_id','fbclid','fbp','fbc',
+                        'event_id','cta_source'];
+
+        // embed.js and fbevents.js are both async, so a status sampled at
+        // DOMContentLoaded reads "NOT LOADED" for scripts that arrive a
+        // moment later. Re-render for a few seconds instead of shipping a
+        // debug panel that lies about the thing it exists to report.
+        function render() {
+          // recomputed every tick: _fbp/_fbc are written by the pixel
+          // asynchronously, so a snapshot taken once would report them
+          // permanently empty even after they land.
+          var data = buildHidden('debug');
+          var lines = EXPECTED.map(function (k) {
+            var v = data[k];
+            return (v ? '  ok   ' : '  --   ') + k + Array(15 - k.length).join(' ') + (v || '(empty)');
+          });
+
+          box.textContent =
+            'SPRK attribution debug\n' +
+            'popup SDK:  ' + (window.tf && window.tf.createPopup ? 'loaded' : 'not loaded yet — links fall back') + '\n' +
+            'meta pixel: ' + (typeof window.fbq === 'function' ? 'loaded' : 'not loaded yet') + '\n\n' +
+            lines.join('\n') +
+            '\n\nfallback url:\n' + buildUrl('debug');
+        }
+
+        render();
+        var ticks = 0;
+        var poll = setInterval(function () {
+          render();
+          if (++ticks > 10 || (window.tf && window.tf.createPopup && window.fbq)) clearInterval(poll);
+        }, 600);
+
+        document.body.appendChild(box);
+      });
+    }
   })();
   </script>
   <!-- ═══ End attribution passthrough ══════════════════════════ -->
