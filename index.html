@@ -14,8 +14,14 @@
   <meta property="og:title" content="SPRK Network — Create Content. For Endless Scalability." />
   <meta property="og:description" content="Proven winning angles, real-time market evaluation, and a community of high-performing creators." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="images/Sprknetwork.png" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:url" content="https://sprk-mmr.vercel.app/" />
+  <!-- absolute: scrapers do not resolve relative og:image against the page -->
+  <meta property="og:image" content="https://sprk-mmr.vercel.app/images/Sprknetwork.png" />
+  <!-- `summary`, not `summary_large_image`: the only OG asset is the
+       1000x1000 logo. Claiming a 1.91:1 large card against a square
+       image gets it cropped or dropped entirely by the scrapers.
+       Switch back once a real 1200x630 share image exists. -->
+  <meta name="twitter:card" content="summary" />
  
   <link rel="icon" href="images/Sprknetwork.png" />
  
@@ -135,7 +141,7 @@
         </p>
       </div>
  
-      <ul class="chips rise d5">
+      <ul class="chips rise d5" role="list">
         <li class="chip">
           <svg class="icon-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           Beginner friendly
@@ -203,7 +209,7 @@
         <h2 class="section-h" id="how-h">Three things you get <em>on day one.</em></h2>
       </header>
  
-      <ol class="steps__list">
+      <ol class="steps__list" role="list">
         <li class="step reveal">
           <span class="step__ghost" aria-hidden="true">1</span>
           <div class="step__icon">
@@ -455,7 +461,7 @@
           <span>SPRK Network</span>
         </div>
         <p class="footer__line">&copy; <span id="year"></span> SPRK Network. All rights reserved.</p>
-        <ul class="footer__links">
+        <ul class="footer__links" role="list">
           <li><a href="#top">Top</a></li>
           <li><a href="#vip">VIP</a></li>
           <li><a href="#faq">FAQ</a></li>

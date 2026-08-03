@@ -44,6 +44,16 @@
 
     var setSticky = function (shown) {
       if ((stickybar.dataset.state === 'shown') === shown) return;
+
+      /* The bar hides via transform + pointer-events, never display or
+         visibility, so the browser will not blur a focused child on its
+         own — and tabIndex = -1 does not blur an already-focused node.
+         Without this, focus can sit inside an aria-hidden subtree that
+         is off-screen, and the screen reader announces nothing. */
+      if (!shown && stickybar.contains(document.activeElement)) {
+        document.activeElement.blur();
+      }
+
       stickybar.dataset.state = shown ? 'shown' : 'hidden';
       stickybar.setAttribute('aria-hidden', shown ? 'false' : 'true');
       if (stickyLink) stickyLink.tabIndex = shown ? 0 : -1;
@@ -86,7 +96,10 @@
     /* threshold 0.01, not 0.12: an element taller than the viewport can
        never reach a large visible-fraction, and a throttled tab can drop
        intermediate entries entirely. Fire on the first visible pixel. */
+    var observerFired = false;
+
     var revealObserver = new IntersectionObserver(function (entries, obs) {
+      observerFired = true;
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
         entry.target.classList.add('is-in');
@@ -99,11 +112,22 @@
     });
 
     /* Failsafe. Copy that is merely un-animated is fine; copy that is
-       invisible is a broken page. If anything is still hidden a few
-       seconds in — throttled tab, observer never delivered, prerender —
-       show it unconditionally. */
-    setTimeout(showAll, 2500);
-    window.addEventListener('load', function () { setTimeout(showAll, 1200); });
+       invisible is a broken page.
+
+       Conditional on the observer never having delivered ANYTHING. The
+       previous version called showAll() unconditionally on a timer, so
+       on a VSL page — where visitors sit on the hero for minutes — every
+       section below the fold transitioned in while off-screen and had
+       already finished by the time it was scrolled to. The observer was
+       effectively dead code for normal visitors. Now it only takes over
+       when the observer is genuinely not working. */
+    var failsafe = function () {
+      if (observerFired) return;
+      showAll();
+    };
+
+    setTimeout(failsafe, 2500);
+    window.addEventListener('load', function () { setTimeout(failsafe, 1200); });
   }
 
 
@@ -233,8 +257,13 @@
      to appear exactly twice. Clones are aria-hidden and made
      non-focusable so screen readers see each win only once. */
 
+  /* Skipped under reduced motion: the CSS there stops the animation and
+     turns the band into a hand-scrolled rail, so the clones stop being a
+     seamless-loop mechanism and just make the reader scroll past all 17
+     wins twice. Queried live rather than using the flag sampled at load,
+     so a mid-session OS change is respected. */
   var winsTrack = document.getElementById('wins-track');
-  if (winsTrack) {
+  if (winsTrack && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     var originals = Array.prototype.slice.call(winsTrack.children);
     originals.forEach(function (node) {
       var clone = node.cloneNode(true);
