@@ -34,23 +34,6 @@
   <link rel="stylesheet" href="tokens.css" />
   <link rel="stylesheet" href="styles.css" />
 
-  <!-- ═══ Typeform embed SDK ═══════════════════════════════════
-       Opens the application form over the page instead of sending
-       the visitor to typeform.com.
-
-       embed.js does NOT inject its own styles — it expects this
-       stylesheet for .tf-v1-popup / .tf-v1-close / .tf-v1-spinner.
-       Loaded via the media="print" swap so a third-party request
-       never blocks first paint (it competes with the VSL otherwise);
-       1.9KB, applied long before anyone reaches a CTA.
-
-       Both are async and neither is awaited: if either fails to
-       load, every CTA still navigates via its href.
-  ══════════════════════════════════════════════════════════════ -->
-  <link rel="preconnect" href="https://embed.typeform.com" />
-  <link rel="stylesheet" href="https://embed.typeform.com/next/css/popup.css"
-        media="print" onload="this.media='all'; this.onload=null" />
-  <script src="https://embed.typeform.com/next/embed.js" async></script>
  
   <!-- Marks that scripting is available, before first paint. Scroll-reveal
        styling hangs off this class so that if JS never runs, the content is
@@ -112,7 +95,7 @@
         <a href="#vip">VIP</a>
         <a href="#faq">FAQ</a>
       </nav>
-      <a class="nav__cta" data-typeform data-cta="nav" href="https://form.typeform.com/to/H2fs6m45" target="_blank" rel="noopener">
+      <a class="nav__cta" data-typeform data-cta="nav" href="/form">
         <span>Get Started</span>
         <span class="nav__cta-arrow" aria-hidden="true">→</span>
       </a>
@@ -145,7 +128,7 @@
       </div>
  
       <div class="stage__actions rise d4">
-        <a class="cta cta--glow" data-typeform data-cta="hero" href="https://form.typeform.com/to/H2fs6m45" target="_blank" rel="noopener">
+        <a class="cta cta--glow" data-typeform data-cta="hero" href="/form">
           <span class="cta__label">Get Started</span>
           <span class="cta__arrow" aria-hidden="true">→</span>
         </a>
@@ -213,7 +196,7 @@
           Posting into the void should not be the plan.
         </h2>
         <p class="statement__sub">So let's give you a system instead.</p>
-        <a class="cta cta--glow" data-typeform data-cta="statement" href="https://form.typeform.com/to/H2fs6m45" target="_blank" rel="noopener">
+        <a class="cta cta--glow" data-typeform data-cta="statement" href="/form">
           <span class="cta__label">Get Started</span>
           <span class="cta__arrow" aria-hidden="true">→</span>
         </a>
@@ -443,7 +426,7 @@
         <h2 class="close__h" id="close-h">Ready to start?</h2>
         <p class="close__sub">Join the network, unlock the VIP advantages, and start scaling.</p>
  
-        <a class="cta cta--glow cta--lg" data-typeform data-cta="close" href="https://form.typeform.com/to/H2fs6m45" target="_blank" rel="noopener">
+        <a class="cta cta--glow cta--lg" data-typeform data-cta="close" href="/form">
           <span class="cta__label">Get Started</span>
           <span class="cta__arrow" aria-hidden="true">→</span>
         </a>
@@ -493,7 +476,7 @@
  
   <!-- ─── sticky CTA · appears once the VSL is scrolled past ──── -->
   <div class="stickybar" data-state="hidden" aria-hidden="true">
-    <a class="cta cta--glow" data-typeform data-cta="sticky" href="https://form.typeform.com/to/H2fs6m45" target="_blank" rel="noopener" tabindex="-1">
+    <a class="cta cta--glow" data-typeform data-cta="sticky" href="/form" tabindex="-1">
       <span class="cta__label">Get Started</span>
       <span class="cta__arrow" aria-hidden="true">→</span>
     </a>
@@ -512,7 +495,7 @@
   ══════════════════════════════════════════════════════════════ -->
   <script>
   (function () {
-    var TYPEFORM = 'https://form.typeform.com/to/H2fs6m45';
+    var FORM_PAGE = '/form';
     var STORE    = 'sprk_attr';
  
     // Parameters set by Meta's URL-parameter string at the ad level,
@@ -569,18 +552,9 @@
       if (fbc) out.set('fbc', fbc);
       if (ctaSource) out.set('cta_source', ctaSource);
  
-      return TYPEFORM + '?' + out.toString();
+      return FORM_PAGE + '?' + out.toString();
     }
  
-    // Same values as buildUrl, shaped as an object for the embed SDK,
-    // which takes hidden fields as a map rather than a query string.
-    function buildHidden(ctaSource) {
-      var out = {};
-      var qs = new URLSearchParams(buildUrl(ctaSource).split('?')[1] || '');
-      qs.forEach(function (value, key) { out[key] = value; });
-      return out;
-    }
-
     function typeformLinks() {
       return document.querySelectorAll('a[data-typeform], a[href*="typeform.com"]');
     }
@@ -609,59 +583,7 @@
       link.setAttribute('href', buildUrl(link.getAttribute('data-cta') || ''));
     }, true);
 
-    // ── 6 · Open the form in a popup instead of navigating away ──────
-    //    Why this matters beyond UX: on a redirect the submit happens on
-    //    typeform.com, where our pixel does not run, so the Lead event
-    //    can never fire from the browser. Keeping the user here lets us
-    //    fire it with the SAME event_id that goes into the hidden field,
-    //    so when n8n posts the Conversions API event Meta deduplicates
-    //    the pair instead of counting the lead twice.
-    //
-    //    Runs in the BUBBLE phase so the capture handler above has
-    //    already refreshed the href — the fallback stays correct even
-    //    when the popup takes over.
-    var FORM_ID = 'H2fs6m45';
-
-    document.addEventListener('click', function (evt) {
-      if (evt.defaultPrevented) return;
-      // let modified clicks (new tab, download, middle-click) behave natively
-      if (evt.metaKey || evt.ctrlKey || evt.shiftKey || evt.altKey || evt.button !== 0) return;
-
-      var node = evt.target;
-      var link = node && node.closest
-        ? node.closest('a[data-typeform], a[href*="typeform.com"]')
-        : null;
-      if (!link) return;
-
-      // Not loaded, blocked, or still downloading → do nothing and let the
-      // href navigate. Ad traffic carries enough script blockers that a
-      // silent no-op here would cost real clicks.
-      if (!window.tf || typeof window.tf.createPopup !== 'function') return;
-
-      evt.preventDefault();
-
-      var cta = link.getAttribute('data-cta') || '';
-      var hidden = buildHidden(cta);
-
-      try {
-        window.tf.createPopup(FORM_ID, {
-          hidden: hidden,
-          size: 90,
-          onSubmit: function () {
-            if (typeof window.fbq === 'function') {
-              window.fbq('track', 'Lead',
-                { content_name: 'SPRK Application', content_category: cta },
-                { eventID: hidden.event_id });
-            }
-          }
-        }).open();
-      } catch (err) {
-        // Any SDK failure falls back to the plain navigation.
-        window.location.href = buildUrl(cta);
-      }
-    }, false);
-
-    // ── 7 · ?debug=1 — show exactly what would be sent ───────────────
+    // ── 6 · ?debug=1 — show exactly what would be sent ───────────────
     if (incoming.get('debug') === '1') {
       window.addEventListener('DOMContentLoaded', function () {
         var box = document.createElement('pre');
@@ -684,7 +606,8 @@
           // recomputed every tick: _fbp/_fbc are written by the pixel
           // asynchronously, so a snapshot taken once would report them
           // permanently empty even after they land.
-          var data = buildHidden('debug');
+          var data = Object.fromEntries(
+            new URLSearchParams(buildUrl('debug').split('?')[1] || '').entries());
           var lines = EXPECTED.map(function (k) {
             var v = data[k];
             return (v ? '  ok   ' : '  --   ') + k + Array(15 - k.length).join(' ') + (v || '(empty)');

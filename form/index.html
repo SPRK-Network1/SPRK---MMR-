@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <title>Apply — SPRK Network</title>
+  <meta name="description" content="Apply to join SPRK Network. Takes about two minutes." />
+  <meta name="theme-color" content="#0B0F14" />
+
+  <!-- Funnel page, not a search landing page. Kept out of the index so it
+       cannot outrank the real landing page or be entered without context. -->
+  <meta name="robots" content="noindex, follow" />
+
+  <link rel="icon" href="/images/Sprknetwork.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://embed.typeform.com" />
+  <link rel="preconnect" href="https://connect.facebook.net" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/tokens.css" />
+  <link rel="stylesheet" href="/styles.css" />
+
+  <!-- embed.js does not inject its own styles; the inline widget needs this. -->
+  <link rel="stylesheet" href="https://embed.typeform.com/next/css/widget.css" />
+  <script src="https://embed.typeform.com/next/embed.js"></script>
+
+  <!-- ═══ Meta Pixel ═══════════════════════════════════════════ -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1746915513340219');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1746915513340219&ev=PageView&noscript=1" alt="" /></noscript>
+  <!-- ═══ End Meta Pixel ═══════════════════════════════════════ -->
+</head>
+<body class="formpage">
+
+  <div class="ambient" aria-hidden="true">
+    <div class="bloom bloom--1"></div>
+    <div class="bloom bloom--2"></div>
+    <div class="grid-lines"></div>
+    <div class="grain"></div>
+  </div>
+
+  <main class="apply" id="main">
+
+    <header class="apply__head">
+      <a class="apply__brand" href="/" aria-label="SPRK Network · home">
+        <img class="apply__logo" src="/images/Sprknetwork.png" alt="" />
+        <span class="apply__wordmark">SPRK <span>Network</span></span>
+      </a>
+
+      <h1 class="apply__h">Fill out the application form below</h1>
+      <p class="apply__sub">
+        Takes about two minutes. We review applications daily and send your access
+        link as soon as you're approved.
+      </p>
+    </header>
+
+    <!-- The Typeform mounts here. The skeleton underneath is what the
+         visitor looks at while the iframe loads, so the slot never reads
+         as a broken white box. -->
+    <section class="apply__frame" aria-label="Application form">
+      <div class="apply__skeleton" id="skeleton" aria-hidden="true">
+        <span class="apply__spinner"></span>
+        <span class="apply__loading">Loading your application…</span>
+      </div>
+      <div id="tf-container" class="apply__embed"></div>
+    </section>
+
+    <!-- Shown only if the embed cannot run at all. -->
+    <noscript>
+      <p class="apply__fallback">
+        This form needs JavaScript.
+        <a href="https://form.typeform.com/to/H2fs6m45">Open the application directly</a>.
+      </p>
+    </noscript>
+    <p class="apply__fallback" id="fallback" hidden>
+      Trouble loading the form?
+      <a id="fallback-link" href="https://form.typeform.com/to/H2fs6m45">Open it in a new tab</a>.
+    </p>
+
+    <p class="apply__back"><a href="/">← Back to sprknetwork</a></p>
+  </main>
+
+  <!-- ═══ Attribution → Typeform hidden fields ═════════════════
+       Mirrors the block on the landing page. Values arrive in this
+       page's query string, with sessionStorage as the backup for a
+       reload or a back-navigation. Cookies are read here directly,
+       since this is the same origin and the pixel runs here too.
+  ══════════════════════════════════════════════════════════════ -->
+  <script>
+  (function () {
+    var FORM_ID  = 'H2fs6m45';
+    var TYPEFORM = 'https://form.typeform.com/to/' + FORM_ID;
+    var STORE    = 'sprk_attr';
+
+    var KEYS = [
+      'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
+      'campaign_id', 'adset_id', 'ad_id', 'fbclid', 'cta_source'
+    ];
+
+    function readCookie(name) {
+      var match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+      return match ? match.pop() : '';
+    }
+
+    var incoming = new URLSearchParams(window.location.search);
+    var saved = {};
+    try { saved = JSON.parse(sessionStorage.getItem(STORE) || '{}'); } catch (e) {}
+
+    var attr = {};
+    KEYS.forEach(function (key) {
+      var value = incoming.get(key) || saved[key] || '';
+      if (value) attr[key] = value;
+    });
+
+    // The landing page already minted an event_id for this visit; reuse it so
+    // the browser Lead event and the Conversions API event that n8n sends
+    // share one id and Meta deduplicates them. Only mint a new one if someone
+    // reached /form directly.
+    attr.event_id = incoming.get('event_id') || saved.event_id ||
+      ('lead_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10));
+
+    try { sessionStorage.setItem(STORE, JSON.stringify(attr)); } catch (e) {}
+
+    function buildHidden() {
+      var out = {};
+      Object.keys(attr).forEach(function (key) { if (attr[key]) out[key] = attr[key]; });
+
+      var fbp = readCookie('_fbp');
+      var fbc = readCookie('_fbc') || incoming.get('fbc') || '';
+
+      // Meta writes _fbc asynchronously and only when fbclid is present. If it
+      // has not landed, build a valid one by hand: fb.1.<timestamp_ms>.<fbclid>
+      if (!fbc && attr.fbclid) fbc = 'fb.1.' + Date.now() + '.' + attr.fbclid;
+
+      if (fbp) out.fbp = fbp;
+      if (fbc) out.fbc = fbc;
+      if (!out.cta_source) out.cta_source = 'form_page';
+      return out;
+    }
+
+    function fallbackUrl() {
+      var qs = new URLSearchParams();
+      var hidden = buildHidden();
+      Object.keys(hidden).forEach(function (k) { qs.set(k, hidden[k]); });
+      return TYPEFORM + '?' + qs.toString();
+    }
+
+    var fallback = document.getElementById('fallback');
+    var fallbackLink = document.getElementById('fallback-link');
+    var skeleton = document.getElementById('skeleton');
+
+    function showFallback() {
+      if (fallbackLink) fallbackLink.setAttribute('href', fallbackUrl());
+      if (fallback) fallback.hidden = false;
+      if (skeleton) skeleton.setAttribute('data-state', 'failed');
+    }
+
+    if (!window.tf || typeof window.tf.createWidget !== 'function') {
+      showFallback();
+      return;
+    }
+
+    var hidden = buildHidden();
+
+    try {
+      window.tf.createWidget(FORM_ID, {
+        container: document.getElementById('tf-container'),
+        hidden: hidden,
+        opacity: 0,            // transparent form background, so our navy shows through
+        inlineOnMobile: true,  // scroll with the page rather than trapping touch
+        onReady: function () {
+          if (skeleton) skeleton.setAttribute('data-state', 'ready');
+        },
+        onSubmit: function () {
+          if (typeof window.fbq === 'function') {
+            window.fbq('track', 'Lead',
+              { content_name: 'SPRK Application', content_category: hidden.cta_source },
+              { eventID: hidden.event_id });
+          }
+        }
+      });
+    } catch (err) {
+      showFallback();
+    }
+
+    // If onReady never fires, the iframe is blocked or wedged — offer the link
+    // rather than leaving someone staring at a spinner.
+    setTimeout(function () {
+      if (skeleton && skeleton.getAttribute('data-state') !== 'ready') showFallback();
+    }, 8000);
+
+    // ?debug=1 — what would be sent
+    if (incoming.get('debug') === '1') {
+      var box = document.createElement('pre');
+      box.style.cssText =
+        'position:fixed;left:8px;bottom:8px;z-index:9999;max-width:min(92vw,460px);' +
+        'max-height:52vh;overflow:auto;margin:0;padding:12px 14px;border-radius:10px;' +
+        'background:rgba(8,10,14,.94);border:1px solid rgba(229,209,154,.35);' +
+        'color:#E5D19A;font:11px/1.5 ui-monospace,SFMono-Regular,monospace';
+      var EXPECTED = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content',
+                      'campaign_id','adset_id','ad_id','fbclid','fbp','fbc',
+                      'event_id','cta_source'];
+      var render = function () {
+        var data = buildHidden();
+        box.textContent = '/form attribution debug\n' +
+          'embed SDK:  ' + (window.tf && window.tf.createWidget ? 'loaded' : 'NOT loaded') + '\n' +
+          'meta pixel: ' + (typeof window.fbq === 'function' ? 'loaded' : 'not loaded yet') + '\n\n' +
+          EXPECTED.map(function (k) {
+            var v = data[k];
+            return (v ? '  ok   ' : '  --   ') + k + Array(15 - k.length).join(' ') + (v || '(empty)');
+          }).join('\n');
+      };
+      render();
+      var t = 0, poll = setInterval(function () { render(); if (++t > 10) clearInterval(poll); }, 600);
+      document.body.appendChild(box);
+    }
+  })();
+  </script>
+
+</body>
+</html>
