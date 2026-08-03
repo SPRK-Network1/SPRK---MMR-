@@ -1322,8 +1322,42 @@ a, button, summary, .dot {
   text-transform: uppercase;
   transition: opacity var(--dur-slow) var(--ease-out), visibility var(--dur-slow);
 }
-.apply__skeleton[data-state="ready"],
-.apply__skeleton[data-state="failed"] { opacity: 0; visibility: hidden; }
+/* Ready: the form is behind this, so get out of the way entirely. */
+.apply__skeleton[data-state="ready"] { opacity: 0; visibility: hidden; }
+
+/* Failed: stay put and become the recovery. Hiding it would leave a tall
+   empty box with the only way forward below the fold. */
+.apply__skeleton[data-state="failed"] .apply__spinner,
+.apply__skeleton[data-state="failed"] .apply__loading { display: none; }
+
+.apply__failed { display: none; }
+.apply__skeleton[data-state="failed"] .apply__failed {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  text-align: center;
+}
+
+.apply__failed-h {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-lg);
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  text-transform: none;
+}
+.apply__failed-p {
+  color: var(--color-ink-2);
+  font-size: var(--text-sm);
+  max-width: 34ch;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.apply__failed .cta { margin-top: var(--space-2xs); }
+
+/* A 416px slot sized for a form is dead space once there is no form in it. */
+.apply__frame[data-state="failed"] .apply__embed { height: auto; min-height: 12rem; }
 
 .apply__spinner {
   width: 26px;

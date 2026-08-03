@@ -25,7 +25,12 @@
 
   <!-- embed.js does not inject its own styles; the inline widget needs this. -->
   <link rel="stylesheet" href="https://embed.typeform.com/next/css/widget.css" />
-  <script src="https://embed.typeform.com/next/embed.js"></script>
+  <!-- async, not blocking. A blocking third-party script that HANGS (rather
+       than fails) renders nothing at all — no skeleton, no fallback, just a
+       white page for however long the browser waits. Async means the page
+       always paints and the form mounts when the SDK arrives; the inline
+       script below waits on load/error and gives up on a timer. -->
+  <script src="https://embed.typeform.com/next/embed.js" async id="tf-sdk"></script>
 
   <!-- ═══ Meta Pixel ═══════════════════════════════════════════ -->
   <script>
@@ -68,9 +73,22 @@
          visitor looks at while the iframe loads, so the slot never reads
          as a broken white box. -->
     <section class="apply__frame" aria-label="Application form">
-      <div class="apply__skeleton" id="skeleton" aria-hidden="true">
-        <span class="apply__spinner"></span>
+      <div class="apply__skeleton" id="skeleton">
+        <span class="apply__spinner" aria-hidden="true"></span>
         <span class="apply__loading">Loading your application…</span>
+
+        <!-- Swapped in when the embed fails. Lives INSIDE the frame on
+             purpose: the old fallback sat under a 416px empty box, which
+             on a phone is below the fold — the visitor sees a blank panel
+             and leaves before ever scrolling to the link. -->
+        <div class="apply__failed" role="alert">
+          <p class="apply__failed-h">The form didn't load</p>
+          <p class="apply__failed-p">Your connection or an extension may be blocking it.</p>
+          <a class="cta cta--glow" id="failed-link" href="https://form.typeform.com/to/H2fs6m45">
+            <span class="cta__label">Open the application</span>
+            <span class="cta__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
       </div>
       <div id="tf-container" class="apply__embed"></div>
     </section>
@@ -159,21 +177,65 @@
     var fallbackLink = document.getElementById('fallback-link');
     var skeleton = document.getElementById('skeleton');
 
-    function showFallback() {
-      if (fallbackLink) fallbackLink.setAttribute('href', fallbackUrl());
-      if (fallback) fallback.hidden = false;
-      if (skeleton) skeleton.setAttribute('data-state', 'failed');
+    // Every failure path reports itself. Without this a broken embed is
+    // completely silent: the visitor sees a fallback link, and nothing
+    // upstream ever records that the form did not load. Comparing
+    // PageView on /form against FormReady tells you what share of people
+    // actually reach a usable form.
+    var reported = false;
+    function report(event, reason) {
+      if (reported) return;          // one signal per pageview, not a loop
+      reported = true;
+      if (typeof window.fbq !== 'function') return;
+      window.fbq('trackCustom', event, {
+        reason: reason || '',
+        cta_source: attr.cta_source || 'form_page',
+        event_id: attr.event_id || ''
+      });
     }
 
-    if (!window.tf || typeof window.tf.createWidget !== 'function') {
-      showFallback();
-      return;
+    var failedLink = document.getElementById('failed-link');
+    var frame = document.querySelector('.apply__frame');
+
+    function showFallback(reason) {
+      var url = fallbackUrl();
+      // Both recovery links carry the full attribution, so a visitor who
+      // takes the fallback is still attributed exactly like an embed submit.
+      if (failedLink) failedLink.setAttribute('href', url);
+      if (fallbackLink) fallbackLink.setAttribute('href', url);
+      if (fallback) fallback.hidden = false;
+      if (skeleton) skeleton.setAttribute('data-state', 'failed');
+      if (frame) frame.setAttribute('data-state', 'failed');
+      report('FormEmbedFailed', reason);
+    }
+
+    // The SDK is async now, so it may not be here yet. Wait for its load or
+    // error event, with a timer as the backstop for the case that neither
+    // fires (a hung request emits no event at all).
+    function whenSdkReady(onReady, onFail) {
+      if (window.tf && typeof window.tf.createWidget === 'function') return onReady();
+
+      var tag = document.getElementById('tf-sdk');
+      var settled = false;
+      var settle = function () {
+        if (settled) return;
+        settled = true;
+        if (window.tf && typeof window.tf.createWidget === 'function') onReady();
+        else onFail();
+      };
+
+      if (tag) {
+        tag.addEventListener('load', settle);
+        tag.addEventListener('error', settle);
+      }
+      setTimeout(settle, 6000);
     }
 
     var hidden = buildHidden();
 
-    try {
-      window.tf.createWidget(FORM_ID, {
+    function mount() {
+      try {
+        window.tf.createWidget(FORM_ID, {
         container: document.getElementById('tf-container'),
         hidden: hidden,
         // No `opacity` option on purpose. Setting it to 0 makes the FORM's
@@ -184,6 +246,10 @@
         inlineOnMobile: true,  // scroll with the page rather than trapping touch
         onReady: function () {
           if (skeleton) skeleton.setAttribute('data-state', 'ready');
+          // The success signal. FormReady counted against PageView on this
+          // page is the only way to notice the embed quietly breaking for
+          // some slice of traffic — a browser, a blocker, a bad network.
+          report('FormReady', 'ok');
         },
         onSubmit: function () {
           if (typeof window.fbq === 'function') {
@@ -192,16 +258,20 @@
               { eventID: hidden.event_id });
           }
         }
-      });
-    } catch (err) {
-      showFallback();
+        });
+      } catch (err) {
+        showFallback('create_threw');
+      }
     }
 
+    whenSdkReady(mount, function () { showFallback('sdk_missing'); });
+
     // If onReady never fires, the iframe is blocked or wedged — offer the link
-    // rather than leaving someone staring at a spinner.
+    // rather than leaving someone staring at a spinner. Generous, because the
+    // SDK wait above can consume up to 6s of its own before mount() even runs.
     setTimeout(function () {
-      if (skeleton && skeleton.getAttribute('data-state') !== 'ready') showFallback();
-    }, 8000);
+      if (skeleton && skeleton.getAttribute('data-state') !== 'ready') showFallback('ready_timeout');
+    }, 14000);
 
     // ?debug=1 — what would be sent
     if (incoming.get('debug') === '1') {
