@@ -323,15 +323,6 @@ a, button, summary, .dot {
 .statement__h em,
 .section-h em,
 .close__h em,
-.footer__statement em {
-  font-family: var(--font-accent);
-  font-style: italic;
-  font-weight: 400;
-  font-size: 1.12em;
-  letter-spacing: -0.02em;
-  color: var(--color-accent);
-  font-feature-settings: normal;
-}
 
 .stage__sub {
   max-width: 52ch;
@@ -945,30 +936,13 @@ a, button, summary, .dot {
 /* ── 16 · footer ─────────────────────────────────────────── */
 
 .footer {
-  padding: var(--space-3xl) var(--page-gutter) var(--space-2xl);
+  /* was space-3xl on top to clear the statement block; now a single meta row */
+  padding: var(--space-xl) var(--page-gutter) var(--space-xl);
   border-top: var(--rule-hair) solid var(--color-rule);
 }
 
 .footer__inner { max-width: var(--max-width); margin: 0 auto; }
 
-.footer__statement {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(1.4rem, 3vw, 2.2rem);
-  line-height: 1.18;
-  letter-spacing: -0.025em;
-  max-width: 24ch;
-  margin-bottom: var(--space-xl);
-  text-wrap: balance;
-}
-
-.footer__disclaimer {
-  max-width: 68ch;
-  color: var(--color-ink-3);
-  font-size: var(--text-sm);
-  line-height: var(--leading-body);
-  padding-bottom: var(--space-xl);
-}
 
 /* No dividing rule, and no space-between — that pushed the brand,
    copyright and links to opposite ends of a full-width row, which read

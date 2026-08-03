@@ -388,15 +388,6 @@
           </div>
         </details>
  
-        <details class="faq__item">
-          <summary>
-            <span>What's the difference with VIP?</span>
-            <span class="faq__chev" aria-hidden="true">+</span>
-          </summary>
-          <div class="faq__a">
-            <p>Five things: creatives processed in roughly 2 hours instead of 12–18, new angles 6 days before the rest of the network, direct iMessage and private chat access to the team, 1.5 hours of one-on-one strategy time each month, and a separate VIP-only chat.</p>
-          </div>
-        </details>
  
         <details class="faq__item">
           <summary>
@@ -446,16 +437,6 @@
   <!-- ─── footer ─────────────────────────────────────────────── -->
   <footer class="footer">
     <div class="footer__inner">
-      <p class="footer__statement">
-        <em>Create content. Scale it.</em> One network, built by people who are still running traffic today.
-      </p>
- 
-      <p class="footer__disclaimer">
-        SPRK Network is a media-buying workflow platform. Members bring their own ad accounts,
-        their own budget and their own creatives. Nothing here is a guarantee of earnings — results
-        depend entirely on the work you put in, your experience and your spend.
-      </p>
- 
       <div class="footer__meta">
         <div class="footer__brand">
           <img src="images/Sprknetwork.png" alt="" />
@@ -583,7 +564,43 @@
       link.setAttribute('href', buildUrl(link.getAttribute('data-cta') || ''));
     }, true);
 
-    // ── 6 · ?debug=1 — show exactly what would be sent ───────────────
+    // ── 6 · Meta: ClickButton ────────────────────────────────────────
+    //    Fires when someone clicks any Get Started CTA, before the hop
+    //    to /form. Gives the funnel a middle step:
+    //      PageView -> ClickButton -> PageView (/form) -> Lead
+    //    so a drop-off between "saw the page" and "reached the form" is
+    //    visible instead of being invisible in a single PageView number.
+    //
+    //    cta_source says WHICH of the five buttons was clicked, so the
+    //    nav pill, hero, statement, closing and sticky CTAs can be
+    //    compared against each other.
+    //
+    //    No eventID on purpose: this is browser-only with no server-side
+    //    counterpart, and a stable id across repeat clicks would make
+    //    Meta deduplicate genuine separate clicks into one.
+    document.addEventListener('click', function (evt) {
+      if (typeof window.fbq !== 'function') return;
+
+      var node = evt.target;
+      var link = node && node.closest
+        ? node.closest('a[data-typeform], a[href*="typeform.com"]')
+        : null;
+      if (!link) return;
+
+      var cta = link.getAttribute('data-cta') || 'unknown';
+
+      window.fbq('trackCustom', 'ClickButton', {
+        cta_source:   cta,
+        content_name: 'SPRK Get Started',
+        utm_source:   attr.utm_source || '',
+        utm_campaign: attr.utm_campaign || '',
+        campaign_id:  attr.campaign_id || '',
+        adset_id:     attr.adset_id || '',
+        ad_id:        attr.ad_id || ''
+      });
+    }, false);
+
+    // ── 7 · ?debug=1 — show exactly what would be sent ───────────────
     if (incoming.get('debug') === '1') {
       window.addEventListener('DOMContentLoaded', function () {
         var box = document.createElement('pre');
