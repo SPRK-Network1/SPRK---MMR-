@@ -23,6 +23,34 @@
   <link rel="stylesheet" href="/tokens.css" />
   <link rel="stylesheet" href="/styles.css" />
 
+  <!-- ═══ Scrub ?n= BEFORE the pixel loads ═════════════════════
+       fbevents.js sends the full document location as its `dl`
+       parameter on every event. This page is only ever opened as
+       /welcome?n=Caryn, so without this the lead's FIRST NAME is
+       transmitted to Meta on PageView and PreCallView, keyed to their
+       _fbp. That is customer PII in an ad platform: a Business Tools
+       terms violation and an event-rejection risk on the ad account
+       the whole funnel runs through.
+
+       Must stay above the pixel block and inside <head> — it only
+       works if it runs before fbq reads location.
+
+       Accepted trade: after the scrub a reload or bookmark has no
+       name, so the heading falls back to "Welcome to SPRK Network".
+       Losing personalisation on a refresh beats leaking a name. -->
+  <script>
+  window.__sprkName = '';
+  try {
+    var _p = new URLSearchParams(window.location.search);
+    window.__sprkName = _p.get('n') || '';
+    if (_p.has('n') && window.history && history.replaceState) {
+      _p.delete('n');
+      var _q = _p.toString();
+      history.replaceState(null, '', window.location.pathname + (_q ? '?' + _q : '') + window.location.hash);
+    }
+  } catch (e) { window.__sprkName = ''; }
+  </script>
+
   <!-- ═══ Meta Pixel ═══════════════════════════════════════════
        Its own block, firing its own PageView. Deliberately not shared
        with the other pages — see the note in /form. -->
@@ -35,6 +63,18 @@
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window,document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
+  /* MUST precede init. Scrubbing ?n= off the URL is not sufficient on its
+     own: with autoConfig left on, the pixel also harvests page metadata and
+     ships the document title as pmd[title] plus a page_title entry in ss.
+     Since the title carries the lead's name by design, that put the name
+     back on the wire through a second channel. Verified against live
+     beacons — with this off, neither pmd[title] nor ss is sent.
+
+     Safe here specifically: autoConfig drives automatic advanced matching,
+     which scrapes form fields for emails and phone numbers. This page has
+     no form. Do NOT copy this line to /form, which needs the default. */
+  fbq('set', 'autoConfig', false, '1746915513340219');
+
   fbq('init', '1746915513340219');
   fbq('track', 'PageView');
   // Booked leads who never open this are the no-show risk; the sales team
@@ -62,7 +102,7 @@
         <span class="apply__wordmark">SPRK <span>Network</span></span>
       </a>
 
-      <p class="welcome__eyebrow">Your call is booked</p>
+      <p class="section-eyebrow">Your call is booked</p>
 
       <!-- The greeting line is emptied by script when there is no ?n=, so the
            heading reads "Welcome to SPRK Network" rather than leaving a comma
@@ -91,9 +131,16 @@
          Current ID: Q_oHPhpvxpWzBtUf   ·   Account: GEdWcqBF
     ═══════════════════════════════════════════════════════════ -->
     <div class="frame welcome__frame">
-      <div class="frame__inner">
+      <div class="frame__inner" id="welcome-video">
         <div id="vidalytics_embed_Q_oHPhpvxpWzBtUf" style="width: 100%; position:relative; padding-top: 56.25%;"></div>
         <script type="text/javascript">(function (v, i, d, a, l, y, t, c, s) {    y='_'+d.toLowerCase();c=d+'L';if(!v[d]){v[d]={};}if(!v[c]){v[c]={};}if(!v[y]){v[y]={};}var vl='Loader',vli=v[y][vl],vsl=v[c][vl + 'Script'],vlf=v[c][vl + 'Loaded'],ve='Embed';    if (!vsl){vsl=function(u,cb){        if(t){cb();return;}s=i.createElement("script");s.type="text/javascript";s.async=1;s.src=u;        if(s.readyState){s.onreadystatechange=function(){if(s.readyState==="loaded"||s.readyState=="complete"){s.onreadystatechange=null;vlf=1;cb();}};}else{s.onload=function(){vlf=1;cb();};}        i.getElementsByTagName("head")[0].appendChild(s);    };}    vsl(l+'loader.min.js',function(){if(!vli){var vlc=v[c][vl];vli=new vlc();}vli.loadScript(l+'player.min.js',function(){var vec=v[d][ve];t=new vec();t.run(a);});});})(window, document, 'Vidalytics', 'vidalytics_embed_Q_oHPhpvxpWzBtUf', 'https://fast.vidalytics.com/embeds/GEdWcqBF/Q_oHPhpvxpWzBtUf/');</script>
+
+        <!-- Swapped in by the timeout below when nothing ever mounts. -->
+        <p class="welcome__novideo" role="alert">
+          The video didn't load — your connection or an extension may be blocking it.
+          We'll walk you through everything on the call.
+        </p>
+        <noscript><p class="welcome__novideo welcome__novideo--js">This video needs JavaScript. We'll cover it on the call.</p></noscript>
       </div>
     </div>
 
@@ -114,41 +161,78 @@
     var greeting = document.getElementById('welcome-greeting');
     if (!greeting) return;
 
+    /* The head script scrubbed ?n= off the URL before the pixel fired and
+       stashed the raw value here. Reading the URL is only a fallback for
+       the case where that script was skipped. */
     var raw = '';
-    try { raw = new URLSearchParams(window.location.search).get('n') || ''; } catch (e) { raw = ''; }
+    try {
+      raw = (typeof window.__sprkName === 'string' && window.__sprkName) ||
+            new URLSearchParams(window.location.search).get('n') || '';
+    } catch (e) { raw = ''; }
 
-    /* If the value contains angle brackets it is markup or an injection
-       attempt, not a name. Stripping the characters would still leave
-       "Welcome, Scriptalertscript" on screen — safe, but nonsense. Drop
-       the whole value and show the clean no-name heading instead. */
+    /* Angle brackets mean markup or an injection attempt, not a name.
+       Stripping the characters would still leave "Welcome, Scriptalertscript"
+       on screen — safe, but nonsense. Drop the whole value. */
     if (/[<>]/.test(raw)) raw = '';
 
-    /* Unicode-aware allowlist: letters (any script, so accented and
-       non-Latin names survive), marks (combining accents), space,
-       apostrophe, hyphen. Everything else is dropped — which is what
-       makes <script> collapse to harmless text rather than markup.
-       \p{L}/\p{M} need the u flag; browsers without it fall back to a
-       Latin-only class, which still strips every markup character. */
-    var cleaned;
+    /* Fold typographic punctuation to ASCII first. iOS and most CRM and
+       booking forms auto-substitute ' with U+2019, which is neither a
+       letter nor a mark — without this, O’Brien became Obrien. */
+    raw = raw.replace(/[‘’ʼ′]/g, "'")
+             .replace(/[‐‑‒–—−]/g, '-');
+
+    /* Built with new RegExp, NOT literals. An unsupported \p{...} inside a
+       regex literal is a PARSE-time SyntaxError, which kills this entire
+       script before any try block is reached — so a literal-based fallback
+       can never run. The constructor throws at runtime, which is catchable. */
+    var allow, boundary, hasLetter;
     try {
-      cleaned = raw.replace(/[^\p{L}\p{M}\s'\-]/gu, '');
+      allow     = new RegExp("[^\\p{L}\\p{M}\\s'\\-]", 'gu');
+      boundary  = new RegExp("(^|[\\s'\\-])(\\p{L})", 'gu');
+      hasLetter = new RegExp("\\p{L}", 'u');
     } catch (e) {
-      cleaned = raw.replace(/[^A-Za-zÀ-ɏ\s'\-]/g, '');
+      allow     = /[^A-Za-zÀ-ɏ\s'\-]/g;
+      boundary  = /(^|[\s'\-])([A-Za-zÀ-ɏ])/g;
+      hasLetter = /[A-Za-zÀ-ɏ]/;
     }
 
-    cleaned = cleaned.replace(/\s+/g, ' ').trim().slice(0, MAX).trim();
+    var cleaned = raw.replace(allow, '').replace(/\s+/g, ' ').trim();
 
-    if (!cleaned) return;   // leave the served default: "Welcome to SPRK Network"
+    /* Cap by CODE POINT, not UTF-16 unit: an astral letter is two units, so
+       a raw slice can halve one and render a replacement glyph. */
+    cleaned = Array.from(cleaned).slice(0, MAX).join('');
 
-    /* Title-case each word, including the parts of hyphenated and
-       apostrophed names (mary-jane -> Mary-Jane, o'brien -> O'Brien). */
-    var name = cleaned.toLowerCase().replace(/(^|[\s'\-])(\p{L})/gu, function (m, sep, ch) {
-      return sep + ch.toUpperCase();
-    });
+    /* The cap can land on a separator, and "-Caryn" needs the same trim. */
+    cleaned = cleaned.replace(/^[\s'\-]+|[\s'\-]+$/g, '');
+
+    /* Must contain a real letter. Hyphens and apostrophes are allowlisted, so
+       "---" or a stray "555-1234" is non-empty but is not a name — an SMS
+       platform rendering an empty merge field would otherwise print
+       "Welcome, -". Fall through to the served no-name heading. */
+    if (!hasLetter.test(cleaned)) return;
+
+    /* Title-case, but only re-case a token that is entirely lower or entirely
+       upper. That fixes shouted input (CARYN -> Caryn) without flattening the
+       medial capital in DeShawn, LaToya or McDonald. */
+    var name = cleaned.split(' ').map(function (tok) {
+      var t = (tok === tok.toLowerCase() || tok === tok.toUpperCase()) ? tok.toLowerCase() : tok;
+      return t.replace(boundary, function (m, sep, ch) { return sep + ch.toUpperCase(); });
+    }).join(' ');
 
     greeting.textContent = 'Welcome, ' + name;
     document.title = 'Welcome, ' + name + ' — SPRK Network';
   })();
+
+  /* Mirrors /form's ready_timeout. If no player element ever appears, say so
+     rather than leaving a black 16:9 void — the video IS this page. */
+  setTimeout(function () {
+    var box = document.getElementById('welcome-video');
+    if (!box) return;
+    var mount = box.querySelector('div[id^="vidalytics_embed_"]');
+    if (mount && !mount.querySelector('video, iframe, canvas')) {
+      box.setAttribute('data-state', 'failed');
+    }
+  }, 12000);
   </script>
 
 </body>
