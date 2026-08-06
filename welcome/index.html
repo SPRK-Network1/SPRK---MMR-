@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <title>Welcome — SPRK Network</title>
+  <meta name="description" content="Your call with SPRK Network is booked. Watch this before we speak." />
+  <meta name="theme-color" content="#0B0F14" />
+
+  <!-- Personal page for a single booked lead, reached only from an SMS
+       link. Never a search result. -->
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="icon" href="/images/Sprknetwork.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fast.vidalytics.com" />
+  <link rel="preconnect" href="https://connect.facebook.net" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/tokens.css" />
+  <link rel="stylesheet" href="/styles.css" />
+
+  <!-- ═══ Meta Pixel ═══════════════════════════════════════════
+       Its own block, firing its own PageView. Deliberately not shared
+       with the other pages — see the note in /form. -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1746915513340219');
+  fbq('track', 'PageView');
+  // Booked leads who never open this are the no-show risk; the sales team
+  // uses this against the booking count.
+  fbq('trackCustom', 'PreCallView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1746915513340219&ev=PageView&noscript=1" alt="" /></noscript>
+  <!-- ═══ End Meta Pixel ═══════════════════════════════════════ -->
+</head>
+<body class="formpage">
+
+  <div class="ambient" aria-hidden="true">
+    <div class="bloom bloom--1"></div>
+    <div class="bloom bloom--2"></div>
+    <div class="grid-lines"></div>
+    <div class="grain"></div>
+  </div>
+
+  <main class="apply welcome" id="main">
+
+    <header class="apply__head">
+      <a class="apply__brand" href="/" aria-label="SPRK Network · home">
+        <img class="apply__logo" src="/images/Sprknetwork.png" alt="" />
+        <span class="apply__wordmark">SPRK <span>Network</span></span>
+      </a>
+
+      <p class="welcome__eyebrow">Your call is booked</p>
+
+      <!-- The greeting line is emptied by script when there is no ?n=, so the
+           heading reads "Welcome to SPRK Network" rather than leaving a comma
+           and a gap. Server-rendered default is the no-name version. -->
+      <h1 class="apply__h welcome__h" id="welcome-h">
+        <span class="welcome__greeting" id="welcome-greeting">Welcome</span>
+        <span class="welcome__line2">to <em>SPRK Network</em></span>
+      </h1>
+    </header>
+
+    <p class="welcome__lead">
+      Before we speak, watch the short video below. It covers how the network
+      actually works, so we can spend the call on your situation instead of
+      the basics.
+    </p>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         VIDEO — currently the same VSL as the homepage.
+
+         TO SWAP IN A DEDICATED PRE-CALL VIDEO, change three things:
+           1. the container id on the <div> below      (vidalytics_embed_<ID>)
+           2. the same id in the script's 4th argument (…, 'vidalytics_embed_<ID>', …)
+           3. the embed path in the script's 5th argument
+              https://fast.vidalytics.com/embeds/<ACCOUNT>/<ID>/
+         The <ID> in all three must match, or the player silently never mounts.
+         Current ID: Q_oHPhpvxpWzBtUf   ·   Account: GEdWcqBF
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="frame welcome__frame">
+      <div class="frame__inner">
+        <div id="vidalytics_embed_Q_oHPhpvxpWzBtUf" style="width: 100%; position:relative; padding-top: 56.25%;"></div>
+        <script type="text/javascript">(function (v, i, d, a, l, y, t, c, s) {    y='_'+d.toLowerCase();c=d+'L';if(!v[d]){v[d]={};}if(!v[c]){v[c]={};}if(!v[y]){v[y]={};}var vl='Loader',vli=v[y][vl],vsl=v[c][vl + 'Script'],vlf=v[c][vl + 'Loaded'],ve='Embed';    if (!vsl){vsl=function(u,cb){        if(t){cb();return;}s=i.createElement("script");s.type="text/javascript";s.async=1;s.src=u;        if(s.readyState){s.onreadystatechange=function(){if(s.readyState==="loaded"||s.readyState=="complete"){s.onreadystatechange=null;vlf=1;cb();}};}else{s.onload=function(){vlf=1;cb();};}        i.getElementsByTagName("head")[0].appendChild(s);    };}    vsl(l+'loader.min.js',function(){if(!vli){var vlc=v[c][vl];vli=new vlc();}vli.loadScript(l+'player.min.js',function(){var vec=v[d][ve];t=new vec();t.run(a);});});})(window, document, 'Vidalytics', 'vidalytics_embed_Q_oHPhpvxpWzBtUf', 'https://fast.vidalytics.com/embeds/GEdWcqBF/Q_oHPhpvxpWzBtUf/');</script>
+      </div>
+    </div>
+
+    <p class="welcome__close">
+      Keep your phone nearby — we'll call you at the time you booked.
+    </p>
+
+  </main>
+
+  <!-- ═══ Personalisation ══════════════════════════════════════
+       Reads ?n= and writes it into the heading via textContent, never
+       innerHTML. The value arrives in a URL and is treated as hostile.
+  ══════════════════════════════════════════════════════════════ -->
+  <script>
+  (function () {
+    var MAX = 28;
+
+    var greeting = document.getElementById('welcome-greeting');
+    if (!greeting) return;
+
+    var raw = '';
+    try { raw = new URLSearchParams(window.location.search).get('n') || ''; } catch (e) { raw = ''; }
+
+    /* If the value contains angle brackets it is markup or an injection
+       attempt, not a name. Stripping the characters would still leave
+       "Welcome, Scriptalertscript" on screen — safe, but nonsense. Drop
+       the whole value and show the clean no-name heading instead. */
+    if (/[<>]/.test(raw)) raw = '';
+
+    /* Unicode-aware allowlist: letters (any script, so accented and
+       non-Latin names survive), marks (combining accents), space,
+       apostrophe, hyphen. Everything else is dropped — which is what
+       makes <script> collapse to harmless text rather than markup.
+       \p{L}/\p{M} need the u flag; browsers without it fall back to a
+       Latin-only class, which still strips every markup character. */
+    var cleaned;
+    try {
+      cleaned = raw.replace(/[^\p{L}\p{M}\s'\-]/gu, '');
+    } catch (e) {
+      cleaned = raw.replace(/[^A-Za-zÀ-ɏ\s'\-]/g, '');
+    }
+
+    cleaned = cleaned.replace(/\s+/g, ' ').trim().slice(0, MAX).trim();
+
+    if (!cleaned) return;   // leave the served default: "Welcome to SPRK Network"
+
+    /* Title-case each word, including the parts of hyphenated and
+       apostrophed names (mary-jane -> Mary-Jane, o'brien -> O'Brien). */
+    var name = cleaned.toLowerCase().replace(/(^|[\s'\-])(\p{L})/gu, function (m, sep, ch) {
+      return sep + ch.toUpperCase();
+    });
+
+    greeting.textContent = 'Welcome, ' + name;
+    document.title = 'Welcome, ' + name + ' — SPRK Network';
+  })();
+  </script>
+
+</body>
+</html>

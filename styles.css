@@ -319,10 +319,23 @@ a, button, summary, .dot {
   text-wrap: balance;
 }
 
+/* The italic-serif gold accent. Its declaration block was deleted along
+   with .footer__statement in 1e39e33, which left this selector list
+   dangling on a trailing comma so it merged into .stage__sub — every
+   accent word inherited 17px muted grey inside a 38px display heading. */
 .stage__h em,
 .statement__h em,
 .section-h em,
 .close__h em,
+.welcome__h em {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.12em;
+  letter-spacing: -0.02em;
+  color: var(--color-accent);
+  font-feature-settings: normal;
+}
 
 .stage__sub {
   max-width: 52ch;
@@ -1393,3 +1406,46 @@ a, button, summary, .dot {
 @media (prefers-reduced-motion: reduce) {
   .apply__spinner { animation: none; border-top-color: var(--color-accent); }
 }
+
+
+/* ── 22 · /welcome · booked-call page ────────────────────────
+   Reuses .apply (container, head, brand, logo, wordmark, heading)
+   and .frame/.frame__inner from the homepage VSL. Only the pieces
+   with no existing equivalent are defined here. */
+
+.welcome__eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  padding: var(--space-2xs) var(--space-md);
+  border: var(--rule-hair) solid color-mix(in oklch, var(--color-accent) 28%, transparent);
+  border-radius: var(--radius-pill);
+}
+
+/* Each span is its own line, so the greeting and "to SPRK Network"
+   never reflow into one another as the name length changes. */
+.welcome__greeting,
+.welcome__line2 { display: block; }
+
+.welcome__lead,
+.welcome__close {
+  max-width: 54ch;
+  color: var(--color-ink-2);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  text-wrap: pretty;
+}
+
+.welcome__close {
+  margin-top: var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-ink-3);
+  letter-spacing: 0.02em;
+}
+
+/* .frame carries a 62rem cap for the homepage; inside .apply's 52rem
+   column it just fills the width. */
+.welcome__frame { margin-top: var(--space-xs); }
