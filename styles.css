@@ -1430,6 +1430,17 @@ a, button, summary, .dot {
 /* Shown only when the embed never mounts. The frame is a black 16:9 box, so
    without this a blocked player is a silent void on a page whose entire
    content is the video. */
+/* Fills the frame; the parent sets line-height:0 so there is no gap
+   under it the way there would be with an inline element. */
+.welcome__video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: var(--radius-lg);
+}
+#welcome-video[data-state="failed"] > .welcome__video { display: none; }
+
 .welcome__novideo { display: none; }
 .welcome__novideo--js,
 #welcome-video[data-state="failed"] > .welcome__novideo {
