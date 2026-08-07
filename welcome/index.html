@@ -97,12 +97,6 @@
   <main class="apply welcome" id="main">
 
     <header class="apply__head">
-      <p class="welcome__close welcome__close--top">
-        Keep your phone nearby — we'll call you at the time you booked.
-      </p>
-
-      <p class="section-eyebrow">Your call is booked</p>
-
       <!-- The greeting line is emptied by script when there is no ?n=, so the
            heading reads "Welcome to SPRK Network" rather than leaving a comma
            and a gap. Server-rendered default is the no-name version. -->
@@ -110,13 +104,9 @@
         <span class="welcome__greeting" id="welcome-greeting">Welcome</span>
         <span class="welcome__line2">to <em>SPRK Network</em></span>
       </h1>
-    </header>
 
-    <p class="welcome__lead">
-      Before we speak, watch the short video below. It covers how the network
-      actually works, so we can spend the call on your situation instead of
-      the basics.
-    </p>
+      <p class="section-eyebrow">Your call is booked</p>
+    </header>
 
     <!-- ═══════════════════════════════════════════════════════════
          VIDEO — currently the same VSL as the homepage.
@@ -142,6 +132,15 @@
         <noscript><p class="welcome__novideo welcome__novideo--js">This video needs JavaScript. We'll cover it on the call.</p></noscript>
       </div>
     </div>
+
+    <p class="welcome__lead welcome__lead--after">
+      That video covers how the network actually works, so we can spend the
+      call on your situation instead of the basics.
+    </p>
+
+    <p class="welcome__close">
+      Keep your phone nearby — we'll call you at the time you booked.
+    </p>
 
   </main>
 

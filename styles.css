@@ -1442,6 +1442,10 @@ a, button, summary, .dot {
 }
 #welcome-video[data-state="failed"] > div[id^="vidalytics_embed_"] { display: none; }
 
+/* Sits under the video rather than above it, so it needs separation from
+   the frame instead of from the heading. */
+.welcome__lead--after { margin-top: var(--space-lg); }
+
 .welcome__lead,
 .welcome__close {
   max-width: 54ch;
@@ -1450,10 +1454,6 @@ a, button, summary, .dot {
   line-height: var(--leading-body);
   text-wrap: pretty;
 }
-
-/* Now the first element on the page, so it must not carry the trailing
-   margin it had as a footer note. */
-.welcome__close--top { margin-top: 0; }
 
 .welcome__close {
   margin-top: var(--space-xs);
