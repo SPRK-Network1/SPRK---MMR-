@@ -224,15 +224,25 @@
 
   </script>
 
-  <!-- ═══ Player + watch-depth tracking ════════════════════════
-       Cloudflare Stream serves HLS. Safari and iOS play it natively;
-       everything else needs hls.js, which is loaded on demand so the
-       ~100KB is never fetched by browsers that do not need it.
+  <!-- ═══ Player ═══════════════════════════════════════════════
+       Cloudflare Stream serves HLS. A plain <video> is used rather than
+       Cloudflare's iframe embed so there is no vendor logo and no vendor
+       control bar.
 
-       The events answer one question for the sales team: did this booked
-       lead actually watch before the call? Meta ties each event to the
-       browser through _fbp on its own, so no identifier is added to the
-       URL — the lead's name is deliberately never sent.
+       QUALITY IS PINNED TO THE TOP RUNG. Cloudflare encoded a
+       1080/720/480/360/240 ladder and hls.js would normally pick a rung
+       from measured bandwidth, which is why a good connection could still
+       open at 360p for the first few seconds. Locking to the highest
+       level means it is always 1080p — at the cost of buffering instead
+       of degrading when the connection genuinely cannot carry ~2.9 Mbps.
+
+       hls.js is preferred wherever it is supported, INCLUDING Safari,
+       because native HLS gives no API to pin the level. On iOS below 17.1
+       there is no MSE, so the native player takes over and picks its own
+       quality — that path cannot be controlled from here.
+
+       TO SWAP THE VIDEO: change CF_VIDEO_ID. Poster and source derive
+       from it.
   ══════════════════════════════════════════════════════════════ -->
   <script>
   (function () {
@@ -245,52 +255,41 @@
 
     function fail() { box.setAttribute('data-state', 'failed'); }
 
-    /* ── watch depth ────────────────────────────────────────── */
-    var fired = {};
-    function send(event, extra) {
-      if (fired[event]) return;          // once per pageview, never a loop
-      fired[event] = true;
-      if (typeof window.fbq !== 'function') return;
-      var payload = { video_id: CF_VIDEO_ID, content_name: 'SPRK pre-call' };
-      for (var k in extra) payload[k] = extra[k];
-      window.fbq('trackCustom', event, payload);
-    }
-
-    video.addEventListener('play', function () { send('VideoStart'); }, { passive: true });
-
-    /* Quartiles. Guard on duration being real — it is NaN until metadata
-       arrives and Infinity on a live stream, and NaN comparisons are
-       silently false, which would just never fire. */
-    var MARKS = [25, 50, 75];
-    video.addEventListener('timeupdate', function () {
-      var d = video.duration;
-      if (!d || !isFinite(d)) return;
-      var pct = (video.currentTime / d) * 100;
-      for (var i = 0; i < MARKS.length; i++) {
-        if (pct >= MARKS[i]) send('VideoProgress' + MARKS[i], { percent: MARKS[i] });
-      }
-    }, { passive: true });
-
-    video.addEventListener('ended', function () { send('VideoComplete', { percent: 100 }); }, { passive: true });
-
-    /* ── source attachment ──────────────────────────────────── */
-    // Safari and iOS play HLS natively; do not pull hls.js there at all.
-    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    function useNative() {
       video.src = SRC;
       video.addEventListener('error', fail, { once: true });
-    } else {
-      var tag = document.createElement('script');
-      tag.src = 'https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js';
-      tag.onerror = fail;
-      tag.onload = function () {
-        if (!window.Hls || !window.Hls.isSupported()) { fail(); return; }
-        var hls = new window.Hls({ capLevelToPlayerSize: true });
-        hls.on(window.Hls.Events.ERROR, function (_e, data) { if (data && data.fatal) fail(); });
-        hls.loadSource(SRC);
-        hls.attachMedia(video);
-      };
-      document.head.appendChild(tag);
     }
+
+    var tag = document.createElement('script');
+    tag.src = 'https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js';
+
+    // If hls.js cannot be fetched, fall back to native HLS where the
+    // browser supports it rather than showing the failure panel.
+    tag.onerror = function () {
+      if (video.canPlayType('application/vnd.apple.mpegurl')) useNative(); else fail();
+    };
+
+    tag.onload = function () {
+      if (!window.Hls || !window.Hls.isSupported()) {
+        if (video.canPlayType('application/vnd.apple.mpegurl')) useNative(); else fail();
+        return;
+      }
+      var hls = new window.Hls({
+        capLevelToPlayerSize: false,  // do not let the element's CSS size cap quality
+        startLevel: -1                // replaced with the top rung once levels are known
+      });
+      hls.on(window.Hls.Events.MANIFEST_PARSED, function () {
+        var top = hls.levels.length - 1;
+        hls.startLevel = top;
+        hls.currentLevel = top;       // pin it; -1 would hand control back to ABR
+        hls.autoLevelCapping = -1;
+      });
+      hls.on(window.Hls.Events.ERROR, function (_e, data) { if (data && data.fatal) fail(); });
+      hls.loadSource(SRC);
+      hls.attachMedia(video);
+    };
+
+    document.head.appendChild(tag);
 
     /* Nothing buffered after 12s means the stream never came up. */
     setTimeout(function () {
