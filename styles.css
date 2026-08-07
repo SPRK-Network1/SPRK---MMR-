@@ -1451,6 +1451,10 @@ a, button, summary, .dot {
   text-wrap: pretty;
 }
 
+/* Now the first element on the page, so it must not carry the trailing
+   margin it had as a footer note. */
+.welcome__close--top { margin-top: 0; }
+
 .welcome__close {
   margin-top: var(--space-xs);
   font-family: var(--font-mono);
