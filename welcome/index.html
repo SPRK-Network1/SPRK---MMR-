@@ -275,14 +275,31 @@
         return;
       }
       var hls = new window.Hls({
-        capLevelToPlayerSize: false,  // do not let the element's CSS size cap quality
-        startLevel: -1                // replaced with the top rung once levels are known
+        capLevelToPlayerSize: false,  // the element's CSS size must not cap quality
+        // Provisional floor in case MANIFEST_PARSED never lands; refined
+        // below from the real ladder. Excludes the 480/360/240 rungs.
+        minAutoBitrate: 1000000
       });
+
       hls.on(window.Hls.Events.MANIFEST_PARSED, function () {
-        var top = hls.levels.length - 1;
-        hls.startLevel = top;
-        hls.currentLevel = top;       // pin it; -1 would hand control back to ABR
-        hls.autoLevelCapping = -1;
+        var levels = hls.levels || [];
+        if (!levels.length) return;
+
+        // Floor at 720p: find the lowest rung that is still >= 720 tall and
+        // set the ABR minimum just under its bitrate, so the selector can
+        // never choose anything below it. Derived from the ladder rather
+        // than hardcoded, so re-encoding the video cannot silently break it.
+        var floor = null;
+        for (var i = 0; i < levels.length; i++) {
+          if (levels[i].height >= 720) { floor = levels[i]; break; }
+        }
+        if (floor && floor.bitrate) hls.config.minAutoBitrate = floor.bitrate - 1;
+
+        // Open on the sharpest rung instead of climbing to it — ABR would
+        // otherwise spend the first seconds probing at a low level. nextLevel
+        // forces just the next fragment, then hands control back to ABR.
+        hls.nextLevel = levels.length - 1;
+        hls.autoLevelCapping = -1;    // no ceiling
       });
       hls.on(window.Hls.Events.ERROR, function (_e, data) { if (data && data.fatal) fail(); });
       hls.loadSource(SRC);
