@@ -1446,21 +1446,12 @@ a, button, summary, .dot {
    the frame instead of from the heading. */
 .welcome__lead--after { margin-top: var(--space-lg); }
 
-.welcome__lead,
-.welcome__close {
+.welcome__lead {
   max-width: 54ch;
   color: var(--color-ink-2);
   font-size: var(--text-md);
   line-height: var(--leading-body);
   text-wrap: pretty;
-}
-
-.welcome__close {
-  margin-top: var(--space-xs);
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  color: var(--color-ink-3);
-  letter-spacing: 0.02em;
 }
 
 /* .frame carries a 62rem cap for the homepage; inside .apply's 52rem
