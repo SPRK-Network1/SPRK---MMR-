@@ -486,52 +486,38 @@ a, button, summary, .dot {
 .cta__arrow, .nav__cta-arrow { transition: transform var(--dur-fast) var(--ease-out); }
 .cta:hover .cta__arrow, .nav__cta:hover .nav__cta-arrow { transform: translateX(3px); }
 
-/* Discord button in the hero, above the VSL. The one place on this site that
-   is allowed a non-token colour: it is a brand mark doing recognition work,
-   and a gold Discord button reads as neither Discord nor SPRK. Blurple is
-   hard-coded on purpose — do not "fix" it into a token. */
-.cta-discord {
+/* A line of the description, not a button. It sits close under .stage__sub —
+   the negative top margin cancels most of .stage's grid gap — so it reads as
+   the last line of the copy rather than as a competing CTA above the VSL.
+   Blurple is hard-coded on purpose: it is the mark doing the recognition
+   work, and it is the only non-token colour on the site. Do not "fix" it. */
+.discord-inline {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
+  gap: var(--space-2xs);
+  margin-top: calc(var(--space-sm) - var(--space-lg));
   max-width: 100%;
-  padding: var(--space-md) var(--space-xl);
-  border-radius: var(--radius-pill);
-  background: #5865F2;
-  color: #FFFFFF;
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   line-height: var(--leading-snug);
   letter-spacing: -0.01em;
+  color: var(--color-ink-2);
   text-align: center;
   text-wrap: balance;
-  box-shadow: 0 8px 30px color-mix(in srgb, #5865F2 32%, transparent);
-  transition: background var(--dur-fast) var(--ease-out),
-              transform var(--dur-fast) var(--ease-out),
-              box-shadow var(--dur-fast) var(--ease-out);
+  transition: color var(--dur-fast) var(--ease-out);
 }
-/* "Discord" is the word doing the recognition work — let it carry weight. */
-.cta-discord strong { font-weight: 800; }
-.cta-discord:hover {
-  background: #4752C4;
-  transform: translateY(-1px);
-  box-shadow: 0 12px 36px color-mix(in srgb, #5865F2 42%, transparent);
+.discord-inline svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: #5865F2;
+  transition: color var(--dur-fast) var(--ease-out);
 }
-.cta-discord:active { transform: translateY(0); }
-.cta-discord svg { width: 22px; height: 22px; flex-shrink: 0; }
-
-/* At 375px the full label plus icon plus desktop padding overflows the
-   gutter. Trim the padding rather than the words. */
-@media (max-width: 26rem) {
-  .cta-discord {
-    gap: var(--space-xs);
-    padding: var(--space-sm) var(--space-md);
-    font-size: var(--text-sm);
-  }
-  .cta-discord svg { width: 19px; height: 19px; }
-}
+.discord-inline strong { color: #5865F2; font-weight: 700; }
+.discord-inline:hover { color: var(--color-ink); }
+.discord-inline:hover strong,
+.discord-inline:hover svg { color: #7983F5; }
 
 
 /* ── 07 · shared section heads ───────────────────────────── */
