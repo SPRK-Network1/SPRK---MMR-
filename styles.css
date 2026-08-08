@@ -353,21 +353,26 @@ a, button, summary, .dot {
    rather than smaller, with the leading pulled in so a four-line sentence
    still reads as one block instead of a list. Scoped to .testpage so /
    is untouched. */
+/* Sized for the headline it currently holds — retune both numbers whenever
+   its length changes materially. At ~47 characters it takes three lines and
+   can afford to be bigger than /'s display headline; the previous ~100
+   character version could not, and stacked to seven lines on a phone.
+   Tracking goes tighter as the size goes up: letterforms that look spaced
+   at 2rem look loose at 5rem. */
 .testpage .stage__h {
-  /* Sized for the headline it currently holds. At ~100 characters the
-     previous 2.3rem/24ch stacked to seven lines on a phone and pushed the
-     VSL off the fold, which costs more than the extra weight buys. Retune
-     both numbers whenever the headline's length changes materially. */
-  max-width: 27ch;
-  font-size: clamp(1.8rem, 4.9vw, 3.9rem);
-  line-height: 1.02;
-  letter-spacing: -0.04em;
+  max-width: 16ch;
+  font-size: clamp(2.5rem, 7vw, 5.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
 }
 
-/* The negative margin on .discord-inline exists to pull it up against the
-   description. With no description it would collide with the headline, so
-   it goes back to sitting in .stage's normal grid gap. */
-.testpage .discord-inline { margin-top: 0; }
+/* One idea per line. The supporting line carries the offer and the figure,
+   so it sits a step up from the muted body grey rather than whispering. */
+.testpage .stage__sub {
+  max-width: 42ch;
+  color: var(--color-ink-2);
+  font-size: var(--text-lg);
+}
 
 /* device bezel around the video */
 .frame {
