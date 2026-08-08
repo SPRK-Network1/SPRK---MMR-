@@ -347,19 +347,24 @@ a, button, summary, .dot {
   text-wrap: balance;
 }
 
-/* ── /test · staging copy of the landing page ─────────────────
-   No .stage__sub here, so the headline carries the whole top of the page
-   on its own and is sized up to match: bigger than /'s display headline
-   rather than smaller, with the leading pulled in so a four-line sentence
-   still reads as one block instead of a list. Scoped to .testpage so /
-   is untouched. */
+/* ── .lp-hero · the current landing-page hero treatment ───────
+   Carried by BOTH / and /test. It started life scoped to .testpage while the
+   sweepstakes headline was being tried out; once that shipped to the homepage
+   the scope was renamed, so the two pages cannot drift apart by accident.
+
+   /test additionally carries .testpage, which now has no rules of its own —
+   that is deliberate. It is the hook for the NEXT experiment, so a variant can
+   be styled on /test without touching the page ads point at. Anything proven
+   there gets promoted into .lp-hero the same way this was.
+   ────────────────────────────────────────────────────────────── */
+
 /* Sized for the headline it currently holds — retune both numbers whenever
    its length changes materially. At ~47 characters it takes three lines and
    can afford to be bigger than /'s display headline; the previous ~100
    character version could not, and stacked to seven lines on a phone.
    Tracking goes tighter as the size goes up: letterforms that look spaced
    at 2rem look loose at 5rem. */
-.testpage .stage__h {
+.lp-hero .stage__h {
   max-width: 18ch;
   /* Fluid all the way down instead of a flat 2rem floor. A flat 32px broke to
      FOUR lines on a 320px iPhone SE, and on 375/390 it stranded "underground"
@@ -376,7 +381,7 @@ a, button, summary, .dot {
    line and orphaned it, and because the serif has different vertical metrics
    the oversized word also sat off the sans baseline — which is what read as
    the headline breaking apart rather than simply wrapping. */
-.testpage .stage__h em { font-size: 1em; }
+.lp-hero .stage__h em { font-size: 1em; }
 
 /* ── Vidalytics unmute prompt ──────────────────────────────────
    iOS Safari refuses unmuted autoplay, so the player falls back to muted and
@@ -398,7 +403,7 @@ a, button, summary, .dot {
 
    The durable fix is in the Vidalytics dashboard, not here.
    ────────────────────────────────────────────────────────────── */
-.testpage .AutoPlayBox__box {
+.lp-hero .AutoPlayBox__box {
   top: auto !important;
   bottom: 5% !important;
   left: 50% !important;
@@ -419,27 +424,27 @@ a, button, summary, .dot {
   /* the player pulses the box in its own blue; keep the cue, drop the clash */
   --pulse-color: color-mix(in oklch, var(--color-accent) 40%, transparent);
 }
-.testpage .AutoPlayBox__content {
+.lp-hero .AutoPlayBox__content {
   flex-direction: row !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 9px !important;
   min-height: 0 !important;
 }
-.testpage .AutoPlayBox__icon {
+.lp-hero .AutoPlayBox__icon {
   width: 18px !important;
   height: 18px !important;
   flex: 0 0 auto !important;
 }
 /* the icon's own wave paths animate opacity, which is left alone — only the
    fill is retargeted off the player's blue */
-.testpage .AutoPlayBox__icon path { fill: var(--color-accent) !important; }
-.testpage .AutoPlayBox__heading {
+.lp-hero .AutoPlayBox__icon path { fill: var(--color-accent) !important; }
+.lp-hero .AutoPlayBox__heading {
   margin: 0 !important;
   padding: 0 !important;
   width: auto !important;
 }
-.testpage .AutoPlayBox__scalableText {
+.lp-hero .AutoPlayBox__scalableText {
   font-size: 13px !important;
   line-height: 1.15 !important;
   font-weight: 600 !important;
@@ -448,7 +453,7 @@ a, button, summary, .dot {
 
 /* One idea per line. The supporting line carries the offer and the figure,
    so it sits a step up from the muted body grey rather than whispering. */
-.testpage .stage__sub {
+.lp-hero .stage__sub {
   max-width: 42ch;
   color: var(--color-ink-2);
   font-size: clamp(1.0625rem, 2.4vw, 1.25rem);
