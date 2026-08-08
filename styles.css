@@ -347,6 +347,18 @@ a, button, summary, .dot {
   text-wrap: balance;
 }
 
+/* ── /test · staging copy of the landing page ─────────────────
+   Only for trying headlines on. The original .stage__h is sized for a
+   two-line display headline that breaks after "Create content." — a
+   long-form sentence headline at 18ch and 4rem becomes a narrow tower,
+   so it gets a wider measure and a lower top end here. Scoped to
+   .testpage so / is untouched. */
+.testpage .stage__h {
+  max-width: 26ch;
+  font-size: clamp(1.85rem, 4.2vw, 3.25rem);
+  line-height: 1.06;
+}
+
 /* device bezel around the video */
 .frame {
   width: 100%;
