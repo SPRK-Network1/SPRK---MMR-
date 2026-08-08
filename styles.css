@@ -361,10 +361,22 @@ a, button, summary, .dot {
    at 2rem look loose at 5rem. */
 .testpage .stage__h {
   max-width: 18ch;
-  font-size: clamp(2rem, 5.6vw, 4rem);
+  /* Fluid all the way down instead of a flat 2rem floor. A flat 32px broke to
+     FOUR lines on a 320px iPhone SE, and on 375/390 it stranded "underground"
+     alone in the middle of the headline — 26 characters needed ~361px and a
+     390pt phone only offers 358. Scaling with the viewport holds it to two
+     lines on every iPhone width from 320 up. */
+  font-size: clamp(1.625rem, 8.5vw - 0.1rem, 4rem);
   line-height: 1.0;
   letter-spacing: -0.04em;
 }
+
+/* The accent keeps the serif italic and the gold but loses the 12% size bump
+   the shared rule gives it. That bump is what pushed "underground" past the
+   line and orphaned it, and because the serif has different vertical metrics
+   the oversized word also sat off the sans baseline — which is what read as
+   the headline breaking apart rather than simply wrapping. */
+.testpage .stage__h em { font-size: 1em; }
 
 /* One idea per line. The supporting line carries the offer and the figure,
    so it sits a step up from the muted body grey rather than whispering. */
