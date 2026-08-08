@@ -378,6 +378,74 @@ a, button, summary, .dot {
    the headline breaking apart rather than simply wrapping. */
 .testpage .stage__h em { font-size: 1em; }
 
+/* ── Vidalytics unmute prompt ──────────────────────────────────
+   iOS Safari refuses unmuted autoplay, so the player falls back to muted and
+   raises this prompt. Shipped, it is a saturated blue slab across the middle
+   of the frame covering ~29% of the video — including the speaker's face —
+   for as long as it is up.
+
+   It is NOT hidden, deliberately. Muted autoplay with no prompt is a silent
+   VSL: the visitor never learns there is audio, and a silent VSL converts at
+   roughly nothing. The prompt is load-bearing. So it is moved off the centre
+   and restyled to the page instead — the message and the tap target survive,
+   the creative is visible behind them. Coverage 29% -> 14%, at the bottom
+   edge, and the hit area stays 50px tall (iOS wants 44 minimum).
+
+   !important throughout because the player writes size, position and colour
+   as inline styles from its own theme config. Class names are Vidalytics'
+   internals, so a player update could rename them — the failure mode is
+   simply the original slab returning, which is where we started.
+
+   The durable fix is in the Vidalytics dashboard, not here.
+   ────────────────────────────────────────────────────────────── */
+.testpage .AutoPlayBox__box {
+  top: auto !important;
+  bottom: 5% !important;
+  left: 50% !important;
+  /* a real width, not auto: the label keeps the player's pre-wrap and its own
+     newline, and an auto-width box collapses narrow enough to break it into
+     four ragged lines instead of the two it is written as */
+  width: min(88%, 300px) !important;
+  height: auto !important;
+  transform: translateX(-50%) !important;
+  padding: 9px 16px !important;
+  border-width: 1px !important;
+  border-radius: var(--radius-pill) !important;
+  background-color: color-mix(in oklch, var(--color-paper) 86%, transparent) !important;
+  border-color: color-mix(in oklch, var(--color-accent) 55%, transparent) !important;
+  box-shadow: var(--sh-card) !important;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  /* the player pulses the box in its own blue; keep the cue, drop the clash */
+  --pulse-color: color-mix(in oklch, var(--color-accent) 40%, transparent);
+}
+.testpage .AutoPlayBox__content {
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 9px !important;
+  min-height: 0 !important;
+}
+.testpage .AutoPlayBox__icon {
+  width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 auto !important;
+}
+/* the icon's own wave paths animate opacity, which is left alone — only the
+   fill is retargeted off the player's blue */
+.testpage .AutoPlayBox__icon path { fill: var(--color-accent) !important; }
+.testpage .AutoPlayBox__heading {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: auto !important;
+}
+.testpage .AutoPlayBox__scalableText {
+  font-size: 13px !important;
+  line-height: 1.15 !important;
+  font-weight: 600 !important;
+  color: var(--color-ink) !important;
+}
+
 /* One idea per line. The supporting line carries the offer and the figure,
    so it sits a step up from the muted body grey rather than whispering. */
 .testpage .stage__sub {
