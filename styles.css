@@ -348,16 +348,22 @@ a, button, summary, .dot {
 }
 
 /* ── /test · staging copy of the landing page ─────────────────
-   Only for trying headlines on. The original .stage__h is sized for a
-   two-line display headline that breaks after "Create content." — a
-   long-form sentence headline at 18ch and 4rem becomes a narrow tower,
-   so it gets a wider measure and a lower top end here. Scoped to
-   .testpage so / is untouched. */
+   No .stage__sub here, so the headline carries the whole top of the page
+   on its own and is sized up to match: bigger than /'s display headline
+   rather than smaller, with the leading pulled in so a four-line sentence
+   still reads as one block instead of a list. Scoped to .testpage so /
+   is untouched. */
 .testpage .stage__h {
-  max-width: 26ch;
-  font-size: clamp(1.85rem, 4.2vw, 3.25rem);
-  line-height: 1.06;
+  max-width: 24ch;
+  font-size: clamp(2.3rem, 5.9vw, 4.5rem);
+  line-height: 1.0;
+  letter-spacing: -0.04em;
 }
+
+/* The negative margin on .discord-inline exists to pull it up against the
+   description. With no description it would collide with the headline, so
+   it goes back to sitting in .stage's normal grid gap. */
+.testpage .discord-inline { margin-top: 0; }
 
 /* device bezel around the video */
 .frame {
