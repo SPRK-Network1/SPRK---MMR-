@@ -327,7 +327,8 @@ a, button, summary, .dot {
 .statement__h em,
 .section-h em,
 .close__h em,
-.welcome__h em {
+.welcome__h em,
+.apply__h em {
   font-family: var(--font-accent);
   font-style: italic;
   font-weight: 400;
@@ -484,6 +485,53 @@ a, button, summary, .dot {
 
 .cta__arrow, .nav__cta-arrow { transition: transform var(--dur-fast) var(--ease-out); }
 .cta:hover .cta__arrow, .nav__cta:hover .nav__cta-arrow { transform: translateX(3px); }
+
+/* Discord button in the hero, above the VSL. The one place on this site that
+   is allowed a non-token colour: it is a brand mark doing recognition work,
+   and a gold Discord button reads as neither Discord nor SPRK. Blurple is
+   hard-coded on purpose — do not "fix" it into a token. */
+.cta-discord {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  max-width: 100%;
+  padding: var(--space-md) var(--space-xl);
+  border-radius: var(--radius-pill);
+  background: #5865F2;
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--text-base);
+  line-height: var(--leading-snug);
+  letter-spacing: -0.01em;
+  text-align: center;
+  text-wrap: balance;
+  box-shadow: 0 8px 30px color-mix(in srgb, #5865F2 32%, transparent);
+  transition: background var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out);
+}
+/* "Discord" is the word doing the recognition work — let it carry weight. */
+.cta-discord strong { font-weight: 800; }
+.cta-discord:hover {
+  background: #4752C4;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 36px color-mix(in srgb, #5865F2 42%, transparent);
+}
+.cta-discord:active { transform: translateY(0); }
+.cta-discord svg { width: 22px; height: 22px; flex-shrink: 0; }
+
+/* At 375px the full label plus icon plus desktop padding overflows the
+   gutter. Trim the padding rather than the words. */
+@media (max-width: 26rem) {
+  .cta-discord {
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-sm);
+  }
+  .cta-discord svg { width: 19px; height: 19px; }
+}
 
 
 /* ── 07 · shared section heads ───────────────────────────── */
@@ -1296,6 +1344,82 @@ a, button, summary, .dot {
   text-wrap: balance;
 }
 
+/* Sits under the form, not above it. Once the application is in it has
+   nothing left to say, so it goes. */
+.apply__lede {
+  margin: var(--space-xs) 0 0;
+  max-width: 52ch;
+  color: var(--color-ink-3);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  text-wrap: balance;
+}
+.apply[data-state="submitted"] .apply__lede { display: none; }
+
+.apply__gate { display: grid; justify-items: center; gap: var(--space-xs); }
+.apply__gate[hidden] { display: none; }
+
+/* Ghost pill, not a glow CTA. Above the form it must read as context,
+   not as a competing way out of the page. */
+.apply__discord {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-pill);
+  border: var(--rule-hair) solid color-mix(in oklch, var(--color-accent) 26%, var(--color-rule));
+  background: color-mix(in oklch, var(--color-paper-2) 70%, transparent);
+  color: var(--color-ink-2);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  letter-spacing: -0.01em;
+  transition: color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+.apply__discord:hover {
+  color: var(--color-ink);
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+}
+.apply__discord-mark { width: 18px; height: 18px; color: var(--color-accent); }
+
+/* Locked: dimmed, with a padlock, so the state is legible before the click
+   rather than only after it. Still focusable and still clickable — the click
+   is what surfaces the reason. */
+.apply__discord[data-locked="true"] {
+  color: var(--color-ink-3);
+  border-color: var(--color-rule);
+  background: color-mix(in oklch, var(--color-paper-2) 45%, transparent);
+}
+.apply__discord[data-locked="true"] .apply__discord-mark { color: var(--color-ink-3); }
+.apply__discord[data-locked="true"]:hover {
+  color: var(--color-ink-2);
+  border-color: var(--color-rule-strong);
+}
+.apply__discord-lock {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.75;
+}
+/* Unlocked — the padlock is the only thing that has to change. */
+.apply__discord:not([data-locked]) .apply__discord-lock { display: none; }
+
+.apply__lock {
+  margin: 0;
+  max-width: 34ch;
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  text-wrap: balance;
+}
+.apply__lock[hidden] { display: none; }
+
 /* the branded shell the form sits inside */
 .apply__frame {
   position: relative;
@@ -1372,6 +1496,108 @@ a, button, summary, .dot {
 /* A 416px slot sized for a form is dead space once there is no form in it. */
 .apply__frame[data-state="failed"] .apply__embed { height: auto; min-height: 12rem; }
 
+/* Submitted: the form has done its job. Remove the iframe from the flow
+   entirely rather than overlaying it — an overlay leaves Typeform's own
+   ending screen live underneath, scrollable and competing. */
+.apply__done { display: none; }
+.apply__frame[data-state="submitted"] .apply__embed,
+.apply__frame[data-state="submitted"] .apply__skeleton { display: none; }
+.apply__frame[data-state="submitted"] .apply__done {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-sm);
+  padding: clamp(var(--space-xl), 7vw, var(--space-3xl)) var(--space-lg);
+  text-align: center;
+}
+.apply__done-h {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.4rem, 3.4vw, 2rem);
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+.apply__done-p {
+  max-width: 42ch;
+  color: var(--color-ink-2);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  text-wrap: balance;
+}
+.apply__done-invite { color: var(--color-accent-soft); }
+.apply__done-invite[hidden] { display: none; }
+.apply__done .cta { margin-top: var(--space-xs); }
+.apply__done .cta[hidden] { display: none; }
+
+/* ── the submit confirmation beat ──────────────────────────────
+   Ring draws, tick draws inside it, then the copy and the CTA rise in
+   sequence. The whole thing lands in about a second — long enough to read
+   as "that worked", short enough that nobody waits on it to click.
+   Every animation is keyed to .apply__done being displayed, which only
+   happens on submit, so none of it can fire on a page that is still a form.
+   ────────────────────────────────────────────────────────────── */
+.apply__done-mark {
+  width: clamp(48px, 12vw, 62px);
+  height: clamp(48px, 12vw, 62px);
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.apply__done-ring {
+  stroke: color-mix(in oklch, var(--color-accent) 55%, transparent);
+  stroke-dasharray: 145;
+  stroke-dashoffset: 145;
+}
+.apply__done-tick {
+  stroke: var(--color-accent);
+  stroke-dasharray: 33;
+  stroke-dashoffset: 33;
+}
+
+@keyframes done-draw { to { stroke-dashoffset: 0; } }
+@keyframes done-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.apply__frame[data-state="submitted"] .apply__done-ring {
+  animation: done-draw 620ms var(--ease-out) forwards;
+}
+.apply__frame[data-state="submitted"] .apply__done-tick {
+  animation: done-draw 380ms var(--ease-out) 380ms forwards;
+}
+.apply__frame[data-state="submitted"] .apply__done-h,
+.apply__frame[data-state="submitted"] .apply__done-p,
+.apply__frame[data-state="submitted"] .apply__done .cta {
+  opacity: 0;
+  animation: done-rise 420ms var(--ease-out) forwards;
+}
+.apply__frame[data-state="submitted"] .apply__done-h        { animation-delay: 560ms; }
+.apply__frame[data-state="submitted"] .apply__done-p        { animation-delay: 680ms; }
+.apply__frame[data-state="submitted"] .apply__done-invite   { animation-delay: 780ms; }
+.apply__frame[data-state="submitted"] .apply__done .cta     { animation-delay: 880ms; }
+
+/* Confirmation must never depend on motion: with reduced motion the mark is
+   simply drawn and the copy is simply there. */
+@media (prefers-reduced-motion: reduce) {
+  .apply__done-ring,
+  .apply__done-tick { stroke-dashoffset: 0; }
+  .apply__frame[data-state="submitted"] .apply__done-ring,
+  .apply__frame[data-state="submitted"] .apply__done-tick,
+  .apply__frame[data-state="submitted"] .apply__done-h,
+  .apply__frame[data-state="submitted"] .apply__done-p,
+  .apply__frame[data-state="submitted"] .apply__done .cta {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* The header pill deliberately survives the submit: it is a live invite by
+   then, and someone who scrolled back up should not have to hunt for it.
+   Only the lede goes — see the rule beside .apply__lede. */
+
 .apply__spinner {
   width: 26px;
   height: 26px;
@@ -1382,18 +1608,14 @@ a, button, summary, .dot {
 }
 @keyframes apply-spin { to { transform: rotate(1turn); } }
 
-.apply__fallback,
-.apply__back {
+.apply__fallback {
   font-size: var(--text-sm);
   color: var(--color-ink-3);
 }
-.apply__fallback a,
-.apply__back a {
+.apply__fallback a {
   color: var(--color-accent);
   border-bottom: 1px dotted currentColor;
 }
-.apply__back a { border-bottom: 0; }
-.apply__back a:hover { color: var(--color-ink-2); }
 
 @media (max-width: 40rem) {
   .apply { gap: var(--space-md); }
