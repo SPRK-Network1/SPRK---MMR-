@@ -339,10 +339,12 @@ a, button, summary, .dot {
 }
 
 .stage__sub {
-  max-width: 52ch;
+  /* balance, not pretty: at this length `pretty` leaves a short widow line and
+     the Discord line underneath then reads as its ragged continuation. */
+  max-width: 48ch;
   color: var(--color-ink-2);
   font-size: var(--text-md);
-  text-wrap: pretty;
+  text-wrap: balance;
 }
 
 /* device bezel around the video */
@@ -495,7 +497,7 @@ a, button, summary, .dot {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2xs);
-  margin-top: calc(var(--space-sm) - var(--space-lg));
+  margin-top: calc(var(--space-md) - var(--space-lg));
   max-width: 100%;
   font-family: var(--font-body);
   font-weight: 600;
