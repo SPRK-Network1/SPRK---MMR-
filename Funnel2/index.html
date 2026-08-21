@@ -217,12 +217,12 @@
              Meta with no ad_id and no fbc, and the campaign cannot learn from
              it. The bare href below is the $1 checkout so that the button
              works even with JavaScript off. -->
-        <a class="cta cta--glow" data-checkout data-cta="hero" href="https://commas.com/checkout/NK1MpM9wC0vOQys">
-          <span class="cta__label" data-price-label>Get Instant access for $1</span>
+        <a class="cta cta--glow" data-checkout data-cta="hero" href="https://commas.com/checkout/V2ZDOAOhU9Wh0">
+          <span class="cta__label" data-price-label>Get Instant access for $37</span>
           <span class="cta__arrow" aria-hidden="true">→</span>
         </a>
 
-        <p class="start__terms" data-price-terms>$1 for your first month, then $97/month. Cancel anytime.</p>
+        <p class="start__terms" data-price-terms>$37 for your first month, then $97/month. Cancel anytime.</p>
 
         <p class="stage__trust">
           <span><span class="badge-dot" aria-hidden="true"></span>Instant access</span>
@@ -261,12 +261,12 @@
         <h2 class="close__h" id="close-h">Ready to start?</h2>
         <p class="close__sub">Get the offers, the angles and the community — today.</p>
 
-        <a class="cta cta--glow cta--lg" data-checkout data-cta="close" href="https://commas.com/checkout/NK1MpM9wC0vOQys">
-          <span class="cta__label" data-price-label>Get Instant access for $1</span>
+        <a class="cta cta--glow cta--lg" data-checkout data-cta="close" href="https://commas.com/checkout/V2ZDOAOhU9Wh0">
+          <span class="cta__label" data-price-label>Get Instant access for $37</span>
           <span class="cta__arrow" aria-hidden="true">→</span>
         </a>
 
-        <p class="start__terms" data-price-terms>$1 for your first month, then $97/month. Cancel anytime.</p>
+        <p class="start__terms" data-price-terms>$37 for your first month, then $97/month. Cancel anytime.</p>
 
         <p class="close__trust">
           <span><span class="badge-dot" aria-hidden="true"></span>Instant access</span>
@@ -316,8 +316,8 @@
 
   <!-- ─── sticky CTA · appears once the VSL is scrolled past ──── -->
   <div class="stickybar" data-state="hidden" aria-hidden="true">
-    <a class="cta cta--glow" data-checkout data-cta="sticky" href="https://commas.com/checkout/NK1MpM9wC0vOQys" tabindex="-1">
-      <span class="cta__label" data-price-label>Get Instant access for $1</span>
+    <a class="cta cta--glow" data-checkout data-cta="sticky" href="https://commas.com/checkout/V2ZDOAOhU9Wh0" tabindex="-1">
+      <span class="cta__label" data-price-label>Get Instant access for $37</span>
       <span class="cta__arrow" aria-hidden="true">→</span>
     </a>
   </div>
@@ -405,13 +405,13 @@
     //
     //    $37 for the first month, then $97/month recurring.
     //
-    //    ⚠ WHEN THE $37 URL IS PASTED IN BELOW, also update the three bare
-    //    `data-price-label` spans and the two `data-price-terms` lines in the
-    //    markup above from $1 to $37. Those are only what a JS-off visitor
-    //    sees — the script paints over them on load — but leaving them at $1
-    //    would show that visitor a $1 button wired to a $37 checkout.
+    //    ⚠ IF THIS URL EVER CHANGES PRICE, the three bare `data-price-label`
+    //    spans, the two `data-price-terms` lines and the three bare CTA hrefs
+    //    in the markup above have to move with it. They are only what a
+    //    JS-off visitor sees — the script paints over them on load — but left
+    //    behind they show that visitor one price wired to another's checkout.
     var PRICE = {
-      url:   '',
+      url:   'https://commas.com/checkout/V2ZDOAOhU9Wh0',
       label: 'Get Instant access for $37',
       terms: '$37 for your first month, then $97/month. Cancel anytime.'
     };
