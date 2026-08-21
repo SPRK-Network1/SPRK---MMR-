@@ -423,20 +423,30 @@
     var usingFallback = !PRICE.url;
     if (usingFallback) PRICE = FALLBACK;
 
-    // Prefixes cta_source, so a sale landing in n8n says which funnel
-    // produced it even when both are routed to the same checkout.
-    var FUNNEL = 'f2';
+    // Which funnel this page is. Rides to the checkout as its own `funnel`
+    // parameter, so n8n never has to infer the page from the checkout link
+    // or unpick it out of cta_source.
+    var FUNNEL = 'Funnel2';
 
     var STORE = 'sprk_attr';
 
     // Parameters set by Meta's URL-parameter string at the ad level,
     // plus fbclid, which Facebook appends automatically.
     //
-    // Must stay identical to the list on / — sprk_attr is shared across
-    // both pages and /form reads this exact shape back out of it.
+    // Must stay a SUPERSET of the list on / — sprk_attr is shared across the
+    // pages and /form reads that exact shape back out of it. Extra keys here
+    // are ignored there rather than breaking it. One consequence worth
+    // knowing: a visitor who detours to / via the logo and comes back loses
+    // `placement`, because / rewrites the store with its own nine keys. Every
+    // ad id survives that trip, so attribution does not break — only the
+    // placement breakdown for that one visitor.
     var KEYS = [
       'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
-      'campaign_id', 'adset_id', 'ad_id', 'fbclid'
+      'campaign_id', 'adset_id', 'ad_id', 'fbclid',
+      // Meta's {{placement}} — feed vs reels vs story. Not in the homepage's
+      // set; it is here because these two funnels are judged against each
+      // other and placement is half the reason one of them wins.
+      'placement'
     ];
 
     function readCookie(name) {
@@ -520,7 +530,12 @@
 
       if (fbp) out.set('fbp', fbp);
       if (fbc) out.set('fbc', fbc);
-      if (ctaSource) out.set('cta_source', FUNNEL + '_' + ctaSource);
+      // Which page produced the sale. Unconditional, and deliberately not
+      // folded into cta_source: the two funnels can resolve to the SAME
+      // checkout URL — they do today, while Funnel2 has no $37 link — so the
+      // checkout is not a reliable way to tell them apart downstream.
+      out.set('funnel', FUNNEL);
+      if (ctaSource) out.set('cta_source', ctaSource);
 
       // Defensive: today's Commas links carry no query string of their own,
       // but a future one might, and blindly appending '?' would corrupt it.
@@ -588,10 +603,12 @@
       if (!link) return;
       var cta = link.getAttribute('data-cta') || 'unknown';
       window.fbq('trackCustom', 'ClickButton', {
-        cta_source:   FUNNEL + '_' + cta,
+        cta_source:   cta,
         content_name: 'SPRK Funnel2',
+        funnel:       FUNNEL,
         utm_source:   attr.utm_source || '',
         utm_campaign: attr.utm_campaign || '',
+        placement:    attr.placement || '',
         campaign_id:  attr.campaign_id || '',
         adset_id:     attr.adset_id || '',
         ad_id:        attr.ad_id || ''
@@ -609,8 +626,8 @@
           'color:#E5D19A;font:11px/1.5 ui-monospace,SFMono-Regular,monospace;' +
           '-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)';
         var EXPECTED = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content',
-                        'campaign_id','adset_id','ad_id','fbclid','fbp','fbc',
-                        'event_id','cta_source'];
+                        'placement','campaign_id','adset_id','ad_id','fbclid','fbp','fbc',
+                        'event_id','funnel','cta_source'];
         // fbevents.js is async, so a status sampled at DOMContentLoaded reads
         // "not loaded" for a script that arrives a moment later. Re-render for
         // a few seconds instead of shipping a debug panel that lies about the
