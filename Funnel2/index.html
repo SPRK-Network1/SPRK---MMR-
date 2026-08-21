@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- ═══════════════════════════════════════════════════════════
-     /Funnel2 — $37 first month, then $97/month.
+     /Funnel2 — the homepage funnel, sold instead of applied to.
+     $37 first month, then $97/month.
 
-     TWIN OF /Funnel1. The two pages are identical except for the
-     checkout URL and the price copy, both of which live in the single
-     PRICE constant at the top of the attribution script. Any fix to the
-     attribution, the fbc precedence, the sticky bar or the debug panel
-     has to be applied to BOTH files — that is exactly how / got the fbc
-     fix on 2026-08-08 while /form silently kept the bug.
+     A COPY OF index.html. Same sections, same copy, same VSL. What
+     differs, and only this:
+       · every CTA goes to a Commas checkout, not /form
+       · the buttons carry the price, and a rebill line sits under them
+       · four bits of application-funnel wording that are untrue here
+         (see the "checkout funnel" comments below)
+       · the passthrough targets the checkout URL
+       · noindex, and absolute asset paths (served from /Funnel2/)
+
+     TWIN OF /Funnel1, and a descendant of index.html. A change to
+     the homepage does NOT reach here — port it by hand, to both.
      ═══════════════════════════════════════════════════════════ -->
 <head>
   <meta charset="UTF-8" />
@@ -17,28 +23,27 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
 
-  <!-- COPY PLACEHOLDER · title + description. Swap when the real copy lands. -->
-  <title>SPRK Network — Get instant access</title>
-  <meta name="description" content="Watch the video, then get instant access to the offers, the angles and the community inside SPRK Network." />
+  <title>SPRK Network — Get inside the underground sweepstakes industry</title>
+  <meta name="description" content="SPRK Network hands you the offers, the angles and the playbook to your first 10k." />
   <meta name="theme-color" content="#0B0F14" />
 
   <!-- A paid-ads destination, one per price point. Indexed, the cheaper
-       funnel would be findable organically and would quietly undercut the
-       dearer one. Nothing here is meant to be found by search. -->
+       funnel would be findable organically and would undercut the dearer
+       one. Nothing here is meant to be found by search. -->
   <meta name="robots" content="noindex, nofollow" />
 
-  <meta property="og:title" content="SPRK Network — Get instant access" />
-  <meta property="og:description" content="Watch the video, then get instant access to the offers, the angles and the community inside SPRK Network." />
+  <meta property="og:title" content="SPRK Network — Get inside the underground sweepstakes industry" />
+  <meta property="og:description" content="SPRK Network hands you the offers, the angles and the playbook to your first 10k." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://sprk-mmr.vercel.app/Funnel2" />
+  <meta property="og:url" content="https://www.sprknetwork.com/Funnel2" />
   <!-- absolute: scrapers do not resolve relative og:image against the page -->
-  <meta property="og:image" content="https://sprk-mmr.vercel.app/images/Sprknetwork.png" />
+  <meta property="og:image" content="https://www.sprknetwork.com/images/Sprknetwork.png" />
+  <!-- `summary`, not `summary_large_image`: the only OG asset is the
+       1000x1000 logo. Claiming a 1.91:1 large card against a square
+       image gets it cropped or dropped entirely by the scrapers.
+       Switch back once a real 1200x630 share image exists. -->
   <meta name="twitter:card" content="summary" />
 
-  <!-- ⚠ Every asset path on this page is ABSOLUTE. This document is served
-       from /Funnel2/, so a relative `tokens.css` resolves to
-       /Funnel2/tokens.css
-       and 404s — the page would render as unstyled markup. -->
   <link rel="icon" href="/images/Sprknetwork.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -52,56 +57,14 @@
   <link rel="stylesheet" href="/tokens.css" />
   <link rel="stylesheet" href="/styles.css" />
 
-  <!-- ═══ page-scoped styles ═══════════════════════════════════
-       Every selector below is prefixed with `body.f2page`, and this
-       block lives in the page rather than in the shared styles.css, so
-       / and /form cannot be affected by anything here. Both live funnels
-       must render byte-identically after this page ships.
-
-       Placed AFTER styles.css deliberately: two of these rules tie on
-       specificity with rules in that file, and the later one wins.
-  ══════════════════════════════════════════════════════════════ -->
+  <!-- Page-scoped. Every selector carries body.f2page and this block
+       lives in the page, not styles.css, so / and /form cannot move. -->
   <style>
-    /* The shared nav pill is a three-column grid built for brand | links |
-       CTA. This page carries a brand and nothing else, so the pill is
-       collapsed to fit its contents instead of stretching full width with
-       two empty columns. Padding is restated symmetrically — the shared
-       rule leaves a narrow right edge sized for a button that is not here. */
-    body.f2page .nav__inner {
-      grid-template-columns: auto;
-      justify-items: center;
-      width: max-content;
-      margin-inline: auto;
-      padding: var(--space-xs) var(--space-md);
-    }
-    body.f2page .nav[data-state="scrolled"] .nav__inner {
-      padding: var(--space-2xs) var(--space-md);
-    }
-
-    /* Replaces .stage__actions, and the class is deliberately NOT that name.
-       script.js drives the shared sticky bar off that exact selector, and its
-       retract test (.close top < 0.9 x viewport) is tuned for the homepage,
-       where six sections and ~3400px sit between the hero CTA and the closing
-       one. This page is short — the gap is ~122px — so that test is already
-       true the instant the hero CTA scrolls off, and the bar would never
-       appear at all. Renaming makes script.js bail out cleanly and hands the
-       bar to the controller at the bottom of this file.
-       Values copied verbatim from styles.css:481-486 and styles.css:1304. */
-    body.f2page .funnel__actions {
-      display: grid;
-      justify-items: center;
-      gap: var(--space-md);
-      margin-top: var(--space-xs);
-    }
-    @media (max-width: 60rem) {
-      body.f2page .funnel__actions { gap: var(--space-sm); margin-top: 0; }
-    }
-
-    /* The rebill terms. Deliberately loud enough to read and directly
-       under the button: the entry price is $1 or $37 but the card is
-       charged $97 every month afterwards, and a visitor who does not see
-       that before clicking becomes a chargeback. */
-    body.f2page .start__terms {
+    /* The rebill terms. Loud enough to read and directly under the button:
+       the entry price is $37 but the card is charged $97 every month
+       afterwards, and a visitor who does not see that before clicking
+       becomes a chargeback. */
+    body.f2page .funnel__terms {
       font-family: var(--font-mono);
       font-size: var(--text-xs);
       letter-spacing: 0.02em;
@@ -109,8 +72,7 @@
       text-align: center;
       margin: 0;
     }
-
-    body.f2page .close .start__terms { margin-top: var(--space-sm); }
+    body.f2page .close .funnel__terms { margin-top: var(--space-sm); }
   </style>
 
   <!-- Marks that scripting is available, before first paint. Scroll-reveal
@@ -118,13 +80,7 @@
        simply visible rather than stuck at opacity 0. -->
   <script>document.documentElement.classList.add('js');</script>
 
-  <!-- ═══ Meta Pixel ═══════════════════════════════════════════
-       The real pixel, not the /test stub: this page takes paid traffic and
-       has to report its own PageView into dataset 1746915513340219.
-
-       Per-page on purpose. Do not fold this into a shared include without
-       re-verifying that every page still fires its own PageView.
-  ══════════════════════════════════════════════════════════════ -->
+  <!-- ═══ Meta Pixel ═══════════════════════════════════════════ -->
   <script>
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -153,12 +109,34 @@
 
   <a class="skip" href="#main">Skip to content</a>
 
-  <!-- ─── nav · brand only ───────────────────────────────────── -->
+  <!-- ─── ticker · running strip ─────────────────────────────── -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker__track">
+      <span class="ticker__item">Proven winning angles</span><span class="ticker__sep">·</span>
+      <span class="ticker__item">Real-time market evaluation</span><span class="ticker__sep">·</span>
+      <span class="ticker__item">A community that actually shares</span><span class="ticker__sep">·</span>
+      <span class="ticker__item">Proven winning angles</span><span class="ticker__sep">·</span>
+      <span class="ticker__item">Real-time market evaluation</span><span class="ticker__sep">·</span>
+      <span class="ticker__item">A community that actually shares</span><span class="ticker__sep">·</span>
+    </div>
+  </div>
+
+  <!-- ─── nav · floating pill ────────────────────────────────── -->
   <header class="nav" data-state="rest">
     <div class="nav__inner">
-      <a class="nav__brand" href="/" aria-label="SPRK Network · home">
+      <a class="nav__brand" href="#top" aria-label="SPRK Network · home">
         <img class="nav__brand-logo" src="/images/Sprknetwork.png" alt="" />
         <span class="nav__brand-text">SPRK <span>Network</span></span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#proof">Proof</a>
+        <a href="#how">How it works</a>
+        <a href="#vip">VIP</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a class="nav__cta" data-checkout data-cta="nav" href="https://commas.com/checkout/V2ZDOAOhU9Wh0">
+        <span>Get Started</span>
+        <span class="nav__cta-arrow" aria-hidden="true">→</span>
       </a>
     </div>
   </header>
@@ -171,32 +149,24 @@
 
       <img class="stage__mark rise" src="/images/Sprknetwork.png" alt="SPRK Network" />
 
-      <!-- COPY PLACEHOLDER · headline. The <em> renders as the gold serif
-           italic accent, so keep one short phrase inside it. -->
       <h1 class="stage__h rise d1" id="stage-h">
-        The whole <em>playbook</em>, for the price of lunch.
+        Get inside the <em>underground</em> sweepstakes industry.
       </h1>
-      <!-- COPY PLACEHOLDER · one supporting line. -->
       <p class="stage__sub rise d2">
-        Watch the video, then get instant access to the offers, the angles and
-        the community inside SPRK Network.
+        SPRK Network hands you the offers, the angles and the playbook to your first 10k.
       </p>
-
-      <!-- ── VSL (Vidalytics) — the centrepiece ────────────────────────
-           This is the SAME video as the homepage while a dedicated one is
-           being cut. Two ids have to change to swap it, and they appear in
-           four places between them:
-
-             VIDEO id  Q_oHPhpvxpWzBtUf
-               1. the container's id=  ->  vidalytics_embed_<VIDEO>
-               2. the 4th argument to the loader IIFE (same string)
-               3. the second path segment of the loader URL
-
-             ACCOUNT id  GEdWcqBF
-               4. the first path segment of the loader URL
-
-           Miss any one of them and the old video plays, or nothing does.
-           ────────────────────────────────────────────────────────────── -->
+      <!-- CHECKOUT FUNNEL: goes to the Commas checkout, not /form. There is
+           no application on this funnel, so the label cannot say "Apply" — the
+           Discord comes with access, which is what it now says.
+           `data-checkout` is load-bearing: the passthrough at the bottom of
+           this page rewrites the href of every a[data-checkout] at click time
+           to carry the ad parameters and the Meta cookies. Drop that attribute
+           and the sale arrives at Meta with no fbc and no attribution at all. -->
+      <a class="discord-inline rise d2" data-checkout data-cta="discord_hero" href="https://commas.com/checkout/V2ZDOAOhU9Wh0">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.369a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.009c.12.099.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.891.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.056c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028ZM8.02 15.331c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418Z"/></svg>
+        <span>Get instant access and the <strong>Discord</strong> Community!</span>
+      </a>
+      <!-- ── VSL (Vidalytics) — the centrepiece ── -->
       <div class="frame rise d3">
         <div class="frame__inner">
           <div id="vidalytics_embed_Q_oHPhpvxpWzBtUf" style="width: 100%; position:relative; padding-top: 56.25%;"></div>
@@ -204,32 +174,20 @@
         </div>
       </div>
 
-      <div class="funnel__actions rise d4">
-        <!-- `data-checkout` is load-bearing. The passthrough at the bottom of
-             this page rewrites the href of every a[data-checkout] at click
-             time to carry the ad parameters and the Meta cookies into the
-             Commas checkout URL. Commas echoes them back in its webhook under
-             data.additional_params, which is the ONLY way n8n can attribute
-             the sale to the ad that produced it — the webhook is
-             server-to-server, with no browser and no cookies.
-
-             Drop this attribute and the sale still happens, but it arrives at
-             Meta with no ad_id and no fbc, and the campaign cannot learn from
-             it. The bare href below is the $1 checkout so that the button
-             works even with JavaScript off. -->
+      <div class="stage__actions rise d4">
         <a class="cta cta--glow" data-checkout data-cta="hero" href="https://commas.com/checkout/V2ZDOAOhU9Wh0">
           <span class="cta__label" data-price-label>Get Instant access for $37</span>
           <span class="cta__arrow" aria-hidden="true">→</span>
         </a>
 
-        <p class="start__terms" data-price-terms>$37 for your first month, then $97/month. Cancel anytime.</p>
+        <p class="funnel__terms" data-price-terms>$37 for your first month, then $97/month. Cancel anytime.</p>
 
         <p class="stage__trust">
           <span><span class="badge-dot" aria-hidden="true"></span>Instant access</span>
           <span class="badge-sep" aria-hidden="true"></span>
           <span><span class="badge-dot" aria-hidden="true"></span>Cancel anytime</span>
           <span class="badge-sep" aria-hidden="true"></span>
-          <span><span class="badge-dot" aria-hidden="true"></span>Secure checkout</span>
+          <span><span class="badge-dot" aria-hidden="true"></span>No hidden fees</span>
         </p>
       </div>
 
@@ -249,31 +207,278 @@
       </ul>
     </section>
 
-    <!-- ─── closing CTA ────────────────────────────────────────────
-         Load-bearing for the sticky bar, not just decoration: script.js
-         retracts .stickybar once .close comes into view so the two never
-         stack. Remove this section and the sticky bar stays pinned over
-         the footer disclaimer for the rest of the page.
-         ────────────────────────────────────────────────────────── -->
-    <section class="close" id="get-started" aria-labelledby="close-h">
+    <!-- ─── proof · the wins ───────────────────────────────────── -->
+    <section class="proof" id="proof" aria-labelledby="proof-h">
+      <header class="section-head reveal">
+        <p class="section-eyebrow">Proof</p>
+        <h2 class="section-h" id="proof-h">Real members. <em>Real messages.</em></h2>
+        <p class="section-note">Straight from the member chat, unedited. Keep scrolling — they don't stop.</p>
+      </header>
+
+      <div class="wins__marquee">
+        <div class="wins__track" id="wins-track">
+          <div class="win-card"><img src="/images/wins/win-01.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-02.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-03.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-04.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-05.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-06.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-07.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-08.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-09.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-10.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-11.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-12.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-13.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-14.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-15.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-16.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-17.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── statement · the turn ───────────────────────────────── -->
+    <section class="statement" aria-labelledby="statement-h">
+      <div class="statement__inner reveal">
+        <h2 class="statement__h" id="statement-h">
+          Posting into the void should not be the plan.
+        </h2>
+        <p class="statement__sub">So let's give you a system instead.</p>
+        <a class="cta cta--glow" data-checkout data-cta="statement" href="https://commas.com/checkout/V2ZDOAOhU9Wh0">
+          <span class="cta__label" data-price-label>Get Instant access for $37</span>
+          <span class="cta__arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ─── how it works · 3 steps ─────────────────────────────── -->
+    <section class="steps" id="how" aria-labelledby="how-h">
+      <header class="section-head reveal">
+        <p class="section-eyebrow">How it works</p>
+        <h2 class="section-h" id="how-h">Three things you get <em>on day one.</em></h2>
+      </header>
+
+      <ol class="steps__list" role="list">
+        <li class="step reveal">
+          <span class="step__ghost" aria-hidden="true">1</span>
+          <div class="step__icon">
+            <svg class="icon-stroke" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <div class="step__body">
+            <p class="step__num">Step 01</p>
+            <h3 class="step__h">Hand-picked offers, already vetted</h3>
+            <p class="step__p">
+              Access opportunities reviewed by our team before they reach you — so you spend your
+              time running traffic instead of hunting for something worth running.
+            </p>
+          </div>
+        </li>
+
+        <li class="step step--flip reveal">
+          <span class="step__ghost" aria-hidden="true">2</span>
+          <div class="step__icon">
+            <svg class="icon-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="step__body">
+            <p class="step__num">Step 02</p>
+            <h3 class="step__h">A network that shares what's working</h3>
+            <p class="step__p">
+              Hundreds of creators posting real results, real failures and real creative — while it's
+              still relevant. This is the part people underestimate until they're in the room.
+            </p>
+          </div>
+        </li>
+
+        <li class="step reveal">
+          <span class="step__ghost" aria-hidden="true">3</span>
+          <div class="step__icon">
+            <svg class="icon-stroke" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="step__body">
+            <p class="step__num">Step 03</p>
+            <h3 class="step__h">The playbooks, masterclasses and live Q&amp;A</h3>
+            <p class="step__p">
+              Members-only sessions and a growing library built to compress the learning curve —
+              so you're not paying tuition to the algorithm to find out what already works.
+            </p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ─── stats ──────────────────────────────────────────────── -->
+    <section class="stats" aria-label="SPRK Network by the numbers">
+      <div class="stats__inner reveal">
+        <div class="stat">
+          <span class="stat__value tnum">500+</span>
+          <span class="stat__label">Active affiliates</span>
+        </div>
+        <div class="stat">
+          <span class="stat__value tnum">$1.2M+</span>
+          <span class="stat__label">Community built revenue</span>
+        </div>
+        <div class="stat">
+          <span class="stat__value tnum">98%</span>
+          <span class="stat__label">Member satisfaction</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── VIP ────────────────────────────────────────────────── -->
+    <section class="vip" id="vip" aria-labelledby="vip-h">
+      <header class="section-head reveal">
+        <p class="section-eyebrow">The VIP advantage</p>
+        <h2 class="section-h" id="vip-h">Priority access. <em>Unfair advantages.</em></h2>
+        <p class="section-note">Everything you need to scale faster, with zero bottlenecks.</p>
+      </header>
+
+      <div class="rail" data-rail>
+        <div class="vip__grid" data-rail-track>
+          <article class="vip-card">
+            <p class="vip-card__badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              VIP
+            </p>
+            <div class="vip-card__icon">
+              <svg class="icon-stroke" viewBox="0 0 24 24" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+            <h3 class="vip-card__h">Priority Processing</h3>
+            <p class="vip-card__p">Creatives are processed 5X quicker, with an average wait time of 2 hours compared to 12–18 hours, and scaled more aggressively.</p>
+          </article>
+
+          <article class="vip-card">
+            <p class="vip-card__badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              VIP
+            </p>
+            <div class="vip-card__icon">
+              <svg class="icon-stroke" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <h3 class="vip-card__h">Early Access to Winning Angles</h3>
+            <p class="vip-card__p">Get exclusive access to new, high-converting angles 6 days before the rest of the network. Less competition means higher ROI windows for you.</p>
+          </article>
+
+          <article class="vip-card">
+            <p class="vip-card__badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              VIP
+            </p>
+            <div class="vip-card__icon">
+              <svg class="icon-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <h3 class="vip-card__h">Direct Line Support</h3>
+            <p class="vip-card__p">No waiting in queues. Get direct iMessage and private chat access to our team. No buried messages in general chats — just instant answers.</p>
+          </article>
+
+          <article class="vip-card">
+            <p class="vip-card__badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              VIP
+            </p>
+            <div class="vip-card__icon">
+              <svg class="icon-stroke" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <h3 class="vip-card__h">Allocated Strategy Time</h3>
+            <p class="vip-card__p">Receive 1.5 hours of focused, one-on-one support every month. We'll help you fix bottlenecks, optimize your approach, and accelerate your results.</p>
+          </article>
+
+          <article class="vip-card">
+            <p class="vip-card__badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              VIP
+            </p>
+            <div class="vip-card__icon">
+              <svg class="icon-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h3 class="vip-card__h">VIP-Only Environment</h3>
+            <p class="vip-card__p">Join a private, separate chat reserved strictly for serious operators. No noise, no beginners — just high-level networking and execution.</p>
+          </article>
+        </div>
+        <div class="dots" data-rail-dots></div>
+      </div>
+    </section>
+
+    <!-- ─── FAQ ────────────────────────────────────────────────── -->
+    <section class="faq" id="faq" aria-labelledby="faq-h">
+      <header class="section-head reveal">
+        <p class="section-eyebrow">Questions</p>
+        <h2 class="section-h" id="faq-h">Got questions?</h2>
+      </header>
+
+      <div class="faq__list">
+        <details class="faq__item">
+          <summary>
+            <span>What exactly is SPRK Network?</span>
+            <span class="faq__chev" aria-hidden="true">+</span>
+          </summary>
+          <div class="faq__a">
+            <p>A network for content creators running paid traffic. You get proven, tested angles, real-time market evaluation, and a community of people doing the same work — sharing what's converting right now instead of what worked last year.</p>
+          </div>
+        </details>
+
+        <details class="faq__item">
+          <summary>
+            <span>What do I actually get access to?</span>
+            <span class="faq__chev" aria-hidden="true">+</span>
+          </summary>
+          <div class="faq__a">
+            <p>Tested winning angles, members-only masterclasses, live Q&amp;A sessions, and a growing library of playbooks — plus the member chat, which is where most of the day-to-day value ends up happening.</p>
+          </div>
+        </details>
+
+        <details class="faq__item">
+          <summary>
+            <span>Do I need experience to join?</span>
+            <span class="faq__chev" aria-hidden="true">+</span>
+          </summary>
+          <div class="faq__a">
+            <p>No. Members range from people just starting their online journey to operators scaling an existing portfolio. The resources are built to compress the learning curve either way — but this is a network, not a done-for-you service. You run your own campaigns.</p>
+          </div>
+        </details>
+
+
+        <details class="faq__item">
+          <summary>
+            <span>How do I join, and how fast?</span>
+            <span class="faq__chev" aria-hidden="true">+</span>
+          </summary>
+          <div class="faq__a">
+            <p>Checkout takes about a minute and access is immediate — there is no application and no waiting to be approved.</p>
+          </div>
+        </details>
+
+        <details class="faq__item">
+          <summary>
+            <span>Can I cancel?</span>
+            <span class="faq__chev" aria-hidden="true">+</span>
+          </summary>
+          <div class="faq__a">
+            <p>Any time. If anything is unclear about your billing or you need a hand, email <a href="mailto:admin@sprknetwork.app">admin@sprknetwork.app</a> and we'll sort it out.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ─── closing CTA ────────────────────────────────────────── -->
+    <section class="close" id="start" aria-labelledby="close-h">
       <div class="close__inner reveal">
-        <!-- COPY PLACEHOLDER -->
         <h2 class="close__h" id="close-h">Ready to start?</h2>
-        <p class="close__sub">Get the offers, the angles and the community — today.</p>
+        <p class="close__sub">Join the network, unlock the VIP advantages, and start scaling.</p>
 
         <a class="cta cta--glow cta--lg" data-checkout data-cta="close" href="https://commas.com/checkout/V2ZDOAOhU9Wh0">
           <span class="cta__label" data-price-label>Get Instant access for $37</span>
           <span class="cta__arrow" aria-hidden="true">→</span>
         </a>
 
-        <p class="start__terms" data-price-terms>$37 for your first month, then $97/month. Cancel anytime.</p>
+        <p class="funnel__terms" data-price-terms>$37 for your first month, then $97/month. Cancel anytime.</p>
 
         <p class="close__trust">
           <span><span class="badge-dot" aria-hidden="true"></span>Instant access</span>
           <span class="badge-sep" aria-hidden="true"></span>
           <span><span class="badge-dot" aria-hidden="true"></span>Cancel anytime</span>
           <span class="badge-sep" aria-hidden="true"></span>
-          <span><span class="badge-dot" aria-hidden="true"></span>Secure checkout</span>
+          <span><span class="badge-dot" aria-hidden="true"></span>No hidden fees</span>
         </p>
       </div>
     </section>
@@ -283,12 +488,12 @@
   <!-- ─── footer ─────────────────────────────────────────────── -->
   <footer class="footer">
     <div class="footer__inner">
-      <!-- Earnings disclaimer, matching the homepage word for word. It is the
-           only thing qualifying anything this funnel implies about outcomes.
-           An earlier version was removed from / on 2026-08-03 in 1e39e33,
-           which left that page with no earnings qualifier at all while it was
-           taking paid Meta traffic. Do not remove it here either without
-           replacing it. -->
+      <!-- Earnings disclaimer. This page names a figure in the headline and
+           shows member win screenshots and a revenue stat, so it needs one —
+           this is the only thing qualifying any of them. An earlier version
+           was removed on 2026-08-03 in 1e39e33, which left the page with no
+           earnings qualifier at all while it was taking paid Meta traffic.
+           Do not remove it again without replacing it. -->
       <section class="footer__disclaimer" aria-labelledby="disclaimer-h">
         <h2 class="footer__disclaimer-h" id="disclaimer-h">Disclaimer</h2>
         <p>
@@ -305,7 +510,8 @@
         <p class="footer__line">&copy; <span id="year"></span> SPRK Network. All rights reserved.</p>
         <ul class="footer__links" role="list">
           <li><a href="#top">Top</a></li>
-          <li><a href="/">Home</a></li>
+          <li><a href="#vip">VIP</a></li>
+          <li><a href="#faq">FAQ</a></li>
           <li><a href="/privacy-policy/">Privacy Policy</a></li>
           <li><a href="/terms-of-service/">Terms of Service</a></li>
           <li><a href="mailto:admin@sprknetwork.app">Contact</a></li>
@@ -323,59 +529,6 @@
   </div>
 
   <script src="/script.js" defer></script>
-
-  <!-- ═══ sticky CTA controller ════════════════════════════════
-       script.js owns the sticky bar on the homepage, keyed off
-       .stage__actions. This page names that wrapper .funnel__actions, so the
-       block in script.js bails out and the bar is driven from here instead.
-
-       Why it has to be: script.js retracts the bar once .close's TOP is
-       within 0.9 x the viewport. On the homepage six sections sit between the
-       hero CTA and the closing one (~3400px), so that reads as "the closing
-       CTA is coming into view". Here .close starts ~122px after the hero CTA,
-       which is under the threshold at every viewport — so the test is already
-       true the moment the hero CTA scrolls off, the bar never leaves
-       data-state="hidden", and every visitor past the VSL has no buy button
-       for the rest of the page.
-
-       Same intent, measured against the closing BUTTON rather than the
-       section top, which is what "the two never stack" actually means. The
-       shared 0.9 factor is left alone on purpose: lowering it in script.js
-       would change the homepage, which must not move.
-  ══════════════════════════════════════════════════════════════ -->
-  <script>
-  (function () {
-    var bar         = document.querySelector('.stickybar');
-    var heroActions = document.querySelector('.funnel__actions');
-    var closeCta    = document.querySelector('.close .cta');
-    if (!bar || !heroActions || !closeCta) return;
-    var link = bar.querySelector('a');
-
-    // Hides via transform + pointer-events, never display or visibility, so
-    // the browser will not blur a focused child on its own — and tabIndex=-1
-    // does not blur an already-focused node. Without this, focus can sit
-    // inside an aria-hidden subtree that is off-screen and the screen reader
-    // announces nothing. Same contract script.js uses.
-    function setSticky(shown) {
-      if ((bar.dataset.state === 'shown') === shown) return;
-      if (!shown && bar.contains(document.activeElement)) document.activeElement.blur();
-      bar.dataset.state = shown ? 'shown' : 'hidden';
-      bar.setAttribute('aria-hidden', shown ? 'false' : 'true');
-      if (link) link.tabIndex = shown ? 0 : -1;
-    }
-
-    function sync() {
-      var pastHero = heroActions.getBoundingClientRect().bottom < 0;
-      var r = closeCta.getBoundingClientRect();
-      var closeCtaOnScreen = r.top < window.innerHeight && r.bottom > 0;
-      setSticky(pastHero && !closeCtaOnScreen);
-    }
-
-    sync();
-    window.addEventListener('scroll', sync, { passive: true });
-    window.addEventListener('resize', sync, { passive: true });
-  })();
-  </script>
 
   <!-- ═══ Attribution passthrough → Commas checkout ════════════
        Ported from the homepage. Same structure, same behaviour; the only
@@ -405,11 +558,13 @@
     //
     //    $37 for the first month, then $97/month recurring.
     //
-    //    ⚠ IF THIS URL EVER CHANGES PRICE, the three bare `data-price-label`
-    //    spans, the two `data-price-terms` lines and the three bare CTA hrefs
-    //    in the markup above have to move with it. They are only what a
-    //    JS-off visitor sees — the script paints over them on load — but left
-    //    behind they show that visitor one price wired to another's checkout.
+    //    ⚠ IF THIS URL EVER CHANGES PRICE, the markup above has to move with
+    //    it: FOUR `data-price-label` spans (hero, statement, close, sticky),
+    //    TWO `data-price-terms` lines (hero, close) and SIX bare CTA hrefs
+    //    (nav, discord_hero, hero, statement, close, sticky). They are only
+    //    what a JS-off visitor sees — refresh() and paintPrice() cover all of
+    //    them via querySelectorAll, which is exactly why a miscount here is
+    //    invisible at runtime and only bites the next editor.
     var PRICE = {
       url:   'https://commas.com/checkout/V2ZDOAOhU9Wh0',
       label: 'Get Instant access for $37',
@@ -537,9 +692,9 @@
       if (fbp) out.set('fbp', fbp);
       if (fbc) out.set('fbc', fbc);
       // Which page produced the sale. Unconditional, and deliberately not
-      // folded into cta_source: the two funnels can resolve to the SAME
-      // checkout URL — they do today, while Funnel2 has no $37 link — so the
-      // checkout is not a reliable way to tell them apart downstream.
+      // folded into cta_source. The two funnels have distinct checkout URLs
+      // today, but reading the price back off the URL to infer the page is a
+      // guess that breaks the moment a link is repointed or reused.
       out.set('funnel', FUNNEL);
       if (ctaSource) out.set('cta_source', ctaSource);
 
@@ -564,8 +719,9 @@
     setTimeout(refresh, 4000);
 
     // ── 4b · Paint the price into the copy ───────────────────────────
-    //    The markup ships the $1 wording so the page is correct with JS
-    //    off; this brings it in line with whatever ?p= resolved to.
+    //    The markup already ships this funnel's wording so the page is
+    //    correct with JS off; this re-paints it from the one constant, so a
+    //    stale hand-edit up there cannot outlive a page load.
     (function paintPrice() {
       Array.prototype.forEach.call(
         document.querySelectorAll('[data-price-label]'),
