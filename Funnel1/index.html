@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- ═══════════════════════════════════════════════════════════
+     /Funnel1 — $1 first month, then $97/month.
+
+     TWIN OF /Funnel2. The two pages are identical except for the
+     checkout URL and the price copy, both of which live in the single
+     PRICE constant at the top of the attribution script. Any fix to the
+     attribution, the fbc precedence, the sticky bar or the debug panel
+     has to be applied to BOTH files — that is exactly how / got the fbc
+     fix on 2026-08-08 while /form silently kept the bug.
+     ═══════════════════════════════════════════════════════════ -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+  <!-- COPY PLACEHOLDER · title + description. Swap when the real copy lands. -->
+  <title>SPRK Network — Get instant access</title>
+  <meta name="description" content="Watch the video, then get instant access to the offers, the angles and the community inside SPRK Network." />
+  <meta name="theme-color" content="#0B0F14" />
+
+  <!-- A paid-ads destination, one per price point. Indexed, the cheaper
+       funnel would be findable organically and would quietly undercut the
+       dearer one. Nothing here is meant to be found by search. -->
+  <meta name="robots" content="noindex, nofollow" />
+
+  <meta property="og:title" content="SPRK Network — Get instant access" />
+  <meta property="og:description" content="Watch the video, then get instant access to the offers, the angles and the community inside SPRK Network." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://sprk-mmr.vercel.app/Funnel1" />
+  <!-- absolute: scrapers do not resolve relative og:image against the page -->
+  <meta property="og:image" content="https://sprk-mmr.vercel.app/images/Sprknetwork.png" />
+  <meta name="twitter:card" content="summary" />
+
+  <!-- ⚠ Every asset path on this page is ABSOLUTE. This document is served
+       from /Funnel1/, so a relative `tokens.css` resolves to
+       /Funnel1/tokens.css
+       and 404s — the page would render as unstyled markup. -->
+  <link rel="icon" href="/images/Sprknetwork.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fast.vidalytics.com" />
+  <link rel="preconnect" href="https://connect.facebook.net" />
+  <!-- the CTA hops here; warming the connection shaves the handshake off the click -->
+  <link rel="preconnect" href="https://commas.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/tokens.css" />
+  <link rel="stylesheet" href="/styles.css" />
+
+  <!-- ═══ page-scoped styles ═══════════════════════════════════
+       Every selector below is prefixed with `body.f1page`, and this
+       block lives in the page rather than in the shared styles.css, so
+       / and /form cannot be affected by anything here. Both live funnels
+       must render byte-identically after this page ships.
+
+       Placed AFTER styles.css deliberately: two of these rules tie on
+       specificity with rules in that file, and the later one wins.
+  ══════════════════════════════════════════════════════════════ -->
+  <style>
+    /* The shared nav pill is a three-column grid built for brand | links |
+       CTA. This page carries a brand and nothing else, so the pill is
+       collapsed to fit its contents instead of stretching full width with
+       two empty columns. Padding is restated symmetrically — the shared
+       rule leaves a narrow right edge sized for a button that is not here. */
+    body.f1page .nav__inner {
+      grid-template-columns: auto;
+      justify-items: center;
+      width: max-content;
+      margin-inline: auto;
+      padding: var(--space-xs) var(--space-md);
+    }
+    body.f1page .nav[data-state="scrolled"] .nav__inner {
+      padding: var(--space-2xs) var(--space-md);
+    }
+
+    /* Replaces .stage__actions, and the class is deliberately NOT that name.
+       script.js drives the shared sticky bar off that exact selector, and its
+       retract test (.close top < 0.9 x viewport) is tuned for the homepage,
+       where six sections and ~3400px sit between the hero CTA and the closing
+       one. This page is short — the gap is ~122px — so that test is already
+       true the instant the hero CTA scrolls off, and the bar would never
+       appear at all. Renaming makes script.js bail out cleanly and hands the
+       bar to the controller at the bottom of this file.
+       Values copied verbatim from styles.css:481-486 and styles.css:1304. */
+    body.f1page .funnel__actions {
+      display: grid;
+      justify-items: center;
+      gap: var(--space-md);
+      margin-top: var(--space-xs);
+    }
+    @media (max-width: 60rem) {
+      body.f1page .funnel__actions { gap: var(--space-sm); margin-top: 0; }
+    }
+
+    /* The rebill terms. Deliberately loud enough to read and directly
+       under the button: the entry price is $1/$37/$57 but the card is
+       charged $97 every month afterwards, and a visitor who does not see
+       that before clicking becomes a chargeback. */
+    body.f1page .start__terms {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: 0.02em;
+      color: var(--color-accent);
+      text-align: center;
+      margin: 0;
+    }
+
+    body.f1page .close .start__terms { margin-top: var(--space-sm); }
+  </style>
+
+  <!-- Marks that scripting is available, before first paint. Scroll-reveal
+       styling hangs off this class so that if JS never runs, the content is
+       simply visible rather than stuck at opacity 0. -->
+  <script>document.documentElement.classList.add('js');</script>
+
+  <!-- ═══ Meta Pixel ═══════════════════════════════════════════
+       The real pixel, not the /test stub: this page takes paid traffic and
+       has to report its own PageView into dataset 1746915513340219.
+
+       Per-page on purpose. Do not fold this into a shared include without
+       re-verifying that every page still fires its own PageView.
+  ══════════════════════════════════════════════════════════════ -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1746915513340219');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1746915513340219&ev=PageView&noscript=1" alt="" /></noscript>
+  <!-- ═══ End Meta Pixel ═══════════════════════════════════════ -->
+
+</head>
+<body class="lp-hero f1page">
+  <!-- ambient blooms (atmospheric backdrop) -->
+  <div class="ambient" aria-hidden="true">
+    <div class="bloom bloom--1"></div>
+    <div class="bloom bloom--2"></div>
+    <div class="grid-lines"></div>
+    <div class="grain"></div>
+  </div>
+
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- ─── nav · brand only ───────────────────────────────────── -->
+  <header class="nav" data-state="rest">
+    <div class="nav__inner">
+      <a class="nav__brand" href="/" aria-label="SPRK Network · home">
+        <img class="nav__brand-logo" src="/images/Sprknetwork.png" alt="" />
+        <span class="nav__brand-text">SPRK <span>Network</span></span>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ─── stage · the VSL is the hero ────────────────────────── -->
+    <section class="stage" id="top" aria-labelledby="stage-h">
+      <div class="stage__spotlight" aria-hidden="true"></div>
+
+      <img class="stage__mark rise" src="/images/Sprknetwork.png" alt="SPRK Network" />
+
+      <!-- COPY PLACEHOLDER · headline. The <em> renders as the gold serif
+           italic accent, so keep one short phrase inside it. -->
+      <h1 class="stage__h rise d1" id="stage-h">
+        The whole <em>playbook</em>, for the price of lunch.
+      </h1>
+      <!-- COPY PLACEHOLDER · one supporting line. -->
+      <p class="stage__sub rise d2">
+        Watch the video, then get instant access to the offers, the angles and
+        the community inside SPRK Network.
+      </p>
+
+      <!-- ── VSL (Vidalytics) — the centrepiece ────────────────────────
+           This is the SAME video as the homepage while a dedicated one is
+           being cut. Two ids have to change to swap it, and they appear in
+           four places between them:
+
+             VIDEO id  Q_oHPhpvxpWzBtUf
+               1. the container's id=  ->  vidalytics_embed_<VIDEO>
+               2. the 4th argument to the loader IIFE (same string)
+               3. the second path segment of the loader URL
+
+             ACCOUNT id  GEdWcqBF
+               4. the first path segment of the loader URL
+
+           Miss any one of them and the old video plays, or nothing does.
+           ────────────────────────────────────────────────────────────── -->
+      <div class="frame rise d3">
+        <div class="frame__inner">
+          <div id="vidalytics_embed_Q_oHPhpvxpWzBtUf" style="width: 100%; position:relative; padding-top: 56.25%;"></div>
+          <script type="text/javascript">(function (v, i, d, a, l, y, t, c, s) {    y='_'+d.toLowerCase();c=d+'L';if(!v[d]){v[d]={};}if(!v[c]){v[c]={};}if(!v[y]){v[y]={};}var vl='Loader',vli=v[y][vl],vsl=v[c][vl + 'Script'],vlf=v[c][vl + 'Loaded'],ve='Embed';    if (!vsl){vsl=function(u,cb){        if(t){cb();return;}s=i.createElement("script");s.type="text/javascript";s.async=1;s.src=u;        if(s.readyState){s.onreadystatechange=function(){if(s.readyState==="loaded"||s.readyState=="complete"){s.onreadystatechange=null;vlf=1;cb();}};}else{s.onload=function(){vlf=1;cb();};}        i.getElementsByTagName("head")[0].appendChild(s);    };}    vsl(l+'loader.min.js',function(){if(!vli){var vlc=v[c][vl];vli=new vlc();}vli.loadScript(l+'player.min.js',function(){var vec=v[d][ve];t=new vec();t.run(a);});});})(window, document, 'Vidalytics', 'vidalytics_embed_Q_oHPhpvxpWzBtUf', 'https://fast.vidalytics.com/embeds/GEdWcqBF/Q_oHPhpvxpWzBtUf/');</script>
+        </div>
+      </div>
+
+      <div class="funnel__actions rise d4">
+        <!-- `data-checkout` is load-bearing. The passthrough at the bottom of
+             this page rewrites the href of every a[data-checkout] at click
+             time to carry the ad parameters and the Meta cookies into the
+             Commas checkout URL. Commas echoes them back in its webhook under
+             data.additional_params, which is the ONLY way n8n can attribute
+             the sale to the ad that produced it — the webhook is
+             server-to-server, with no browser and no cookies.
+
+             Drop this attribute and the sale still happens, but it arrives at
+             Meta with no ad_id and no fbc, and the campaign cannot learn from
+             it. The bare href below is the $1 checkout so that the button
+             works even with JavaScript off. -->
+        <a class="cta cta--glow" data-checkout data-cta="hero" href="https://commas.com/checkout/NK1MpM9wC0vOQys">
+          <span class="cta__label" data-price-label>Get instant access — $1</span>
+          <span class="cta__arrow" aria-hidden="true">→</span>
+        </a>
+
+        <p class="start__terms" data-price-terms>$1 today, then $97/month. Cancel anytime.</p>
+
+        <p class="stage__trust">
+          <span><span class="badge-dot" aria-hidden="true"></span>Instant access</span>
+          <span class="badge-sep" aria-hidden="true"></span>
+          <span><span class="badge-dot" aria-hidden="true"></span>Cancel anytime</span>
+          <span class="badge-sep" aria-hidden="true"></span>
+          <span><span class="badge-dot" aria-hidden="true"></span>Secure checkout</span>
+        </p>
+      </div>
+
+      <ul class="chips rise d5" role="list">
+        <li class="chip">
+          <svg class="icon-stroke" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Beginner friendly
+        </li>
+        <li class="chip">
+          <svg class="icon-stroke" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Built for scale
+        </li>
+        <li class="chip">
+          <svg class="icon-stroke" viewBox="0 0 24 24" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          Tested angles
+        </li>
+      </ul>
+    </section>
+
+    <!-- ─── closing CTA ────────────────────────────────────────────
+         Load-bearing for the sticky bar, not just decoration: script.js
+         retracts .stickybar once .close comes into view so the two never
+         stack. Remove this section and the sticky bar stays pinned over
+         the footer disclaimer for the rest of the page.
+         ────────────────────────────────────────────────────────── -->
+    <section class="close" id="get-started" aria-labelledby="close-h">
+      <div class="close__inner reveal">
+        <!-- COPY PLACEHOLDER -->
+        <h2 class="close__h" id="close-h">Ready to start?</h2>
+        <p class="close__sub">Get the offers, the angles and the community — today.</p>
+
+        <a class="cta cta--glow cta--lg" data-checkout data-cta="close" href="https://commas.com/checkout/NK1MpM9wC0vOQys">
+          <span class="cta__label" data-price-label>Get instant access — $1</span>
+          <span class="cta__arrow" aria-hidden="true">→</span>
+        </a>
+
+        <p class="start__terms" data-price-terms>$1 today, then $97/month. Cancel anytime.</p>
+
+        <p class="close__trust">
+          <span><span class="badge-dot" aria-hidden="true"></span>Instant access</span>
+          <span class="badge-sep" aria-hidden="true"></span>
+          <span><span class="badge-dot" aria-hidden="true"></span>Cancel anytime</span>
+          <span class="badge-sep" aria-hidden="true"></span>
+          <span><span class="badge-dot" aria-hidden="true"></span>Secure checkout</span>
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── footer ─────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <!-- Earnings disclaimer, matching the homepage word for word. It is the
+           only thing qualifying anything this funnel implies about outcomes.
+           An earlier version was removed from / on 2026-08-03 in 1e39e33,
+           which left that page with no earnings qualifier at all while it was
+           taking paid Meta traffic. Do not remove it here either without
+           replacing it. -->
+      <section class="footer__disclaimer" aria-labelledby="disclaimer-h">
+        <h2 class="footer__disclaimer-h" id="disclaimer-h">Disclaimer</h2>
+        <p>
+          Results are not typical and are not guaranteed. Any figures shown are
+          individual outcomes and depend on effort, consistency, and factors
+          outside our control. Nothing on this page is a promise of earnings.
+        </p>
+      </section>
+      <div class="footer__meta">
+        <div class="footer__brand">
+          <img src="/images/Sprknetwork.png" alt="" />
+          <span>SPRK Network</span>
+        </div>
+        <p class="footer__line">&copy; <span id="year"></span> SPRK Network. All rights reserved.</p>
+        <ul class="footer__links" role="list">
+          <li><a href="#top">Top</a></li>
+          <li><a href="/">Home</a></li>
+          <li><a href="/privacy-policy/">Privacy Policy</a></li>
+          <li><a href="/terms-of-service/">Terms of Service</a></li>
+          <li><a href="mailto:admin@sprknetwork.app">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ─── sticky CTA · appears once the VSL is scrolled past ──── -->
+  <div class="stickybar" data-state="hidden" aria-hidden="true">
+    <a class="cta cta--glow" data-checkout data-cta="sticky" href="https://commas.com/checkout/NK1MpM9wC0vOQys" tabindex="-1">
+      <span class="cta__label" data-price-label>Get instant access — $1</span>
+      <span class="cta__arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
+
+  <script src="/script.js" defer></script>
+
+  <!-- ═══ sticky CTA controller ════════════════════════════════
+       script.js owns the sticky bar on the homepage, keyed off
+       .stage__actions. This page names that wrapper .funnel__actions, so the
+       block in script.js bails out and the bar is driven from here instead.
+
+       Why it has to be: script.js retracts the bar once .close's TOP is
+       within 0.9 x the viewport. On the homepage six sections sit between the
+       hero CTA and the closing one (~3400px), so that reads as "the closing
+       CTA is coming into view". Here .close starts ~122px after the hero CTA,
+       which is under the threshold at every viewport — so the test is already
+       true the moment the hero CTA scrolls off, the bar never leaves
+       data-state="hidden", and every visitor past the VSL has no buy button
+       for the rest of the page.
+
+       Same intent, measured against the closing BUTTON rather than the
+       section top, which is what "the two never stack" actually means. The
+       shared 0.9 factor is left alone on purpose: lowering it in script.js
+       would change the homepage, which must not move.
+  ══════════════════════════════════════════════════════════════ -->
+  <script>
+  (function () {
+    var bar         = document.querySelector('.stickybar');
+    var heroActions = document.querySelector('.funnel__actions');
+    var closeCta    = document.querySelector('.close .cta');
+    if (!bar || !heroActions || !closeCta) return;
+    var link = bar.querySelector('a');
+
+    // Hides via transform + pointer-events, never display or visibility, so
+    // the browser will not blur a focused child on its own — and tabIndex=-1
+    // does not blur an already-focused node. Without this, focus can sit
+    // inside an aria-hidden subtree that is off-screen and the screen reader
+    // announces nothing. Same contract script.js uses.
+    function setSticky(shown) {
+      if ((bar.dataset.state === 'shown') === shown) return;
+      if (!shown && bar.contains(document.activeElement)) document.activeElement.blur();
+      bar.dataset.state = shown ? 'shown' : 'hidden';
+      bar.setAttribute('aria-hidden', shown ? 'false' : 'true');
+      if (link) link.tabIndex = shown ? 0 : -1;
+    }
+
+    function sync() {
+      var pastHero = heroActions.getBoundingClientRect().bottom < 0;
+      var r = closeCta.getBoundingClientRect();
+      var closeCtaOnScreen = r.top < window.innerHeight && r.bottom > 0;
+      setSticky(pastHero && !closeCtaOnScreen);
+    }
+
+    sync();
+    window.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync, { passive: true });
+  })();
+  </script>
+
+  <!-- ═══ Attribution passthrough → Commas checkout ════════════
+       Ported from the homepage. Same structure, same behaviour; the only
+       difference is where it points — this funnel's Commas checkout URL
+       instead of /form.
+
+       Why it has to exist at all: the purchase completes on commas.com and
+       is reported by a server-to-server webhook. No browser, no cookies. The
+       only channel that survives from the ad click to Meta's Conversions API
+       is the checkout URL's query string, which Commas echoes back under
+       data.additional_params. Verified with a live test purchase carrying
+       ?ad_id=TEST123&fbc=fb.1.999.TESTCLICK — both came back intact.
+
+       So: every parameter that reaches the checkout URL survives to Meta.
+       Every one that does not is lost forever.
+
+       Everything is built as one continuous ?a=1&b=2 query string.
+  ══════════════════════════════════════════════════════════════ -->
+  <script>
+  (function () {
+    // ── 0 · The checkout ─────────────────────────────────────────────
+    //
+    //    THIS URL WILL CHANGE. It is the only place the price lives — the
+    //    button label and the rebill line under the button are both painted
+    //    from it, so the page can never quote one price and send the
+    //    visitor to a checkout for another.
+    //
+    //    $1 for the first month, then $97/month recurring.
+    var PRICE = {
+      url:   'https://commas.com/checkout/NK1MpM9wC0vOQys',
+      label: 'Get instant access — $1',
+      terms: '$1 for your first month, then $97/month. Cancel anytime.'
+    };
+
+    // Last-resort fallback, used ONLY while PRICE.url above is still empty.
+    // An empty url would make buildUrl() emit a relative link — every CTA
+    // would point back at this page instead of a checkout. The label and
+    // terms fall back WITH the url, never separately, so a page missing its
+    // real link advertises $1 rather than quoting a price it cannot charge.
+    var FALLBACK = {
+      url:   'https://commas.com/checkout/NK1MpM9wC0vOQys',
+      label: 'Get instant access — $1',
+      terms: '$1 for your first month, then $97/month. Cancel anytime.'
+    };
+    var usingFallback = !PRICE.url;
+    if (usingFallback) PRICE = FALLBACK;
+
+    // Prefixes cta_source, so a sale landing in n8n says which funnel
+    // produced it even when both are routed to the same checkout.
+    var FUNNEL = 'f1';
+
+    var STORE = 'sprk_attr';
+
+    // Parameters set by Meta's URL-parameter string at the ad level,
+    // plus fbclid, which Facebook appends automatically.
+    //
+    // Must stay identical to the list on / — sprk_attr is shared across
+    // both pages and /form reads this exact shape back out of it.
+    var KEYS = [
+      'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
+      'campaign_id', 'adset_id', 'ad_id', 'fbclid'
+    ];
+
+    function readCookie(name) {
+      var match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+      return match ? match.pop() : '';
+    }
+
+    // ── 1 · Collect the params, falling back to a stored copy ────────
+    //    Survives a page reload or a back-navigation, which would
+    //    otherwise drop every parameter and orphan the visit.
+    var incoming = new URLSearchParams(window.location.search);
+    var saved = {};
+    try { saved = JSON.parse(sessionStorage.getItem(STORE) || '{}'); } catch (e) {}
+
+    var attr = {};
+    KEYS.forEach(function (key) {
+      var value = incoming.get(key) || saved[key] || '';
+      if (value) attr[key] = value;
+    });
+
+    // ── 2 · One event_id per visit, stable across reloads ────────────
+    //    The `lead_` prefix is kept deliberately, even though what this
+    //    page produces is a Purchase. sprk_attr is shared with / and
+    //    /form, so a visit that touches more than one of them must carry
+    //    ONE id; minting a differently-shaped one here would fork it.
+    //    The prefix is inert to Meta — dedup matches on the value.
+    attr.event_id = saved.event_id ||
+      ('lead_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10));
+
+    try { sessionStorage.setItem(STORE, JSON.stringify(attr)); } catch (e) {}
+
+    // Where the fbc we are sending came from. Surfaced in the debug panel
+    // only — the whole class of bug below is invisible without it.
+    var fbcSource = 'none';
+
+    // ── 3 · Build the destination URL fresh each time it's needed ────
+    function buildUrl(ctaSource) {
+      var out = new URLSearchParams();
+
+      Object.keys(attr).forEach(function (key) {
+        if (attr[key]) out.set(key, attr[key]);
+      });
+
+      var fbp = readCookie('_fbp');
+
+      // ── fbc · THE fbclid IN THE URL WINS ──────────────────────────
+      //
+      //  _fbc persists for ~90 days, so a returning visitor still carries
+      //  the PREVIOUS click's id in that cookie. Reading the cookie first
+      //  meant sending a stale fbclid that had nothing to do with the click
+      //  that just happened — which is exactly what Meta reports as
+      //  "Server sending modified fbclid value in fbc parameter".
+      //
+      //  It was caught on / on 2026-08-08 with a live ad click: the URL
+      //  carried a real fbclid while the page sent fb.1.1785747591773.SMOKE0803,
+      //  a test value five days stale. Meta had flagged 24% of events — about
+      //  the share of traffic that has visited before.
+      //
+      //  Order:
+      //    1. an fbclid in the URL is authoritative for THIS visit
+      //    2. prefer the cookie only when it belongs to that same click, so
+      //       Meta's own creation timestamp is used wherever possible
+      //    3. otherwise build one: fb.1.<timestamp_ms>.<fbclid>
+      //    4. with no fbclid at all, the cookie is all there is
+      //
+      //  Do not "simplify" this back to reading the cookie first.
+      var fbc = '';
+      if (attr.fbclid) {
+        var cookieFbc = readCookie('_fbc');
+        if (cookieFbc && cookieFbc.indexOf(attr.fbclid) !== -1) {
+          fbc = cookieFbc;
+          fbcSource = 'cookie (matches this click)';
+        } else {
+          fbc = 'fb.1.' + Date.now() + '.' + attr.fbclid;
+          fbcSource = cookieFbc ? 'built (cookie was stale)' : 'built (no cookie yet)';
+        }
+      } else {
+        fbc = readCookie('_fbc') || '';
+        fbcSource = fbc ? 'cookie (no fbclid in url)' : 'none';
+      }
+
+      if (fbp) out.set('fbp', fbp);
+      if (fbc) out.set('fbc', fbc);
+      if (ctaSource) out.set('cta_source', FUNNEL + '_' + ctaSource);
+
+      // Defensive: today's Commas links carry no query string of their own,
+      // but a future one might, and blindly appending '?' would corrupt it.
+      return PRICE.url + (PRICE.url.indexOf('?') === -1 ? '?' : '&') + out.toString();
+    }
+
+    function checkoutLinks() {
+      return document.querySelectorAll('a[data-checkout]');
+    }
+
+    // ── 4 · Set hrefs on load so links are never bare ────────────────
+    function refresh() {
+      var links = checkoutLinks();
+      for (var i = 0; i < links.length; i++) {
+        links[i].setAttribute('href', buildUrl(links[i].getAttribute('data-cta') || ''));
+      }
+    }
+    refresh();
+    setTimeout(refresh, 1500);
+    setTimeout(refresh, 4000);
+
+    // ── 4b · Paint the price into the copy ───────────────────────────
+    //    The markup ships the $1 wording so the page is correct with JS
+    //    off; this brings it in line with whatever ?p= resolved to.
+    (function paintPrice() {
+      Array.prototype.forEach.call(
+        document.querySelectorAll('[data-price-label]'),
+        function (el) { el.textContent = PRICE.label; });
+      Array.prototype.forEach.call(
+        document.querySelectorAll('[data-price-terms]'),
+        function (el) { el.textContent = PRICE.terms; });
+    })();
+
+    // ── 5 · Rebuild at click time — the one that actually matters ────
+    //    Captures the cookies at the moment of the click, however long
+    //    the pixel took, and covers CTAs injected after page load.
+    document.addEventListener('click', function (evt) {
+      var node = evt.target;
+      var link = node && node.closest ? node.closest('a[data-checkout]') : null;
+      if (!link) return;
+      link.setAttribute('href', buildUrl(link.getAttribute('data-cta') || ''));
+    }, true);
+
+    // ── 6 · Meta: ClickButton ────────────────────────────────────────
+    //    Fires when someone clicks any CTA, before the hop to Commas.
+    //    Gives the funnel a middle step:
+    //      PageView -> ClickButton -> (checkout) -> Purchase via CAPI
+    //    so a drop-off between "saw the page" and "reached the checkout"
+    //    is visible instead of vanishing inside a single PageView number.
+    //
+    //    cta_source says WHICH button was clicked, so the hero, closing
+    //    and sticky CTAs can be compared against each other.
+    //
+    //    No eventID on purpose: this is browser-only with no server-side
+    //    counterpart, and a stable id across repeat clicks would make
+    //    Meta deduplicate genuine separate clicks into one.
+    //
+    //    ⚠ NO Purchase EVENT FIRES FROM THIS PAGE. The purchase happens on
+    //    Commas and is reported server-side by n8n off the webhook. A
+    //    browser-side Purchase here would double-count every sale.
+    document.addEventListener('click', function (evt) {
+      if (typeof window.fbq !== 'function') return;
+      var node = evt.target;
+      var link = node && node.closest ? node.closest('a[data-checkout]') : null;
+      if (!link) return;
+      var cta = link.getAttribute('data-cta') || 'unknown';
+      window.fbq('trackCustom', 'ClickButton', {
+        cta_source:   FUNNEL + '_' + cta,
+        content_name: 'SPRK Funnel1',
+        utm_source:   attr.utm_source || '',
+        utm_campaign: attr.utm_campaign || '',
+        campaign_id:  attr.campaign_id || '',
+        adset_id:     attr.adset_id || '',
+        ad_id:        attr.ad_id || ''
+      });
+    }, false);
+
+    // ── 7 · ?debug=1 — show exactly what would be sent ───────────────
+    if (incoming.get('debug') === '1') {
+      window.addEventListener('DOMContentLoaded', function () {
+        var box = document.createElement('pre');
+        box.style.cssText =
+          'position:fixed;left:8px;bottom:8px;z-index:9999;max-width:min(92vw,460px);' +
+          'max-height:52vh;overflow:auto;margin:0;padding:12px 14px;border-radius:10px;' +
+          'background:rgba(8,10,14,.94);border:1px solid rgba(229,209,154,.35);' +
+          'color:#E5D19A;font:11px/1.5 ui-monospace,SFMono-Regular,monospace;' +
+          '-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)';
+        var EXPECTED = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content',
+                        'campaign_id','adset_id','ad_id','fbclid','fbp','fbc',
+                        'event_id','cta_source'];
+        // fbevents.js is async, so a status sampled at DOMContentLoaded reads
+        // "not loaded" for a script that arrives a moment later. Re-render for
+        // a few seconds instead of shipping a debug panel that lies about the
+        // thing it exists to report.
+
+        // The <head> snippet assigns window.fbq SYNCHRONOUSLY, so testing for
+        // that alone only proves the stub exists — it prints "loaded" even
+        // when fbevents.js is blocked by an ad blocker and nothing whatsoever
+        // reaches Meta. fbevents.js is what assigns callMethod. (fbq.loaded is
+        // set by the stub too, so it is not a valid test either.)
+        function pixelReady() {
+          return typeof window.fbq === 'function' &&
+                 typeof window.fbq.callMethod === 'function';
+        }
+        function render() {
+          // recomputed every tick: _fbp/_fbc are written by the pixel
+          // asynchronously, so a snapshot taken once would report them
+          // permanently empty even after they land.
+          var url = buildUrl('debug');
+          var data = Object.fromEntries(
+            new URLSearchParams(url.split('?')[1] || '').entries());
+          var lines = EXPECTED.map(function (k) {
+            var v = data[k];
+            return (v ? '  ok   ' : '  --   ') + k + Array(15 - k.length).join(' ') + (v || '(empty)');
+          });
+          // The single most useful line here. A green-looking fbc that came
+          // from a stale cookie is the bug this panel exists to catch, and
+          // it is indistinguishable from a correct one without this.
+          var tailOk = data.fbc && data.fbclid &&
+            data.fbc.slice(-24) === data.fbclid.slice(-24);
+          box.textContent =
+            'SPRK attribution debug (Funnel1)\n' +
+            'meta pixel: ' + (pixelReady() ? 'loaded' : 'not loaded yet') + '\n' +
+            'funnel: Funnel1 — $1 first month, then $97/mo\n' +
+            (usingFallback
+              ? '*** $1 CHECKOUT URL NOT SUPPLIED — SERVING THE $1 CHECKOUT ***\n'
+              : '') +
+            'checkout: ' + PRICE.url + '\n' +
+            'fbc source: ' + fbcSource + '\n' +
+            'fbc matches fbclid: ' + (data.fbclid ? (tailOk ? 'YES' : 'NO — STALE OR MANGLED') : 'n/a, no fbclid') + '\n\n' +
+            lines.join('\n') +
+            '\n\ncta url:\n' + url;
+        }
+        render();
+        var ticks = 0;
+        var poll = setInterval(function () {
+          render();
+          // Deliberately NO `|| window.fbq` short-circuit (the homepage has
+          // one, and it is a bug): the <head> snippet defines window.fbq
+          // synchronously, so that condition is already true on the FIRST
+          // tick — the panel would freeze at ~600ms and report fbp/fbc as
+          // "(empty)" forever on any connection where fbevents.js lands
+          // later, which is the exact thing this panel exists to report.
+          if (++ticks > 10) clearInterval(poll);
+        }, 600);
+        document.body.appendChild(box);
+      });
+    }
+  })();
+  </script>
+  <!-- ═══ End attribution passthrough ══════════════════════════ -->
+
+</body>
+</html>
