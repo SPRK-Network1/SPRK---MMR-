@@ -57,24 +57,6 @@
   <link rel="stylesheet" href="/tokens.css" />
   <link rel="stylesheet" href="/styles.css" />
 
-  <!-- Page-scoped. Every selector carries body.f1page and this block
-       lives in the page, not styles.css, so / and /form cannot move. -->
-  <style>
-    /* The rebill terms. Loud enough to read and directly under the button:
-       the entry price is $1 but the card is charged $97 every month
-       afterwards, and a visitor who does not see that before clicking
-       becomes a chargeback. */
-    body.f1page .funnel__terms {
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      letter-spacing: 0.02em;
-      color: var(--color-accent);
-      text-align: center;
-      margin: 0;
-    }
-    body.f1page .close .funnel__terms { margin-top: var(--space-sm); }
-  </style>
-
   <!-- Marks that scripting is available, before first paint. Scroll-reveal
        styling hangs off this class so that if JS never runs, the content is
        simply visible rather than stuck at opacity 0. -->
@@ -179,8 +161,6 @@
           <span class="cta__label" data-price-label>Get Instant access for $1</span>
           <span class="cta__arrow" aria-hidden="true">→</span>
         </a>
-
-        <p class="funnel__terms" data-price-terms>$1 for your first month, then $97/month. Cancel anytime.</p>
 
         <p class="stage__trust">
           <span><span class="badge-dot" aria-hidden="true"></span>Instant access</span>
@@ -471,8 +451,6 @@
           <span class="cta__arrow" aria-hidden="true">→</span>
         </a>
 
-        <p class="funnel__terms" data-price-terms>$1 for your first month, then $97/month. Cancel anytime.</p>
-
         <p class="close__trust">
           <span><span class="badge-dot" aria-hidden="true"></span>Instant access</span>
           <span class="badge-sep" aria-hidden="true"></span>
@@ -552,23 +530,27 @@
     // ── 0 · The checkout ─────────────────────────────────────────────
     //
     //    THIS URL WILL CHANGE. It is the only place the price lives — the
-    //    button label and the rebill line under the button are both painted
-    //    from it, so the page can never quote one price and send the
-    //    visitor to a checkout for another.
+    //    button labels are painted from it, so the page can never quote one
+    //    price and send the visitor to a checkout for another.
+    //
+    //    The $97/month rebill is deliberately NOT stated on this page — Migi's
+    //    call, 2026-08-21. The Commas checkout discloses it before any card is
+    //    charged ("$1.00 due today", "Then $97.00 every 30 days",
+    //    "Cancel anytime"), which is where it has to be. Do not re-add it here
+    //    without asking.
     //
     //    $1 for the first month, then $97/month recurring.
     //
     //    ⚠ IF THIS URL EVER CHANGES PRICE, the markup above has to move with
-    //    it: FOUR `data-price-label` spans (hero, statement, close, sticky),
-    //    TWO `data-price-terms` lines (hero, close) and SIX bare CTA hrefs
-    //    (nav, discord_hero, hero, statement, close, sticky). They are only
+    //    it: FOUR `data-price-label` spans (hero, statement, close, sticky)
+    //    and SIX bare CTA hrefs (nav, discord_hero, hero, statement, close,
+    //    sticky). They are only
     //    what a JS-off visitor sees — refresh() and paintPrice() cover all of
     //    them via querySelectorAll, which is exactly why a miscount here is
     //    invisible at runtime and only bites the next editor.
     var PRICE = {
       url:   'https://commas.com/checkout/NK1MpM9wC0vOQys',
-      label: 'Get Instant access for $1',
-      terms: '$1 for your first month, then $97/month. Cancel anytime.'
+      label: 'Get Instant access for $1'
     };
 
     // Last-resort fallback, used ONLY while PRICE.url above is still empty.
@@ -578,8 +560,7 @@
     // real link advertises $1 rather than quoting a price it cannot charge.
     var FALLBACK = {
       url:   'https://commas.com/checkout/NK1MpM9wC0vOQys',
-      label: 'Get Instant access for $1',
-      terms: '$1 for your first month, then $97/month. Cancel anytime.'
+      label: 'Get Instant access for $1'
     };
     var usingFallback = !PRICE.url;
     if (usingFallback) PRICE = FALLBACK;
@@ -726,9 +707,6 @@
       Array.prototype.forEach.call(
         document.querySelectorAll('[data-price-label]'),
         function (el) { el.textContent = PRICE.label; });
-      Array.prototype.forEach.call(
-        document.querySelectorAll('[data-price-terms]'),
-        function (el) { el.textContent = PRICE.terms; });
     })();
 
     // ── 5 · Rebuild at click time — the one that actually matters ────
