@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+  <title>SPRK Network — Get inside the Performance Marketing industry</title>
+  <meta name="description" content="SPRK Network hands you the offers, the angles and the playbook to your first 10k." />
+  <meta name="theme-color" content="#0B0F14" />
+  <!-- Paid-traffic lander, not a search page. -->
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Absolute paths throughout: this page lives at /slp/, so a relative
+       path resolves under /slp/ and 404s. -->
+  <link rel="icon" href="/images/Sprknetwork.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fast.vidalytics.com" />
+  <link rel="preconnect" href="https://embed.typeform.com" />
+  <link rel="preconnect" href="https://connect.facebook.net" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/tokens.css" />
+  <link rel="stylesheet" href="/styles.css" />
+  <!-- The application opens as a Typeform POPUP over this page. There is no
+       hop to /form: the visitor never leaves the page the ad sent them to. -->
+  <link rel="stylesheet" href="https://embed.typeform.com/next/css/popup.css" />
+  <script src="https://embed.typeform.com/next/embed.js" async id="tf-sdk"></script>
+
+  <script>document.documentElement.classList.add('js');</script>
+
+  <!-- ═══ Meta Pixel ═══════════════════════════════════════════
+       Real pixel on the live site; a console-logging stub on localhost,
+       so review loads never land in dataset 1746915513340219. Nothing
+       to swap when the page ships — the host decides.
+  ══════════════════════════════════════════════════════════════ -->
+  <script>
+  window.__sprkLocal = location.protocol === 'file:' ||
+    /^(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])$/.test(location.hostname) ||
+    /\.local$/.test(location.hostname);
+  if (window.__sprkLocal) {
+    window.fbq = function () {
+      try { console.info('[pixel stub]', Array.prototype.slice.call(arguments)); } catch (e) {}
+    };
+  } else {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1746915513340219');
+    fbq('track', 'PageView');
+  }
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1746915513340219&ev=PageView&noscript=1" alt="" /></noscript>
+  <!-- ═══ End Meta Pixel ═══════════════════════════════════════ -->
+
+  <!-- ═══ VSL autoplay · held on localhost only ════════════════
+       Reviewing this page means reloading it constantly, and the VSL
+       restarts with sound every time. On localhost the player's own play
+       attempts are paused until someone clicks the video itself; ?play=1
+       turns the hold off. The live site autoplays as normal.
+       Capture phase because media events do not bubble, and a listener
+       rather than a one-off .pause() because the player mounts late and
+       retries playback on its own schedule.
+  ══════════════════════════════════════════════════════════════ -->
+  <script>
+  (function () {
+    if (!window.__sprkLocal || /[?&]play=1\b/.test(location.search)) return;
+    function hold(evt) {
+      var el = evt.target;
+      if (el && typeof el.pause === 'function') el.pause();
+    }
+    function release(evt) {
+      var t = evt.target;
+      if (!t || !t.closest || !t.closest('.frame')) return;
+      document.removeEventListener('play', hold, true);
+      document.removeEventListener('pointerdown', release, true);
+    }
+    document.addEventListener('play', hold, true);
+    document.addEventListener('pointerdown', release, true);
+  }());
+  </script>
+
+  <style>
+  /* ── /slp only. Every selector is scoped to .vslpage so the shared
+     stylesheet, and every other page that loads it, is untouched. ── */
+
+  .vslpage .vsl__masthead {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-lg) var(--page-gutter) 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-md);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    color: var(--color-ink);
+  }
+  .vslpage .vsl__masthead img { width: 24px; height: 24px; object-fit: contain; }
+  .vslpage .vsl__masthead em { font-style: normal; color: var(--color-accent); }
+
+  .vslpage .vsl {
+    position: relative;
+    isolation: isolate;
+    max-width: 62rem;
+    margin: 0 auto;
+    padding: var(--space-lg) var(--page-gutter) var(--space-xl);
+    display: grid;
+    justify-items: center;
+    gap: var(--space-lg);
+    text-align: center;
+  }
+
+  .vslpage .vsl__hook {
+    max-width: 46ch;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1rem, 2.2vw, 1.25rem);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+  .vslpage .vsl__hook .vsl__arrow { margin-inline: 0.4em; color: var(--color-accent); }
+
+  .vslpage .vsl__player { width: 100%; display: grid; justify-items: center; gap: var(--space-md); }
+  .vslpage .vsl__player .frame { margin-top: 0; }
+
+  .vslpage .vsl__actions { display: grid; justify-items: center; gap: var(--space-sm); }
+  .vslpage .vsl__actions[hidden] { display: none; }
+  .vslpage .vsl__note {
+    max-width: 40ch;
+    font-size: var(--text-sm);
+    color: var(--color-ink-3);
+    text-wrap: balance;
+  }
+
+  /* Post-submit confirmation. Borrows /form's panel and its draw-in beat
+     (.apply__frame[data-state="submitted"] .apply__done), so the two
+     pages confirm an application the same way. */
+  .vslpage .vsl__done { max-width: 34rem; margin-top: 0; }
+  .vslpage .vsl__done[hidden] { display: none; }
+
+  .vslpage .vsl__close { display: grid; justify-items: center; gap: var(--space-md); margin-top: var(--space-lg); }
+  .vslpage .vsl__h {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    max-width: 18ch;
+    text-wrap: balance;
+  }
+  .vslpage .vsl__h em {
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.12em;
+    letter-spacing: -0.02em;
+    color: var(--color-accent);
+    font-feature-settings: normal;
+  }
+  .vslpage .vsl__lede {
+    max-width: 42ch;
+    color: var(--color-ink-2);
+    font-size: clamp(1.0625rem, 2.4vw, 1.25rem);
+    line-height: var(--leading-body);
+    text-wrap: balance;
+  }
+
+  .vslpage .vsl__wins { padding: var(--space-md) 0 var(--space-2xl); overflow: hidden; }
+
+  /* Room for the sticky bar, so it never sits over the footer links. */
+  .vslpage .footer { padding-bottom: calc(var(--space-xl) + 5.5rem); }
+
+  @media (max-width: 60rem) {
+    .vslpage .vsl__masthead { padding-top: var(--space-md); font-size: var(--text-base); }
+    .vslpage .vsl { padding-top: var(--space-md); gap: var(--space-md); }
+    .vslpage .vsl__hook { font-size: var(--text-base); }
+    .vslpage .vsl .cta { width: 100%; max-width: 22rem; }
+    .vslpage .vsl__close { margin-top: var(--space-sm); }
+    .vslpage .vsl__h { font-size: clamp(1.75rem, 8vw, 2.4rem); }
+    .vslpage .vsl__lede { font-size: var(--text-md); max-width: 36ch; }
+    .vslpage .vsl__wins { padding-bottom: var(--space-xl); }
+  }
+  </style>
+</head>
+<!-- lp-hero: the homepage's restyle of the Vidalytics unmute prompt is keyed
+     to it (styles.css .lp-hero .AutoPlayBox__*). Its other .lp-hero rules
+     target .stage__h / .stage__sub, which this page does not use. -->
+<body class="vslpage lp-hero">
+  <div class="ambient" aria-hidden="true">
+    <div class="bloom bloom--1"></div>
+    <div class="bloom bloom--2"></div>
+    <div class="grid-lines"></div>
+    <div class="grain"></div>
+  </div>
+
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- ─── masthead ───────────────────────────────────────────── -->
+  <div class="vsl__masthead">
+    <img src="/images/Sprknetwork.png" alt="" />
+    <span>SPRK <em>Network</em></span>
+  </div>
+
+  <main id="main">
+    <header class="vsl">
+      <div class="stage__spotlight" aria-hidden="true"></div>
+
+      <p class="vsl__hook rise">
+        <span class="vsl__arrow" aria-hidden="true">↓</span>How SPRK members stopped posting into the void<span class="vsl__arrow" aria-hidden="true">↓</span>
+      </p>
+
+      <!-- ── VSL (Vidalytics) ── -->
+      <div class="vsl__player rise d1">
+        <div class="frame">
+          <div class="frame__inner">
+            <div id="vidalytics_embed_Q_oHPhpvxpWzBtUf" style="width: 100%; position:relative; padding-top: 56.25%;"></div>
+            <script type="text/javascript">(function (v, i, d, a, l, y, t, c, s) {    y='_'+d.toLowerCase();c=d+'L';if(!v[d]){v[d]={};}if(!v[c]){v[c]={};}if(!v[y]){v[y]={};}var vl='Loader',vli=v[y][vl],vsl=v[c][vl + 'Script'],vlf=v[c][vl + 'Loaded'],ve='Embed';    if (!vsl){vsl=function(u,cb){        if(t){cb();return;}s=i.createElement("script");s.type="text/javascript";s.async=1;s.src=u;        if(s.readyState){s.onreadystatechange=function(){if(s.readyState==="loaded"||s.readyState=="complete"){s.onreadystatechange=null;vlf=1;cb();}};}else{s.onload=function(){vlf=1;cb();};}        i.getElementsByTagName("head")[0].appendChild(s);    };}    vsl(l+'loader.min.js',function(){if(!vli){var vlc=v[c][vl];vli=new vlc();}vli.loadScript(l+'player.min.js',function(){var vec=v[d][ve];t=new vec();t.run(a);});});})(window, document, 'Vidalytics', 'vidalytics_embed_Q_oHPhpvxpWzBtUf', 'https://fast.vidalytics.com/embeds/GEdWcqBF/Q_oHPhpvxpWzBtUf/');</script>
+          </div>
+        </div>
+
+        <p class="stage__trust">
+          <span><span class="badge-dot" aria-hidden="true"></span>2-minute application</span>
+          <span class="badge-sep" aria-hidden="true"></span>
+          <span><span class="badge-dot" aria-hidden="true"></span>Cancel anytime</span>
+          <span class="badge-sep" aria-hidden="true"></span>
+          <span><span class="badge-dot" aria-hidden="true"></span>No hidden fees</span>
+        </p>
+      </div>
+
+      <!-- ── CTA · opens the application popup ──
+           `data-typeform` is load-bearing: the script at the bottom opens the
+           popup for every a[data-typeform] and builds its hidden fields. The
+           href is only the fallback for when the Typeform SDK cannot load. -->
+      <div class="vsl__actions rise d2" id="vsl-actions">
+        <a class="cta cta--glow cta--lg" data-typeform data-cta="slp_hero" href="https://form.typeform.com/to/csiL88ZN">
+          <span class="cta__label">Get Started</span>
+          <span class="cta__arrow" aria-hidden="true">→</span>
+        </a>
+        <p class="vsl__note">Every application is reviewed by our team. Not everyone gets in.</p>
+      </div>
+
+      <!-- ── Swapped in for the CTA once the application is submitted ── -->
+      <div class="apply__frame vsl__done" id="vsl-done" data-state="submitted" hidden>
+        <div class="apply__done" role="status" aria-live="polite">
+          <svg class="apply__done-mark" viewBox="0 0 52 52" aria-hidden="true">
+            <circle class="apply__done-ring" cx="26" cy="26" r="23" />
+            <path class="apply__done-tick" d="M15 27.5 L22.5 35 L37.5 19" />
+          </svg>
+          <p class="apply__done-h">Your application has been submitted.</p>
+          <p class="apply__done-p">
+            Expect a call from the team soon so we can make sure this is a good
+            fit for the both of us.
+          </p>
+          <p class="apply__done-p apply__done-invite" data-discord-reveal hidden>
+            In the meantime, join the SPRK Network Discord — it's where the weekly
+            giveaways run.
+          </p>
+          <a class="cta cta--glow" data-discord="slp_submitted" data-discord-reveal href="#" target="_blank" rel="noopener noreferrer" hidden>
+            <span class="cta__label">Join the community</span>
+            <span class="cta__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="vsl__close rise d3">
+        <h1 class="vsl__h">Get inside the <em>Performance Marketing</em> industry.</h1>
+        <p class="vsl__lede">SPRK Network hands you the offers, the angles and the playbook to your first 10k.</p>
+      </div>
+    </header>
+
+    <!-- ─── member wins ────────────────────────────────────────── -->
+    <section class="vsl__wins" aria-label="Member wins">
+      <div class="wins__marquee">
+        <div class="wins__track" id="wins-track">
+          <div class="win-card"><img src="/images/wins/win-01.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-02.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-03.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-04.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-05.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-06.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-07.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-08.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-09.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-10.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-11.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-12.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-13.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-14.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-15.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-16.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+          <div class="win-card"><img src="/images/wins/win-17.jpg" alt="SPRK Network member win" loading="lazy" decoding="async" /></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ─── footer ─────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <!-- Earnings disclaimer: the headline names a figure and the page shows
+           member wins, so it needs one. Do not remove it without replacing it. -->
+      <section class="footer__disclaimer" aria-labelledby="disclaimer-h">
+        <h2 class="footer__disclaimer-h" id="disclaimer-h">Disclaimer</h2>
+        <p>
+          Results are not typical and are not guaranteed. Any figures shown are
+          individual outcomes and depend on effort, consistency, and factors
+          outside our control. Nothing on this page is a promise of earnings.
+        </p>
+      </section>
+      <div class="footer__meta">
+        <div class="footer__brand">
+          <img src="/images/Sprknetwork.png" alt="" />
+          <span>SPRK Network</span>
+        </div>
+        <p class="footer__line">&copy; <span id="year"></span> SPRK Network. All rights reserved.</p>
+        <ul class="footer__links" role="list">
+          <li><a href="/privacy-policy/">Privacy Policy</a></li>
+          <li><a href="/terms-of-service/">Terms of Service</a></li>
+          <li><a href="mailto:admin@sprknetwork.app">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ─── sticky CTA · once the hero button is scrolled past ──── -->
+  <div class="stickybar" data-state="hidden" aria-hidden="true">
+    <a class="cta cta--glow" data-typeform data-cta="slp_sticky" href="https://form.typeform.com/to/csiL88ZN" tabindex="-1">
+      <span class="cta__label">Get Started</span>
+      <span class="cta__arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
+
+  <!-- Shared behaviour: footer year and the wins marquee loop. Its own
+       sticky-bar block bails here (it needs .stage__actions, which this
+       page deliberately does not have) — the page drives the bar below. -->
+  <script src="/script.js" defer></script>
+
+  <!-- ═══ Application popup + attribution ═════════════════════
+       Same contract as the homepage → /form path, in one page:
+         · ad params + Meta cookies → Typeform hidden fields, so n8n can
+           store them on the lead and send Meta's Conversions API event
+         · one event_id per visit, shared by the browser Lead below and
+           n8n's server Lead, so Meta deduplicates them
+         · PageView → ClickButton → FormReady → Lead
+  ══════════════════════════════════════════════════════════════ -->
+  <script>
+  (function () {
+    'use strict';
+
+    var FORM_ID     = 'csiL88ZN';
+    var TYPEFORM    = 'https://form.typeform.com/to/' + FORM_ID;
+    var STORE       = 'sprk_attr';
+    // Same permanent invite as /form. Empty = every Discord element stays hidden.
+    var DISCORD_URL = 'https://discord.gg/TcURpuPeFU';
+
+    var KEYS = [
+      'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
+      'campaign_id', 'adset_id', 'ad_id', 'fbclid'
+    ];
+
+    function readCookie(name) {
+      var match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+      return match ? match.pop() : '';
+    }
+
+    // ── 1 · Collect the params, falling back to a stored copy ────────
+    var incoming = new URLSearchParams(window.location.search);
+    var saved = {};
+    try { saved = JSON.parse(sessionStorage.getItem(STORE) || '{}'); } catch (e) {}
+
+    var attr = {};
+    KEYS.forEach(function (key) {
+      var value = incoming.get(key) || saved[key] || '';
+      if (value) attr[key] = value;
+    });
+
+    // ── 2 · One event_id per visit, stable across reloads ────────────
+    attr.event_id = saved.event_id ||
+      ('lead_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10));
+
+    try { sessionStorage.setItem(STORE, JSON.stringify(attr)); } catch (e) {}
+
+    var fbcSource = 'none';
+
+    // ── 3 · Hidden fields, built fresh at the moment they are needed ──
+    //    fbc: an fbclid in THIS url wins over the ~90-day _fbc cookie, which
+    //    a returning visitor carries from an older click (the stale-fbc bug
+    //    Meta flagged on 24% of events). Same order as the homepage.
+    function buildHidden(ctaSource) {
+      var out = {};
+      Object.keys(attr).forEach(function (key) {
+        if (attr[key]) out[key] = attr[key];
+      });
+
+      var fbp = readCookie('_fbp');
+      var fbc = '';
+      if (attr.fbclid) {
+        var cookieFbc = readCookie('_fbc');
+        if (cookieFbc && cookieFbc.indexOf(attr.fbclid) !== -1) {
+          fbc = cookieFbc;
+          fbcSource = 'cookie (matches this click)';
+        } else {
+          fbc = 'fb.1.' + Date.now() + '.' + attr.fbclid;
+          fbcSource = cookieFbc ? 'built (cookie was stale)' : 'built (no cookie yet)';
+        }
+      } else {
+        fbc = readCookie('_fbc') || '';
+        fbcSource = fbc ? 'cookie (no fbclid in url)' : 'none';
+      }
+
+      if (fbp) out.fbp = fbp;
+      if (fbc) out.fbc = fbc;
+      out.cta_source = ctaSource || 'slp';
+      return out;
+    }
+
+    // Hosted-form URL carrying the same fields: the fallback when the
+    // popup cannot run (SDK blocked or down), and a modified click.
+    function fallbackUrl(ctaSource) {
+      var qs = new URLSearchParams();
+      var hidden = buildHidden(ctaSource);
+      Object.keys(hidden).forEach(function (k) { qs.set(k, hidden[k]); });
+      return TYPEFORM + '?' + qs.toString();
+    }
+
+    function ctaLinks() { return document.querySelectorAll('a[data-typeform]'); }
+    function refreshLinks() {
+      var links = ctaLinks();
+      for (var i = 0; i < links.length; i++) {
+        links[i].setAttribute('href', fallbackUrl(links[i].getAttribute('data-cta') || ''));
+      }
+    }
+    refreshLinks();
+    setTimeout(refreshLinks, 1500);
+    setTimeout(refreshLinks, 4000);
+
+    // ── 4 · Diagnostics · one signal per pageview ────────────────────
+    //    FormReady against ClickButton shows how many clicks reach a usable
+    //    form. Neither may ever be promoted to a custom conversion — the
+    //    campaign optimizes on Lead.
+    var reported = false;
+    function report(event, reason, ctaSource) {
+      if (reported) return;
+      reported = true;
+      if (typeof window.fbq !== 'function') return;
+      window.fbq('trackCustom', event, {
+        reason: reason || '',
+        cta_source: ctaSource || '',
+        event_id: attr.event_id || ''
+      });
+    }
+
+    // ── 5 · SDK state · async, so it may not be here at first click ──
+    //    Always asked live: an SDK that lands late (slow mobile data, the VSL
+    //    hogging bandwidth) still gets the popup on a click minutes later.
+    function sdkLoaded() {
+      return !!(window.tf && typeof window.tf.createPopup === 'function');
+    }
+    var sdkGaveUp = false;      // errored, or still missing after 6s
+    var pending = null;         // a click waiting on the SDK
+    var pendingTimer = 0;
+    function resolvePending() {
+      if (!pending) return;
+      var cta = pending;
+      pending = null;
+      clearTimeout(pendingTimer);
+      if (sdkLoaded()) openForm(cta);
+      else goFallback(cta, 'sdk_missing');
+    }
+    var tag = document.getElementById('tf-sdk');
+    if (tag) {
+      tag.addEventListener('load', resolvePending);
+      tag.addEventListener('error', function () { sdkGaveUp = true; resolvePending(); });
+    }
+    // A hung request fires neither event. After 6s a click stops waiting
+    // for it — but sdkLoaded() is still checked first, so a late arrival wins.
+    setTimeout(function () { if (!sdkLoaded()) sdkGaveUp = true; }, 6000);
+
+    function goFallback(ctaSource, reason) {
+      report('FormEmbedFailed', reason, ctaSource);
+      window.location.href = fallbackUrl(ctaSource);
+    }
+
+    // ── 6 · The popup ────────────────────────────────────────────────
+    //    Created once, on the first click, and reused: keepSession means a
+    //    visitor who closes it half-way and clicks again picks up where they
+    //    left off. Hidden fields are fixed at that first open.
+    var popup = null;
+    var popupOpen = false;
+    var popupDead = false;      // never became ready — see readyTimer
+    var formReady = false;
+    var readyTimer = 0;
+    var submitted = false;
+
+    function openForm(ctaSource) {
+      if (submitted) return;
+      // A popup that never loaded would just reopen its stuck iframe
+      // (keepSession keeps it), so later clicks take the hosted form.
+      if (popupDead) { goFallback(ctaSource, 'ready_timeout'); return; }
+      if (!popup) {
+        var hidden = buildHidden(ctaSource);
+        // Same 14s and same signal as /form: if Typeform's iframe never says
+        // it is ready (blocked, stalled, erroring), report it and hand over
+        // the hosted form with full attribution instead of a dead spinner.
+        // Only navigates if the popup is still open — someone who closed it
+        // is back on the VSL and is not yanked off the page.
+        readyTimer = setTimeout(function () {
+          if (formReady || submitted) return;
+          popupDead = true;
+          report('FormEmbedFailed', 'ready_timeout', hidden.cta_source);
+          if (!popupOpen) return;
+          try { popup.close(); } catch (e) {}
+          window.location.href = fallbackUrl(hidden.cta_source);
+        }, 14000);
+        try {
+          popup = window.tf.createPopup(FORM_ID, {
+            hidden: hidden,
+            keepSession: true,
+            onReady: function () {
+              formReady = true;
+              clearTimeout(readyTimer);
+              report('FormReady', 'ok', hidden.cta_source);
+            },
+            onSubmit: function () {
+              if (submitted) return;
+              submitted = true;
+              if (typeof window.fbq === 'function') {
+                window.fbq('track', 'Lead',
+                  { content_name: 'SPRK Application', content_category: hidden.cta_source },
+                  { eventID: hidden.event_id });
+              }
+              // Strictly after the Lead: nothing here may run ahead of it.
+              showDone();
+              // Brief pause so Typeform's own "thanks" registers, then the
+              // page's confirmation takes over — same end state as /form.
+              setTimeout(function () {
+                try { popup.close(); } catch (e) {}
+                revealDone();
+              }, 1200);
+            },
+            onClose: function () {
+              popupOpen = false;
+              if (submitted) revealDone();
+            }
+          });
+        } catch (err) {
+          clearTimeout(readyTimer);
+          popup = null;
+          goFallback(ctaSource, 'create_threw');
+          return;
+        }
+      }
+      popup.open();
+      popupOpen = true;
+    }
+
+    document.addEventListener('click', function (evt) {
+      var node = evt.target;
+      var link = node && node.closest ? node.closest('a[data-typeform]') : null;
+      if (!link) return;
+      var cta = link.getAttribute('data-cta') || 'unknown';
+
+      // ClickButton · which button, from which ad. No eventID on purpose:
+      // browser-only, and a stable id would merge genuine repeat clicks.
+      if (typeof window.fbq === 'function') {
+        window.fbq('trackCustom', 'ClickButton', {
+          cta_source:   cta,
+          content_name: 'SPRK Get Started',
+          utm_source:   attr.utm_source || '',
+          utm_campaign: attr.utm_campaign || '',
+          campaign_id:  attr.campaign_id || '',
+          adset_id:     attr.adset_id || '',
+          ad_id:        attr.ad_id || ''
+        });
+      }
+
+      // Cmd/ctrl/shift/middle click asked for a new tab — give it the
+      // hosted form with full attribution rather than hijacking it.
+      if (evt.metaKey || evt.ctrlKey || evt.shiftKey || evt.altKey || evt.button !== 0) {
+        link.setAttribute('href', fallbackUrl(cta));
+        return;
+      }
+
+      evt.preventDefault();
+      if (submitted) return;
+      if (sdkLoaded()) openForm(cta);
+      else if (sdkGaveUp) goFallback(cta, 'sdk_missing');
+      else {
+        // Still downloading: open it the moment it lands, or give up after 4s.
+        pending = cta;
+        clearTimeout(pendingTimer);
+        pendingTimer = setTimeout(resolvePending, 4000);
+      }
+    }, false);
+
+    // ── 7 · After submit ─────────────────────────────────────────────
+    var actions  = document.getElementById('vsl-actions');
+    var done     = document.getElementById('vsl-done');
+    var revealed = false;
+
+    // At submit: retire every way back into the form.
+    function showDone() {
+      if (actions) actions.hidden = true;
+      document.body.setAttribute('data-state', 'submitted');
+      syncSticky();
+    }
+
+    // Once the popup is out of the way: show the confirmation. Unhiding it
+    // here, not at submit, is what starts its draw-in — at submit it would
+    // play out unseen behind the popup. Whichever button they used, hero or
+    // sticky, it is scrolled into view first so the beat lands on screen.
+    function revealDone() {
+      if (revealed || !done) return;
+      revealed = true;
+      if (DISCORD_URL) {
+        Array.prototype.forEach.call(document.querySelectorAll('[data-discord-reveal]'), function (el) {
+          if (el.tagName === 'A') el.setAttribute('href', DISCORD_URL);
+          el.hidden = false;
+        });
+      }
+      done.hidden = false;
+      try { done.scrollIntoView({ block: 'center', behavior: 'instant' }); }
+      catch (e) { try { done.scrollIntoView(); } catch (e2) {} }
+    }
+
+    document.addEventListener('click', function (evt) {
+      var node = evt.target;
+      var link = node && node.closest ? node.closest('a[data-discord]') : null;
+      if (!link || typeof window.fbq !== 'function') return;
+      window.fbq('trackCustom', 'DiscordClick', {
+        placement: link.getAttribute('data-discord') || '',
+        event_id: attr.event_id || ''
+      });
+    }, false);
+
+    // ── 8 · Sticky bar ───────────────────────────────────────────────
+    //    The shared script.js controller measures against a closing section
+    //    two screens down; this page is too short for that, so it is driven
+    //    here: shown once the hero button is above the viewport, gone after
+    //    submit. Hidden via transform, so focus and a11y are handled by hand.
+    var stickybar  = document.querySelector('.stickybar');
+    var stickyLink = stickybar ? stickybar.querySelector('a') : null;
+
+    function setSticky(shown) {
+      if (!stickybar) return;
+      if ((stickybar.getAttribute('data-state') === 'shown') === shown) return;
+      if (!shown && stickybar.contains(document.activeElement)) document.activeElement.blur();
+      stickybar.setAttribute('data-state', shown ? 'shown' : 'hidden');
+      stickybar.setAttribute('aria-hidden', shown ? 'false' : 'true');
+      if (stickyLink) stickyLink.tabIndex = shown ? 0 : -1;
+    }
+
+    function syncSticky() {
+      if (!stickybar || !actions) return;
+      if (submitted) { setSticky(false); return; }
+      setSticky(actions.getBoundingClientRect().bottom < 0);
+    }
+
+    syncSticky();
+    window.addEventListener('scroll', syncSticky, { passive: true });
+    window.addEventListener('resize', syncSticky, { passive: true });
+
+    // ── 9 · ?debug=1 — what the form would receive ───────────────────
+    if (incoming.get('debug') === '1') {
+      window.addEventListener('DOMContentLoaded', function () {
+        var box = document.createElement('pre');
+        box.style.cssText =
+          'position:fixed;left:8px;bottom:8px;z-index:9999;max-width:min(92vw,460px);' +
+          'max-height:52vh;overflow:auto;margin:0;padding:12px 14px;border-radius:10px;' +
+          'background:rgba(8,10,14,.94);border:1px solid rgba(229,209,154,.35);' +
+          'color:#E5D19A;font:11px/1.5 ui-monospace,SFMono-Regular,monospace';
+        var EXPECTED = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content',
+                        'campaign_id','adset_id','ad_id','fbclid','fbp','fbc',
+                        'event_id','cta_source'];
+        function render() {
+          var data = buildHidden('debug');
+          var tailOk = data.fbc && data.fbclid &&
+            data.fbc.slice(-(data.fbclid.length + 1)) === '.' + data.fbclid;
+          box.textContent =
+            'SPRK attribution debug (/slp)\n' +
+            'form id:     ' + FORM_ID + ' (popup)\n' +
+            'typeform sdk: ' + (sdkLoaded() ? 'ready' : (sdkGaveUp ? 'failed' : 'loading')) + '\n' +
+            'meta pixel:  ' + (window.__sprkLocal ? 'STUB (localhost)' :
+              (typeof window.fbq === 'function' ? 'loaded' : 'not loaded yet')) + '\n' +
+            'fbc source:  ' + fbcSource + '\n' +
+            'fbc matches fbclid: ' + (data.fbclid ? (tailOk ? 'YES' : 'NO — STALE OR MANGLED') : 'n/a, no fbclid') + '\n\n' +
+            EXPECTED.map(function (k) {
+              var v = data[k];
+              return (v ? '  ok   ' : '  --   ') + k + Array(15 - k.length).join(' ') + (v || '(empty)');
+            }).join('\n');
+        }
+        render();
+        var ticks = 0;
+        var poll = setInterval(function () {
+          render();
+          if (++ticks > 10) clearInterval(poll);
+        }, 600);
+        document.body.appendChild(box);
+      });
+    }
+  })();
+  </script>
+  <!-- ═══ End application popup ════════════════════════════════ -->
+
+</body>
+</html>
