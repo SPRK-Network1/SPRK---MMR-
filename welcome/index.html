@@ -2,14 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <!-- First, before any request leaves the page: the address carries the
+       lead's first name until the script below rewrites it, and the fonts
+       stylesheet is fetched before that. Cross-origin requests send only
+       the origin, even on old browsers whose default sent the full URL. -->
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
   <title>Welcome — SPRK Network</title>
   <meta name="description" content="Your call with SPRK Network is booked. Watch this before we speak." />
   <meta name="theme-color" content="#0B0F14" />
 
-  <!-- Personal page for a single booked lead, reached only from an SMS
-       link. Never a search result. -->
+  <!-- Personal page for a single booked lead, reached only from a link the
+       team sends. Never a search result. -->
   <meta name="robots" content="noindex, nofollow" />
 
   <link rel="icon" href="/images/Sprknetwork.png" />
@@ -24,59 +29,93 @@
   <link rel="stylesheet" href="/tokens.css" />
   <link rel="stylesheet" href="/styles.css" />
 
-  <!-- ═══ Scrub ?n= BEFORE the pixel loads ═════════════════════
-       fbevents.js sends the full document location as its `dl`
-       parameter on every event. This page is only ever opened as
-       /welcome?n=Caryn, so without this the lead's FIRST NAME is
-       transmitted to Meta on PageView and PreCallView, keyed to their
-       _fbp. That is customer PII in an ad platform: a Business Tools
-       terms violation and an event-rejection risk on the ad account
-       the whole funnel runs through.
+  <!-- ═══ Read the name, then scrub it, BEFORE the pixel loads ═══
+       Two link shapes carry the lead's first name:
+         /welcome-andreah   (vercel.json rewrites /welcome-* to this page)
+         /welcome?n=Andreah (the original links, still in the wild)
+       fbevents.js sends the full document location as its `dl` parameter
+       on every event, so either shape would transmit the lead's FIRST NAME
+       to Meta on PageView and PreCallView, keyed to their _fbp. That is
+       customer PII in an ad platform: a Business Tools terms violation and
+       an event-rejection risk on the ad account the whole funnel runs
+       through. So the name is read here, the address is rewritten to plain
+       /welcome, and only then does the pixel run.
 
-       Must stay above the pixel block and inside <head> — it only
-       works if it runs before fbq reads location.
+       Must stay above the pixel block and inside <head>.
 
-       Accepted trade: after the scrub a reload or bookmark has no
-       name, so the heading falls back to "Welcome to SPRK Network".
-       Losing personalisation on a refresh beats leaking a name. -->
+       The name is also kept in sessionStorage (this tab only, never sent
+       anywhere), so a reload still greets them by name. -->
   <script>
   window.__sprkName = '';
   try {
-    var _p = new URLSearchParams(window.location.search);
-    window.__sprkName = _p.get('n') || '';
-    if (_p.has('n') && window.history && history.replaceState) {
-      _p.delete('n');
-      var _q = _p.toString();
-      history.replaceState(null, '', window.location.pathname + (_q ? '?' + _q : '') + window.location.hash);
+    var _raw = '', _p = new URLSearchParams(window.location.search);
+    var _m = window.location.pathname.match(/^\/welcome-([^\/]+)\/?$/i);
+    if (_m) {
+      try { _raw = decodeURIComponent(_m[1]); } catch (e) { _raw = ''; }
+      _raw = _raw.replace(/[_+]/g, ' ');
     }
+    if (!_raw) _raw = _p.get('n') || '';
+    var _hadN = _p.has('n');
+    _p.delete('n');
+    /* ?t= is the booked call time (ISO 8601 with offset), used only for the
+       calendar buttons. Scrubbed with the name and kept for reloads. */
+    var _t = _p.get('t') || '', _hadT = _p.has('t');
+    _p.delete('t');
+    if (_t) { try { sessionStorage.setItem('sprk_welcome_time', _t); } catch (e) {} }
+    else { try { _t = sessionStorage.getItem('sprk_welcome_time') || ''; } catch (e) {} }
+    window.__sprkCallTime = _t;
+    if ((_m || _hadN || _hadT) && window.history && history.replaceState) {
+      var _q = _p.toString();
+      history.replaceState(null, '',
+        (_m ? '/welcome/' : window.location.pathname) + (_q ? '?' + _q : '') + window.location.hash);
+    }
+    if (_raw) {
+      try { sessionStorage.setItem('sprk_welcome_name', _raw); } catch (e) {}
+    } else {
+      try { _raw = sessionStorage.getItem('sprk_welcome_name') || ''; } catch (e) {}
+    }
+    window.__sprkName = _raw;
   } catch (e) { window.__sprkName = ''; }
   </script>
 
   <!-- ═══ Meta Pixel ═══════════════════════════════════════════
        Its own block, firing its own PageView. Deliberately not shared
-       with the other pages — see the note in /form. -->
+       with the other pages — see the note in /form.
+       On localhost it is a console stub, so review loads never land in
+       dataset 1746915513340219 (or in the PreCallView count the sales
+       team reads). -->
   <script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window,document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  /* MUST precede init. Scrubbing ?n= off the URL is not sufficient on its
-     own: with autoConfig left on, the pixel also harvests page metadata and
-     ships the document title as pmd[title] plus a page_title entry in ss.
-     Since the title carries the lead's name by design, that put the name
-     back on the wire through a second channel. Verified against live
-     beacons — with this off, neither pmd[title] nor ss is sent.
+  window.__sprkLocal = location.protocol === 'file:' ||
+    /^(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])$/.test(location.hostname) ||
+    /\.local$/.test(location.hostname);
+  if (window.__sprkLocal) {
+    window.fbq = function () {
+      try { console.info('[pixel stub]', Array.prototype.slice.call(arguments)); } catch (e) {}
+    };
+  } else {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    /* MUST precede init. Scrubbing the name off the URL is not sufficient
+       on its own: with autoConfig left on, the pixel also harvests page
+       metadata and ships the document title as pmd[title] plus a
+       page_title entry in ss. Since the title carries the lead's name by
+       design, that put the name back on the wire through a second channel.
+       Verified against live beacons — with this off, neither is sent.
 
-     Safe here specifically: autoConfig drives automatic advanced matching,
-     which scrapes form fields for emails and phone numbers. This page has
-     no form. Do NOT copy this line to /form, which needs the default. */
-  fbq('set', 'autoConfig', false, '1746915513340219');
+       Safe here specifically: autoConfig drives automatic advanced
+       matching, which scrapes form fields for emails and phone numbers.
+       This page has no form. Do NOT copy this line to /form, which needs
+       the default. */
+    fbq('set', 'autoConfig', false, '1746915513340219');
 
-  fbq('init', '1746915513340219');
+    fbq('init', '1746915513340219');
+  }
   fbq('track', 'PageView');
   // Booked leads who never open this are the no-show risk; the sales team
   // uses this against the booking count.
@@ -85,6 +124,275 @@
   <noscript><img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=1746915513340219&ev=PageView&noscript=1" alt="" /></noscript>
   <!-- ═══ End Meta Pixel ═══════════════════════════════════════ -->
+
+  <style>
+  /* ── /welcome only. Every selector starts with .welcome so nothing
+     leaks to other pages. */
+
+  .welcome { gap: var(--space-xl); }
+
+  .welcome .welcome__thanks { margin-top: var(--space-2xs); text-align: center; }
+  .welcome .welcome__confirm-note {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-accent);
+    text-align: center;
+  }
+  .welcome .welcome__frame { margin-top: 0; }
+
+  /* The "Your call is booked" pill, bolder and brighter so it can't be missed. */
+  .welcome .apply__head .section-eyebrow {
+    font-weight: 700;
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+    border-color: color-mix(in oklch, var(--color-accent) 60%, transparent);
+    background: color-mix(in oklch, var(--color-accent) 14%, transparent);
+  }
+  .welcome .welcome__must {
+    max-width: 30ch;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.15rem, 3.2vw, 1.45rem);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    text-align: center;
+    text-wrap: balance;
+  }
+
+
+  /* ── Confirm-your-call card ── */
+  .welcome .welcome__card {
+    width: 100%;
+    display: grid;
+    justify-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-lg);
+    border: var(--rule-hair) solid var(--color-rule-strong);
+    border-radius: calc(var(--radius-lg) + 6px);
+    background: color-mix(in oklch, var(--color-paper-2) 78%, transparent);
+    text-align: center;
+  }
+  .welcome .welcome__card [hidden] { display: none; }
+  .welcome .welcome__card-h {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.3rem, 3.4vw, 1.6rem);
+    letter-spacing: -0.02em;
+  }
+  .welcome .welcome__card-sub { color: var(--color-ink-2); font-size: var(--text-md); }
+  .welcome .welcome__time {
+    width: 100%;
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    background: var(--color-paper-3);
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .welcome .welcome__cal { width: 100%; display: grid; gap: var(--space-sm); }
+  @media (min-width: 36rem) { .welcome .welcome__cal { grid-template-columns: 1fr 1fr; } }
+  .welcome .welcome__cal-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    min-height: 48px;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: var(--text-md);
+    cursor: pointer;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .welcome .welcome__cal-btn:hover { transform: translateY(-1px); }
+  .welcome .welcome__cal-btn svg { width: 18px; height: 18px; flex: 0 0 auto; }
+  .welcome .welcome__cal-btn--google { background: var(--color-accent); color: var(--color-accent-ink); }
+  .welcome .welcome__cal-btn--google svg { fill: none; stroke: currentColor; stroke-width: 2; }
+  .welcome .welcome__cal-btn--apple { background: var(--color-paper-4); color: var(--color-ink); }
+  .welcome .welcome__cal-btn--apple svg { fill: currentColor; }
+  .welcome .welcome__or {
+    width: 100%;
+    margin-block: var(--space-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.12em;
+    color: var(--color-ink-3);
+  }
+  .welcome .welcome__or::before,
+  .welcome .welcome__or::after { content: ''; flex: 1; height: 1px; background: var(--color-rule-strong); }
+  .welcome .welcome__card-p { max-width: 46ch; color: var(--color-ink-2); line-height: var(--leading-body); }
+
+  /* No time on the link: the time box holds a date-and-time picker. */
+  .welcome .welcome__time-pick { display: grid; gap: var(--space-xs); justify-items: center; font-weight: 600; }
+  .welcome .welcome__time-pick input {
+    width: 100%;
+    max-width: 18rem;
+    min-height: 44px;
+    padding: var(--space-xs) var(--space-sm);
+    border: var(--rule-hair) solid color-mix(in oklch, var(--color-accent) 45%, var(--color-rule));
+    border-radius: var(--radius-sm);
+    background: var(--color-paper-2);
+    color: var(--color-ink);
+    font: inherit;
+    font-size: 16px;               /* 16px+ stops iOS zooming into the field */
+    color-scheme: dark;
+  }
+  .welcome .welcome__time[data-state="needs"] .welcome__time-pick input {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-accent) 30%, transparent);
+  }
+
+  .welcome .welcome__invite {
+    position: relative;
+    width: 100%;
+    max-width: 28rem;
+    margin-top: var(--space-xs);
+    padding: var(--space-md);
+    border: 1px solid #e3e3e3;
+    border-radius: var(--radius-md);
+    background: #fff;
+    color: #202124;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: left;
+  }
+  .welcome .welcome__invite-k { font-weight: 700; font-size: 14px; margin-top: 10px; }
+  .welcome .welcome__invite-k:first-child { margin-top: 0; }
+  .welcome .welcome__invite-v { font-size: 13px; margin-top: 2px; }
+  .welcome .welcome__redact { display: block; height: 20px; margin-top: 4px; background: #000; }
+  .welcome .welcome__invite-reply { display: flex; align-items: center; gap: 6px; margin-top: 14px; }
+  .welcome .welcome__invite-reply .welcome__redact { display: inline-block; margin-top: 0; }
+  .welcome .welcome__invite-link { margin-top: 12px; font-size: 13px; font-weight: 700; color: #1a56c4; }
+  .welcome .welcome__invite-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .welcome .welcome__invite-btns > span {
+    position: relative;
+    padding: 5px 14px;
+    border: 1px solid #c7c7c7;
+    border-radius: 999px;
+    font-size: 13px;
+  }
+  .welcome .welcome__invite-arrow {
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    width: 34px;
+    height: 48px;
+    margin-bottom: -6px;
+    transform: translateX(-50%);
+    fill: #4cd61d;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.25));
+  }
+
+  /* ── Players: big play button over the still, failure panel ── */
+  .welcome [data-video-box] { position: relative; }
+  .welcome .welcome__play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.05));
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+  }
+  .welcome .welcome__play[hidden] { display: none; }
+  .welcome .welcome__play-dot {
+    display: grid;
+    place-items: center;
+    width: clamp(52px, 12vw, 68px);
+    height: clamp(52px, 12vw, 68px);
+    border-radius: 50%;
+    background: color-mix(in oklch, var(--color-accent) 86%, transparent);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .welcome .welcome__play:hover .welcome__play-dot { transform: scale(1.06); }
+  .welcome .welcome__play-dot svg { width: 42%; height: 42%; margin-left: 8%; fill: var(--color-accent-ink); }
+  .welcome [data-video-box][data-state="failed"] > .welcome__play { display: none; }
+  .welcome [data-video-box][data-state="failed"] > .welcome__video { display: none; }
+  .welcome [data-video-box][data-state="failed"] > .welcome__novideo {
+    display: block;
+    padding: var(--space-lg);
+    text-align: center;
+    color: var(--color-ink-2);
+    font-size: var(--text-sm);
+    line-height: var(--leading-body);
+  }
+
+  /* ── Common questions: one card per question ── */
+  .welcome .welcome__qs { width: 100%; display: grid; gap: var(--space-lg); }
+  .welcome .welcome__qs[hidden] { display: none; }
+  .welcome .welcome__qs-h {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.25rem, 3vw, 1.6rem);
+    letter-spacing: -0.02em;
+    text-align: center;
+    text-wrap: balance;
+  }
+  .welcome .welcome__qs-arrow { margin-inline: 0.4em; color: var(--color-accent); }
+  .welcome .welcome__answers { display: grid; gap: var(--space-xl); }
+  .welcome .welcome__answer { display: grid; gap: var(--space-xs); text-align: left; }
+  .welcome .welcome__answer[hidden] { display: none; }
+  .welcome .welcome__answer .frame { margin-top: 0; }
+  .welcome .welcome__answer-h {
+    margin-top: var(--space-2xs);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-lg);
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+  }
+  .welcome .welcome__answer-p { color: var(--color-ink-2); font-size: var(--text-md); line-height: var(--leading-body); }
+
+  /* ── Load more → member results (nothing loads before the click) ── */
+  .welcome .welcome__more { display: grid; justify-items: center; }
+  .welcome .welcome__more[hidden] { display: none; }
+  .welcome .welcome__results { width: 100%; display: grid; gap: var(--space-md); }
+  .welcome .welcome__results[hidden] { display: none; }
+  /* Two staggered columns; see the comment on the markup. */
+  .welcome .welcome__results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-sm);
+    align-items: start;
+  }
+  .welcome .welcome__col { display: grid; gap: var(--space-sm); }
+  .welcome .welcome__post {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 920 / 1150;
+    border: var(--rule-hair) solid var(--color-rule);
+    border-radius: var(--radius-md);
+    background: var(--color-paper-2);
+  }
+  .welcome .welcome__tile {
+    aspect-ratio: 920 / 380;
+    display: grid;
+    place-items: center;
+    border: var(--rule-hair) solid color-mix(in oklch, var(--color-accent) 38%, var(--color-rule));
+    border-radius: var(--radius-md);
+    background: color-mix(in oklch, var(--color-accent) 8%, var(--color-paper-2));
+  }
+  .welcome .welcome__tile img { width: 30%; max-width: 72px; height: auto; object-fit: contain; }
+  @media (min-width: 48rem) {
+    .welcome .welcome__results-grid,
+    .welcome .welcome__col { gap: var(--space-md); }
+  }
+  .welcome .welcome__disclaimer {
+    max-width: 68ch;
+    margin: var(--space-xs) auto 0;
+    color: var(--color-ink-3);
+    font-size: var(--text-sm);
+    line-height: var(--leading-body);
+    text-align: center;
+  }
+
+  @media (min-width: 48rem) {
+    .welcome .welcome__answers { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-lg); }
+  }
+  </style>
 </head>
 <body class="formpage">
 
@@ -98,41 +406,30 @@
   <main class="apply welcome" id="main">
 
     <header class="apply__head">
-      <!-- The greeting line is emptied by script when there is no ?n=, so the
-           heading reads "Welcome to SPRK Network" rather than leaving a comma
-           and a gap. Server-rendered default is the no-name version. -->
+      <!-- The greeting line is filled in by script only when there is a
+           name, so with none the heading reads "Welcome to SPRK Network"
+           rather than leaving a comma and a gap. -->
       <h1 class="apply__h welcome__h" id="welcome-h">
         <span class="welcome__greeting" id="welcome-greeting">Welcome</span>
         <span class="welcome__line2">to <em>SPRK Network</em></span>
       </h1>
 
       <p class="section-eyebrow">Your call is booked</p>
+
+      <p class="welcome__must">Make sure to watch the precall so your call doesn't get canceled.</p>
+      <p class="welcome__confirm-note">We'll reach out shortly to confirm your appointment.</p>
     </header>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         VIDEO — Cloudflare Stream, played through a native <video>.
-
-         Deliberately NOT Cloudflare's iframe embed. A plain video element
-         means no vendor logo, no vendor control bar, and — more usefully —
-         playback events are readable directly instead of across an iframe
-         boundary, which is what makes the watch-depth tracking below work.
-
-         TO SWAP THE VIDEO: change CF_VIDEO_ID in the script at the bottom
-         of this file. Nothing here needs touching — the poster and the
-         source are both derived from it.
-    ═══════════════════════════════════════════════════════════ -->
+    <!-- ═══ The precall video ════════════════════════════════════
+         A native <video> (no vendor player): no vendor logo or control bar,
+         and playback events readable directly for start/finish tracking
+         later. Sources are set by the player script at the bottom. -->
     <div class="frame welcome__frame">
-      <div class="frame__inner" id="welcome-video">
-        <video
-          id="precall-video"
-          class="welcome__video"
-          controls
-          playsinline
-          preload="metadata"
-          poster="https://videodelivery.net/7fbaac96008ffb840d46378f7e8c5cd1/thumbnails/thumbnail.jpg?time=8s&amp;width=1280"
-        ></video>
-
-        <!-- Shown by the script if the stream cannot be attached at all. -->
+      <div class="frame__inner" id="welcome-video" data-video-box>
+        <video id="precall-video" class="welcome__video" data-video="precall" playsinline preload="metadata"></video>
+        <button class="welcome__play" type="button" aria-label="Play the video">
+          <span class="welcome__play-dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l15 8-15 8z"/></svg></span>
+        </button>
         <p class="welcome__novideo" role="alert">
           The video didn't load — your connection or an extension may be blocking it.
           We'll walk you through everything on the call.
@@ -141,16 +438,290 @@
       </div>
     </div>
 
-    <p class="welcome__lead welcome__lead--after">
-      That video covers how the network actually works, so we can spend the
-      call on your situation instead of the basics.
-    </p>
+    <!-- ═══ Confirm the call ═══════════════════════════════════
+         The buttons work in both cases:
+           · the link carries the booked time (?t=2026-11-20T15:00-05:00):
+             the box shows it and each button adds that exact event;
+           · no time on the link: the box becomes a date-and-time picker,
+             the lead enters the time from their confirmation, and the
+             buttons use that. A tap before a time is set opens the picker. -->
+    <section class="welcome__card" aria-labelledby="confirm-h">
+      <h2 class="welcome__card-h" id="confirm-h">Add the call to your calendar</h2>
+      <p class="welcome__card-sub">Tap a button so you don't miss it.</p>
+      <div class="welcome__time" id="welcome-time">Getting your call time…</div>
+      <div class="welcome__cal">
+        <a class="welcome__cal-btn welcome__cal-btn--google" id="cal-google" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Call%20with%20SPRK%20Network" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Add to Google Calendar
+        </a>
+        <a class="welcome__cal-btn welcome__cal-btn--apple" id="cal-apple" href="#" download="sprk-network-call.ics">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9-.1 0-2.7-1-2.7-4.1zM13.9 5c.7-.9 1.2-2 1-3.2-1 .1-2.3.7-3 1.6-.7.8-1.2 2-1.1 3.1 1.2.1 2.4-.6 3.1-1.5z"/></svg>
+          Add to Apple Calendar
+        </a>
+      </div>
+      <p class="welcome__or">OR</p>
+      <p class="welcome__card-p">
+        You've been sent a confirmation email with the exact date, time, and meeting link
+        for your call. Check your inbox (and spam folder) now and add it to your calendar
+        immediately.
+      </p>
+      <!-- An example of the emailed invite, drawn in HTML: which button to press. -->
+      <div class="welcome__invite" role="img" aria-label="Example of the emailed calendar invite: press Yes to add the call to your calendar">
+        <p class="welcome__invite-k">When</p>
+        <p class="welcome__invite-v">Wednesday Jul 1, 2026 · 6pm – 7pm (Central Time - Chicago)</p>
+        <p class="welcome__invite-k">Guests</p>
+        <span class="welcome__redact" style="width: 58%"></span>
+        <p class="welcome__invite-link">View all guest info</p>
+        <p class="welcome__invite-v welcome__invite-reply">Reply for <span class="welcome__redact" style="width: 52%"></span></p>
+        <div class="welcome__invite-btns">
+          <span class="welcome__invite-yes">Yes
+            <svg class="welcome__invite-arrow" viewBox="0 0 40 56" aria-hidden="true"><path d="M13 0h14v30h11L20 56 2 30h11z"/></svg>
+          </span>
+          <span>No</span><span>Maybe</span><span>More options</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Common questions · one short answer video each ═══════
+         Nothing downloads until a video is played. -->
+    <section class="welcome__qs" id="welcome-answers" aria-labelledby="welcome-qs-h">
+      <h2 class="welcome__qs-h" id="welcome-qs-h"><span class="welcome__qs-arrow" aria-hidden="true">↓</span>Common questions answered with videos<span class="welcome__qs-arrow" aria-hidden="true">↓</span></h2>
+
+      <div class="welcome__answers">
+        <article class="welcome__answer" data-breakout="b1">
+          <div class="frame"><div class="frame__inner" data-video-box>
+            <video class="welcome__video" data-video="b1" playsinline preload="none"></video>
+            <button class="welcome__play" type="button" aria-label="Play: Why should I listen to you?">
+              <span class="welcome__play-dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l15 8-15 8z"/></svg></span>
+            </button>
+            <p class="welcome__novideo" role="alert">This video didn't load. We'll answer it on the call.</p>
+          </div></div>
+          <h3 class="welcome__answer-h">Why should I listen to you?</h3>
+          <p class="welcome__answer-p">Who's behind SPRK and how they got here.</p>
+        </article>
+
+        <article class="welcome__answer" data-breakout="b2">
+          <div class="frame"><div class="frame__inner" data-video-box>
+            <video class="welcome__video" data-video="b2" playsinline preload="none"></video>
+            <button class="welcome__play" type="button" aria-label="Play: I've never run an ad before">
+              <span class="welcome__play-dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l15 8-15 8z"/></svg></span>
+            </button>
+            <p class="welcome__novideo" role="alert">This video didn't load. We'll answer it on the call.</p>
+          </div></div>
+          <h3 class="welcome__answer-h">I've never run an ad before</h3>
+          <p class="welcome__answer-p">Why starting from zero is fine, and how we set you up.</p>
+        </article>
+
+        <article class="welcome__answer" data-breakout="b3">
+          <div class="frame"><div class="frame__inner" data-video-box>
+            <video class="welcome__video" data-video="b3" playsinline preload="none"></video>
+            <button class="welcome__play" type="button" aria-label="Play: What if I lose money?">
+              <span class="welcome__play-dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l15 8-15 8z"/></svg></span>
+            </button>
+            <p class="welcome__novideo" role="alert">This video didn't load. We'll answer it on the call.</p>
+          </div></div>
+          <h3 class="welcome__answer-h">What if I lose money?</h3>
+          <p class="welcome__answer-p">How we keep your tests small while you find what works.</p>
+        </article>
+
+        <article class="welcome__answer" data-breakout="b4">
+          <div class="frame"><div class="frame__inner" data-video-box>
+            <video class="welcome__video" data-video="b4" playsinline preload="none"></video>
+            <button class="welcome__play" type="button" aria-label="Play: Is this legit? Where does the money come from?">
+              <span class="welcome__play-dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l15 8-15 8z"/></svg></span>
+            </button>
+            <p class="welcome__novideo" role="alert">This video didn't load. We'll answer it on the call.</p>
+          </div></div>
+          <h3 class="welcome__answer-h">Is this legit? Where does the money come from?</h3>
+          <p class="welcome__answer-p">Where the money comes from and how it gets to you.</p>
+        </article>
+
+        <article class="welcome__answer" data-breakout="b5">
+          <div class="frame"><div class="frame__inner" data-video-box>
+            <video class="welcome__video" data-video="b5" playsinline preload="none"></video>
+            <button class="welcome__play" type="button" aria-label="Play: Why pay for Elite when I'm already paying for ads?">
+              <span class="welcome__play-dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l15 8-15 8z"/></svg></span>
+            </button>
+            <p class="welcome__novideo" role="alert">This video didn't load. We'll answer it on the call.</p>
+          </div></div>
+          <h3 class="welcome__answer-h">Why pay for Elite when I'm already paying for ads?</h3>
+          <p class="welcome__answer-p">What Elite adds on top of your ad budget.</p>
+        </article>
+
+        <article class="welcome__answer" data-breakout="b6">
+          <div class="frame"><div class="frame__inner" data-video-box>
+            <video class="welcome__video" data-video="b6" playsinline preload="none"></video>
+            <button class="welcome__play" type="button" aria-label="Play: I don't have time, I've got a job">
+              <span class="welcome__play-dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l15 8-15 8z"/></svg></span>
+            </button>
+            <p class="welcome__novideo" role="alert">This video didn't load. We'll answer it on the call.</p>
+          </div></div>
+          <h3 class="welcome__answer-h">I don't have time, I've got a job</h3>
+          <p class="welcome__answer-p">How this fits around a full-time job.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ═══ Load more → the member results from SPRK's Instagram ═══
+         Only on click: the images have no src until then, so none of them
+         downloads for a lead who never asks. -->
+    <div class="welcome__more" id="welcome-more">
+      <button class="cta cta--glow" type="button" id="load-more" aria-controls="welcome-results" aria-expanded="false">
+        <span class="cta__label">Load more</span>
+        <span class="cta__arrow" aria-hidden="true">↓</span>
+      </button>
+    </div>
+
+    <section class="welcome__results" id="welcome-results" aria-label="Member results" tabindex="-1" hidden>
+      <!-- Staggered two-column wall (Migi's sketch): the right column opens with a
+           SPRK tile and the left one closes with one, so with an even number of
+           posts both columns end level. Posts zig-zag left, right, left... -->
+      <div class="welcome__results-grid">
+        <div class="welcome__col">
+          <img class="welcome__post" data-src="/images/testimonials/sprk-result-15.jpg" alt="SPRK Network member result: $7,473.87 in the first month" width="920" height="1150" decoding="async" />
+          <img class="welcome__post" data-src="/images/testimonials/sprk-result-08.jpg" alt="SPRK Network member result: $20,000 in a single month" width="920" height="1150" decoding="async" />
+          <img class="welcome__post" data-src="/images/testimonials/sprk-result-10.jpg" alt="SPRK Network member result: $16,700.00 in a single month" width="920" height="1150" decoding="async" />
+          <img class="welcome__post" data-src="/images/testimonials/sprk-result-12.jpg" alt="SPRK Network member result: $121.14 on her first day" width="920" height="1150" decoding="async" />
+          <img class="welcome__post" data-src="/images/testimonials/sprk-result-14.jpg" alt="SPRK Network member result: $10,898.90 within 10 days" width="920" height="1150" decoding="async" />
+          <img class="welcome__post" data-src="/images/testimonials/sprk-result-02.jpg" alt="SPRK Network member result: $1,524.81" width="920" height="1150" decoding="async" />
+          <img class="welcome__post" data-src="/images/testimonials/sprk-result-04.jpg" alt="SPRK Network member result: $8,430.28" width="920" height="1150" decoding="async" />
+          <img class="welcome__post" data-src="/images/testimonials/sprk-result-06.jpg" alt="SPRK Network member result: $1,575.08" width="920" height="1150" decoding="async" />
+          <div class="welcome__tile" aria-hidden="true"><img src="/images/Sprknetwork.png" alt="" width="1000" height="1000" /></div>
+        </div>
+        <div class="welcome__col">
+          <div class="welcome__tile" aria-hidden="true"><img src="/images/Sprknetwork.png" alt="" width="1000" height="1000" /></div>
+          <img class="welcome__post" data-src="/images/testimonials/sprk-result-16.jpg" alt="SPRK Network member result: $7,730.27 within a week" width="920" height="1150" decoding="async" />
+          <img class="welcome__post" data-src="/images/testimonials/sprk-result-09.jpg" alt="SPRK Network member result: $20,137.03 paid in a single month" width="920" height="1150" decoding="async" />
+          <img class="welcome__post" data-src="/images/testimonials/sprk-result-11.jpg" alt="SPRK Network member result: $9,990.53 in a single month" width="920" height="1150" decoding="async" />
+          <img class="welcome__post" data-src="/images/testimonials/sprk-result-13.jpg" alt="SPRK Network member result: $1,687.05 in a single week" width="920" height="1150" decoding="async" />
+          <img class="welcome__post" data-src="/images/testimonials/sprk-result-01.jpg" alt="SPRK Network member result: $763.00" width="920" height="1150" decoding="async" />
+          <img class="welcome__post" data-src="/images/testimonials/sprk-result-03.jpg" alt="SPRK Network member result: $1,081.96 in the first month" width="920" height="1150" decoding="async" />
+          <img class="welcome__post" data-src="/images/testimonials/sprk-result-05.jpg" alt="SPRK Network member result: $1,862.24" width="920" height="1150" decoding="async" />
+          <img class="welcome__post" data-src="/images/testimonials/sprk-result-07.jpg" alt="SPRK Network member result: $9,672.64" width="920" height="1150" decoding="async" />
+        </div>
+      </div>
+      <!-- Earnings disclaimer, the homepage's own wording: these posts show
+           income figures, so the page must qualify them. -->
+      <p class="welcome__disclaimer">
+        Results are not typical and are not guaranteed. Any figures shown are
+        individual outcomes and depend on effort, consistency, and factors
+        outside our control. Nothing on this page is a promise of earnings.
+      </p>
+    </section>
 
   </main>
 
+  <!-- ═══ Calendar buttons + Load more ═════════════════════════ -->
+  <script>
+  (function () {
+    // ── Calendar ─────────────────────────────────────────────────────
+    //    The time comes from ?t= (captured and scrubbed in <head>) or, with
+    //    no ?t=, from the picker the box turns into. Every button works
+    //    either way; a tap before a time exists opens the picker instead.
+    var MINUTES = 30;
+    var TITLE   = 'Call with SPRK Network';
+    var box     = document.getElementById('welcome-time');
+    var gBtn    = document.getElementById('cal-google');
+    var aBtn    = document.getElementById('cal-apple');
+    var input   = null;
+    var start   = null;
+
+    // iPhone/iPad Safari shows the event to add when it OPENS calendar data;
+    // with a download attribute it only saves a file. Desktops need the
+    // download (Chrome refuses to open data: URLs as a page).
+    var isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    function stamp(d) { return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); }
+
+    function label(d) {
+      try {
+        return d.toLocaleString(undefined, {
+          weekday: 'long', month: 'long', day: 'numeric',
+          hour: 'numeric', minute: '2-digit', timeZoneName: 'short'
+        });
+      } catch (e) { return d.toString(); }
+    }
+
+    function setLinks(d) {
+      start = d;
+      var end = new Date(d.getTime() + MINUTES * 60000);
+      if (gBtn) gBtn.href = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+        '&text=' + encodeURIComponent(TITLE) + '&dates=' + stamp(d) + '/' + stamp(end);
+      if (aBtn) {
+        var ics = [
+          'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//SPRK Network//Welcome//EN', 'METHOD:PUBLISH',
+          'BEGIN:VEVENT',
+          'UID:' + stamp(d) + '-call@sprknetwork.com',
+          'DTSTAMP:' + stamp(new Date()),
+          'DTSTART:' + stamp(d),
+          'DTEND:' + stamp(end),
+          'SUMMARY:' + TITLE,
+          'END:VEVENT', 'END:VCALENDAR'
+        ].join('\r\n');
+        aBtn.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+        if (isIOS) aBtn.removeAttribute('download');
+        else aBtn.setAttribute('download', 'sprk-network-call.ics');
+      }
+    }
+
+    var raw = String(window.__sprkCallTime || '').trim().replace(/ /g, '+');   // '+' arrives as a space
+    var given = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?(Z|[+-]\d{2}:?\d{2})$/.test(raw) ? new Date(raw) : null;
+
+    if (given && !isNaN(given.getTime())) {
+      if (box) box.textContent = label(given);
+      setLinks(given);
+    } else if (box) {
+      // No time on the link: the lead enters it from their confirmation.
+      box.textContent = '';
+      var lab = document.createElement('label');
+      lab.className = 'welcome__time-pick';
+      lab.appendChild(document.createTextNode('Enter your call time'));
+      input = document.createElement('input');
+      input.type = 'datetime-local';
+      input.id = 'call-time';
+      lab.appendChild(input);
+      box.appendChild(lab);
+      input.addEventListener('change', function () {
+        var d = input.value ? new Date(input.value) : null;   // read as the lead's local time
+        if (d && !isNaN(d.getTime())) { setLinks(d); box.removeAttribute('data-state'); }
+        else start = null;
+      });
+    }
+
+    function needTime(evt) {
+      if (start) return;                       // a time exists: let the link work
+      evt.preventDefault();
+      if (!input) return;
+      box.setAttribute('data-state', 'needs');
+      try { input.focus({ preventScroll: true }); } catch (e) { input.focus(); }
+      try { if (input.showPicker) input.showPicker(); } catch (e) {}
+      box.scrollIntoView({ block: 'center' });
+    }
+    if (gBtn) gBtn.addEventListener('click', needTime);
+    if (aBtn) aBtn.addEventListener('click', needTime);
+
+    // ── Load more: attach the image sources, reveal, hide the button ──
+    var btn  = document.getElementById('load-more');
+    var wrap = document.getElementById('welcome-more');
+    var res  = document.getElementById('welcome-results');
+    if (btn && res) btn.addEventListener('click', function () {
+      Array.prototype.forEach.call(res.querySelectorAll('img[data-src]'), function (img) {
+        img.src = img.getAttribute('data-src');
+        img.removeAttribute('data-src');
+      });
+      res.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+      if (wrap) wrap.hidden = true;
+      try { res.focus({ preventScroll: true }); } catch (e) {}
+    });
+  })();
+  </script>
+
   <!-- ═══ Personalisation ══════════════════════════════════════
-       Reads ?n= and writes it into the heading via textContent, never
-       innerHTML. The value arrives in a URL and is treated as hostile.
+       Writes the name the head script captured into the heading via
+       textContent, never innerHTML. The value arrives in a URL and is
+       treated as hostile.
   ══════════════════════════════════════════════════════════════ -->
   <script>
   (function () {
@@ -159,9 +730,6 @@
     var greeting = document.getElementById('welcome-greeting');
     if (!greeting) return;
 
-    /* The head script scrubbed ?n= off the URL before the pixel fired and
-       stashed the raw value here. Reading the URL is only a fallback for
-       the case where that script was skipped. */
     var raw = '';
     try {
       raw = (typeof window.__sprkName === 'string' && window.__sprkName) ||
@@ -220,98 +788,101 @@
     greeting.textContent = 'Welcome, ' + name;
     document.title = 'Welcome, ' + name + ' — SPRK Network';
   })();
-
-
   </script>
 
-  <!-- ═══ Player ═══════════════════════════════════════════════
-       Cloudflare Stream serves HLS. A plain <video> is used rather than
-       Cloudflare's iframe embed so there is no vendor logo and no vendor
-       control bar.
+  <!-- ═══ Players ══════════════════════════════════════════════
+       Each video plays from its own MP4 on this site (/welcome/media/),
+       with a cover image shown until it is played. Before it starts the
+       preview is just that cover and the big play button; the player's own
+       controls appear once it plays. One video plays at a time.
 
-       QUALITY IS PINNED TO THE TOP RUNG. Cloudflare encoded a
-       1080/720/480/360/240 ladder and hls.js would normally pick a rung
-       from measured bandwidth, which is why a good connection could still
-       open at 360p for the first few seconds. Locking to the highest
-       level means it is always 1080p — at the cost of buffering instead
-       of degrading when the connection genuinely cannot carry ~2.9 Mbps.
+       The six answers download nothing until played (preload="none"); the
+       precall fetches only its metadata up front.
 
-       hls.js is preferred wherever it is supported, INCLUDING Safari,
-       because native HLS gives no API to pin the level. On iOS below 17.1
-       there is no MSE, so the native player takes over and picks its own
-       quality — that path cannot be controlled from here.
-
-       TO SWAP THE VIDEO: change CF_VIDEO_ID. Poster and source derive
-       from it.
+       TO MOVE A VIDEO TO CLOUDFLARE STREAM LATER: put its Stream ID in
+       STREAM. That video then plays the HLS stream (with a 720p floor)
+       instead of the MP4; the others are unaffected.
   ══════════════════════════════════════════════════════════════ -->
   <script>
   (function () {
-    var CF_VIDEO_ID = '7fbaac96008ffb840d46378f7e8c5cd1';
-    var SRC = 'https://videodelivery.net/' + CF_VIDEO_ID + '/manifest/video.m3u8';
+    var STREAM = { precall: '', b1: '', b2: '', b3: '', b4: '', b5: '', b6: '' };
+    function fileSrc(key)   { return '/welcome/media/' + key + '.mp4'; }
+    function filePoster(key) { return '/welcome/media/' + key + '.jpg'; }
 
-    var video = document.getElementById('precall-video');
-    var box   = document.getElementById('welcome-video');
-    if (!video || !box) return;
-
-    function fail() { box.setAttribute('data-state', 'failed'); }
-
-    function useNative() {
-      video.src = SRC;
-      video.addEventListener('error', fail, { once: true });
+    var hlsReady = null;
+    function loadHls() {
+      if (hlsReady) return hlsReady;
+      hlsReady = new Promise(function (resolve) {
+        var tag = document.createElement('script');
+        tag.src = 'https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js';
+        tag.onload = function () { resolve(window.Hls && window.Hls.isSupported() ? window.Hls : null); };
+        tag.onerror = function () { resolve(null); };
+        document.head.appendChild(tag);
+      });
+      return hlsReady;
     }
 
-    var tag = document.createElement('script');
-    tag.src = 'https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js';
+    function attach(video, key, lazy) {
+      var box = video.parentNode;
+      function fail() { box.setAttribute('data-state', 'failed'); }
+      var id = STREAM[key];
 
-    // If hls.js cannot be fetched, fall back to native HLS where the
-    // browser supports it rather than showing the failure panel.
-    tag.onerror = function () {
-      if (video.canPlayType('application/vnd.apple.mpegurl')) useNative(); else fail();
-    };
-
-    tag.onload = function () {
-      if (!window.Hls || !window.Hls.isSupported()) {
-        if (video.canPlayType('application/vnd.apple.mpegurl')) useNative(); else fail();
+      if (!id) {
+        video.poster = filePoster(key);
+        video.preload = lazy ? 'none' : 'metadata';
+        video.addEventListener('error', fail, { once: true });
+        video.src = fileSrc(key);
         return;
       }
-      var hls = new window.Hls({
-        capLevelToPlayerSize: false,  // the element's CSS size must not cap quality
-        // Provisional floor in case MANIFEST_PARSED never lands; refined
-        // below from the real ladder. Excludes the 480/360/240 rungs.
-        minAutoBitrate: 1000000
-      });
 
-      hls.on(window.Hls.Events.MANIFEST_PARSED, function () {
-        var levels = hls.levels || [];
-        if (!levels.length) return;
-
-        // Floor at 720p: find the lowest rung that is still >= 720 tall and
-        // set the ABR minimum just under its bitrate, so the selector can
-        // never choose anything below it. Derived from the ladder rather
-        // than hardcoded, so re-encoding the video cannot silently break it.
-        var floor = null;
-        for (var i = 0; i < levels.length; i++) {
-          if (levels[i].height >= 720) { floor = levels[i]; break; }
+      var src = 'https://videodelivery.net/' + id + '/manifest/video.m3u8';
+      video.poster = 'https://videodelivery.net/' + id + '/thumbnails/thumbnail.jpg?time=' +
+        (key === 'precall' ? '8s' : '2s') + '&width=1280';
+      function useNative() {
+        video.addEventListener('error', fail, { once: true });
+        video.src = src;
+      }
+      loadHls().then(function (Hls) {
+        if (!Hls) {
+          if (video.canPlayType('application/vnd.apple.mpegurl')) useNative(); else fail();
+          return;
         }
-        if (floor && floor.bitrate) hls.config.minAutoBitrate = floor.bitrate - 1;
-
-        // Open on the sharpest rung instead of climbing to it — ABR would
-        // otherwise spend the first seconds probing at a low level. nextLevel
-        // forces just the next fragment, then hands control back to ABR.
-        hls.nextLevel = levels.length - 1;
-        hls.autoLevelCapping = -1;    // no ceiling
+        var hls = new Hls({ capLevelToPlayerSize: false, minAutoBitrate: 1000000, autoStartLoad: !lazy });
+        hls.on(Hls.Events.MANIFEST_PARSED, function () {
+          var levels = hls.levels || [];
+          if (!levels.length) return;
+          var floor = null;
+          for (var i = 0; i < levels.length; i++) {
+            if (levels[i].height >= 720) { floor = levels[i]; break; }
+          }
+          if (floor && floor.bitrate) hls.config.minAutoBitrate = floor.bitrate - 1;
+          hls.nextLevel = levels.length - 1;
+          hls.autoLevelCapping = -1;
+        });
+        hls.on(Hls.Events.ERROR, function (_e, data) { if (data && data.fatal) fail(); });
+        if (lazy) video.addEventListener('play', function () { hls.startLoad(-1); }, { once: true });
+        hls.loadSource(src);
+        hls.attachMedia(video);
       });
-      hls.on(window.Hls.Events.ERROR, function (_e, data) { if (data && data.fatal) fail(); });
-      hls.loadSource(SRC);
-      hls.attachMedia(video);
-    };
+    }
 
-    document.head.appendChild(tag);
+    var all = Array.prototype.slice.call(document.querySelectorAll('video[data-video]'));
+    all.forEach(function (v) {
+      var key = v.getAttribute('data-video');
+      var btn = v.parentNode.querySelector('.welcome__play');
+      attach(v, key, !!v.closest('[data-breakout]'));
 
-    /* Nothing buffered after 12s means the stream never came up. */
-    setTimeout(function () {
-      if (!video.readyState && box.getAttribute('data-state') !== 'failed') fail();
-    }, 12000);
+      v.addEventListener('play', function () {
+        v.controls = true;
+        if (btn) btn.hidden = true;
+        all.forEach(function (o) { if (o !== v && !o.paused) o.pause(); });
+      });
+      if (btn) btn.addEventListener('click', function () {
+        v.controls = true;
+        var p = v.play();
+        if (p && p.catch) p.catch(function () {});
+      });
+    });
   })();
   </script>
 
