@@ -1,5 +1,6 @@
 {
   "rewrites": [
-    { "source": "/welcome-:name", "destination": "/welcome/index.html" }
+    { "source": "/welcome-:name", "destination": "/welcome/index.html" },
+    { "source": "/welcome-:name/", "destination": "/welcome/index.html" }
   ]
 }
