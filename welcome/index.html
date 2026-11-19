@@ -183,6 +183,7 @@
   .welcome .welcome__card-sub { color: var(--color-ink-2); font-size: var(--text-md); }
   .welcome .welcome__time {
     width: 100%;
+    min-width: 0;
     padding: var(--space-md);
     border-radius: var(--radius-md);
     background: var(--color-paper-3);
@@ -227,8 +228,10 @@
 
   /* No time on the link: the time box holds a date-and-time picker. */
   .welcome .welcome__time-pick { display: grid; gap: var(--space-xs); justify-items: center; font-weight: 600; }
+  .welcome .welcome__time-pick { min-width: 0; }
   .welcome .welcome__time-pick input {
     width: 100%;
+    min-width: 0;                  /* the date input's built-in width overflowed 320px phones */
     max-width: 18rem;
     min-height: 44px;
     padding: var(--space-xs) var(--space-sm);
@@ -300,8 +303,8 @@
   .welcome .welcome__play-dot {
     display: grid;
     place-items: center;
-    width: clamp(52px, 12vw, 68px);
-    height: clamp(52px, 12vw, 68px);
+    width: clamp(40px, 11vw, 68px);
+    height: clamp(40px, 11vw, 68px);
     border-radius: 50%;
     background: color-mix(in oklch, var(--color-accent) 86%, transparent);
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
@@ -332,7 +335,11 @@
     text-wrap: balance;
   }
   .welcome .welcome__qs-arrow { margin-inline: 0.4em; color: var(--color-accent); }
-  .welcome .welcome__answers { display: grid; gap: var(--space-xl); }
+  .welcome .welcome__answers {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));   /* 2 per row on every screen, phones included */
+    gap: var(--space-lg) var(--space-sm);
+  }
   .welcome .welcome__answer { display: grid; gap: var(--space-xs); text-align: left; }
   .welcome .welcome__answer[hidden] { display: none; }
   .welcome .welcome__answer .frame { margin-top: 0; }
@@ -367,15 +374,50 @@
     border-radius: var(--radius-md);
     background: var(--color-paper-2);
   }
+  /* Polished gold: a metallic band gradient (light catching, falling off,
+     catching again), a bright top edge and a shadowed bottom for depth, and
+     a slow sheen that sweeps across. The sheen stops for reduced motion. */
   .welcome .welcome__tile {
+    position: relative;
+    overflow: hidden;
     aspect-ratio: 920 / 380;
     display: grid;
     place-items: center;
-    border: var(--rule-hair) solid color-mix(in oklch, var(--color-accent) 38%, var(--color-rule));
+    border: 1px solid #a07a26;
     border-radius: var(--radius-md);
-    background: color-mix(in oklch, var(--color-accent) 8%, var(--color-paper-2));
+    background: linear-gradient(135deg,
+      #7d5a14 0%, #b88d2e 14%, #e9c96e 30%, #fff1b8 40%, #e2bd5c 50%,
+      #a87d22 64%, #d9b456 78%, #f5df95 88%, #b48a2c 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 249, 220, 0.75),
+      inset 0 -3px 8px rgba(90, 58, 0, 0.45),
+      0 10px 28px rgba(0, 0, 0, 0.5);
   }
-  .welcome .welcome__tile img { width: 30%; max-width: 72px; height: auto; object-fit: contain; }
+  .welcome .welcome__tile::after {
+    content: '';
+    position: absolute;
+    inset: -60% -40%;
+    background: linear-gradient(110deg, transparent 42%, rgba(255, 255, 255, 0.65) 50%, transparent 58%);
+    transform: translateX(-70%);
+    animation: welcome-sheen 5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes welcome-sheen {
+    0%, 55% { transform: translateX(-70%); }
+    100%    { transform: translateX(70%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .welcome .welcome__tile::after { animation: none; display: none; }
+  }
+  /* The mark is white in the file: brightness(0) makes it black, and a thin
+     light edge below makes it read as pressed into the gold. */
+  .welcome .welcome__tile img {
+    width: 30%;
+    max-width: 72px;
+    height: auto;
+    object-fit: contain;
+    filter: brightness(0) drop-shadow(0 1px 0 rgba(255, 244, 200, 0.7));
+  }
   @media (min-width: 48rem) {
     .welcome .welcome__results-grid,
     .welcome .welcome__col { gap: var(--space-md); }
@@ -389,8 +431,14 @@
     text-align: center;
   }
 
+  /* Phones: two answer cards per row means a ~165-205px column, so the
+     question and its line step down a size. */
+  @media (max-width: 47.99rem) {
+    .welcome .welcome__answer-h { font-size: var(--text-base); line-height: 1.25; }
+    .welcome .welcome__answer-p { font-size: var(--text-sm); }
+  }
   @media (min-width: 48rem) {
-    .welcome .welcome__answers { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-lg); }
+    .welcome .welcome__answers { gap: var(--space-xl) var(--space-lg); }
   }
   </style>
 </head>
