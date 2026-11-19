@@ -140,6 +140,18 @@
   }
   .welcome .welcome__frame { margin-top: 0; }
 
+  /* Heading: white, with "SPRK Network" in the same bold display face, gold.
+     Overrides the shared italic-serif accent (styles.css .welcome__h em). */
+  .welcome .welcome__h { color: #fff; }
+  .welcome .welcome__h em {
+    font-family: var(--font-display);
+    font-style: normal;
+    font-weight: 800;
+    font-size: 1em;
+    letter-spacing: inherit;
+    color: var(--color-accent);
+  }
+
   /* The "Your call is booked" pill, bolder and brighter so it can't be missed. */
   .welcome .apply__head .section-eyebrow {
     font-weight: 700;
